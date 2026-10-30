@@ -5,10 +5,10 @@
 CUDA_PATH ?= /usr/local/cuda-12.9
 
 EMBEDDED_CLANG ?= no
-USE_ENZYME_LLVM ?= yes
+USE_ENZYME_LLVM ?= no
 
-CLANG_ENZYME ?= $(HOME)/Enzyme/build/Enzyme/ClangEnzyme-23.so
-REACTANT_PATH ?= $(HOME)/Reactant/build/Enzyme/libClangReactant-23.so
+CLANG_ENZYME ?= $(HOME)/Enzyme/build/Enzyme/ClangEnzyme-24.so
+REACTANT_PATH ?= $(HOME)/Reactant/build/Enzyme/libClangReactant-24.so
 CLANG_PATH ?= $(HOME)/llvm-project/build/bin/clang++
 LIB_RAISE_PATH ?= $(HOME)/Enzyme-JAX/bazel-bin/libRaise.so
 REACTANT_EXTRA_PATH ?= $(HOME)/git/Reactant.jl/deps/ReactantExtra/bazel-bin/
