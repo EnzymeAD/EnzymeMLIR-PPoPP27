@@ -1,0 +1,7 @@
+{
+  "tracer_names": [
+    "q_v"
+  ],
+  "n_levels": 40,
+  "wind_transform": "mpas_helmholtz"
+}
