@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+syr2k.mlir: compiling
+syr2k        tensorize_jax    no synthesized program
+syr2k        enzyme_while     median     10.391 ms  min     10.368 ms  compile   0.17 s  err 
+wrote ./out/timings/kiriko/syr2k.csv

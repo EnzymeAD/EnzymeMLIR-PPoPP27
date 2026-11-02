@@ -1,0 +1,10 @@
+kernel,variant,status,raise_s
+matmul,while,ok,.087494359
+rmsnorm_part1,while,ok,.082751597
+rmsnorm_part2,while,ok,.084015200
+softmax_part1,while,ok,.082351621
+softmax_part2,while,ok,.081486942
+softmax_part3,while,ok,.084327613
+softmax_part4,while,ok,.084431140
+transformer_part3,while,ok,.085158310
+transformer_part4,while,ok,.081505480

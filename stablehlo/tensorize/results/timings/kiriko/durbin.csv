@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+durbin,tensorize_jax,no synthesized program,,,,,,,
+durbin,enzyme_while,ok,0.2323645418509841,157860.79759383574,157594.97088752687,,,157878.0575513062,155349 157595 157808 157913 158197

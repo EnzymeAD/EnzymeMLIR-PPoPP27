@@ -1,0 +1,13 @@
+kernel,variant,status,raise_s
+color_burn_8,while,ok,.087157058
+color_dodge_8,while,ok,.085013922
+darken_blend_8,while,ok,.086397788
+dissolve_blend_8,while,ok,.084544812
+lighten_blend_8,while,ok,.083244262
+linear_burn_8,while,ok,.083556856
+linear_dodge_8,while,ok,.084403428
+multiply_blend_8,while,ok,.083855608
+normal_blend_8,while,ok,.082929806
+normal_blend_f,while,ok,.085580570
+overlay_blend_8,while,ok,.083724780
+screen_blend_8,while,ok,.084238037

@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+matrix2.mlir: compiling
+matrix2      tensorize_jax    median      1.251 ms  min      1.249 ms  compile   3.14 s  err 
+matrix2      enzyme_while     median      1.262 ms  min      1.259 ms  compile   1.78 s  err 6.6e-16
+wrote ./out/timings/dspstone/matrix2.csv

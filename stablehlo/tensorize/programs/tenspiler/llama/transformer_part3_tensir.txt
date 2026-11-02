@@ -1,0 +1,5 @@
+(FnDeclRecursive:Function  transformer_part3_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i hidden_dim)) (Eq:Bool agg.result (vec_elemwise_mul:List Int (list_take:List Int input i) (scalar_vec_div:List Int (Lit:Int 1) (vec_scalar_add:List Int (Lit:Int 1) (vec_map:List Int (scalar_vec_sub:List Int (Lit:Int 0) (list_take:List Int input i)) map_int_to_int)))))) agg.result curr hidden_dim i input)
+
+(FnDeclRecursive:Function  transformer_part3_ps (list_eq:Bool transformer_part3_rv (vec_elemwise_mul:List Int (list_take:List Int input hidden_dim) (scalar_vec_div:List Int (Lit:Int 1) (vec_scalar_add:List Int (Lit:Int 1) (vec_map:List Int (scalar_vec_sub:List Int (Lit:Int 0) (list_take:List Int input hidden_dim)) map_int_to_int))))) input hidden_dim transformer_part3_rv)
+
+(FnDeclRecursive:Function  map_int_to_int (integer_exp:Int int_x) int_x)

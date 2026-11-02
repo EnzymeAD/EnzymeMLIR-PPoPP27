@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  vneg_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool agg.result (vec_scalar_mul:List Int (Sub:Int (Lit:Int 0) (Lit:Int 1)) (list_take:List Int a i)))) a agg.result i ref.tmp)
+
+(FnDeclRecursive:Function  vneg_ps (Eq:Bool vneg_rv (vec_scalar_mul:List Int (Sub:Int (Lit:Int 0) (Lit:Int 1)) a)) a vneg_rv)

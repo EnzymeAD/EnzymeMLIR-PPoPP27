@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+jacobi-1d-imper.mlir: compiling
+jacobi-1d-imper tensorize_jax    no synthesized program
+jacobi-1d-imper enzyme_while     median      0.844 ms  min      0.832 ms  compile   0.15 s  err 
+wrote ./out/timings/kiriko/jacobi-1d-imper.csv

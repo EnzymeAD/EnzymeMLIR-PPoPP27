@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+reg_detect.mlir: compiling
+reg_detect   tensorize_jax    no synthesized program
+reg_detect   enzyme_while     median    432.645 ms  min    430.352 ms  compile   0.19 s  err 
+wrote ./out/timings/kiriko/reg_detect.csv

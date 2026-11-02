@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+color_dodge_8.mlir: compiling
+color_dodge_8 tensorize_jax    median      0.082 ms  min      0.076 ms  compile   0.06 s  err 
+color_dodge_8 enzyme_while     median      0.078 ms  min      0.076 ms  compile   0.04 s  err 0.0e+00
+wrote ./out/timings/blend/color_dodge_8.csv

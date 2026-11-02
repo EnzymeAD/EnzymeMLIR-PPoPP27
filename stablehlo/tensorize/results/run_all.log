@@ -1,0 +1,311 @@
+date: 2026-11-01T10:46:51-06:00
+host: hydra  load: 4.97 37.91 42.11
+tensorize: 6c25396 
+enzymexlamlir-opt: ./build/Enzyme-JAX/bazel-bin/enzymexlamlir-opt (Enzyme-JAX 5d830a05e3164dc5b87713b01af986c776efc98b)
+jax 0.11.2 enzyme-ad 0.0.15 devices [CudaDevice(id=0)]
+NVIDIA GeForce RTX 5090, 575.57.08
+NVIDIA GeForce RTX 5090, 575.57.08
+protocol: warmup=1 reps=5 discard=1 timeout=1800s skip=[polybench/symm kiriko/symm kiriko/dynprog kiriko/floyd-warshall] cpus=all
+polybench: 15 kernels
+kiriko: 30 kernels
+blas: 3 kernels
+blend: 12 kernels
+darknet: 14 kernels
+dsp: 15 kernels
+dspstone: 5 kernels
+llama: 9 kernels
+makespeare: 1 kernels
+mathfu: 12 kernels
+simpl_array: 5 kernels
+utdsp: 6 kernels
+polybench
+  2mm ok .085364594s
+  3mm ok .090091642s
+  atax ok .084693196s
+  bicg ok .081961410s
+  bicg ok .085181887s
+  correlation ok .100541115s
+  covariance ok .093730061s
+  doitgen ok .088313830s
+  gemm ok .090427169s
+  gemver ok .086672575s
+  gesummv ok .088089680s
+  mvt ok .083250633s
+  mvt ok .087605167s
+  symm ok .119961452s
+  syr2k ok .089092088s
+  syrk ok .084931638s
+  trmm ok .093040927s
+kiriko
+  2mm ok .087747362s
+  3mm ok .088475575s
+  adi ok .114609357s
+  atax ok .084304978s
+  bicg ok .084576119s
+  bicg ok .085026341s
+  cholesky ok .095911104s
+  correlation ok .102350805s
+  covariance ok .094311942s
+  doitgen ok .089607429s
+  durbin ok .096848753s
+  dynprog ok .111810749s
+  fdtd-2d ok .091271047s
+  fdtd-apml ok .241345588s
+  floyd-warshall ok .086289845s
+  gemm ok .084723552s
+  gemver ok .090452057s
+  gesummv ok .085451405s
+  gramschmidt ok .093041057s
+  jacobi-1d-imper ok .087891109s
+  jacobi-2d-imper ok .088950103s
+  ludcmp ok .115744025s
+  lu ok .095791953s
+  mvt ok .086180569s
+  mvt ok .084998729s
+  reg_detect ok .098846789s
+  seidel-2d ok .098220851s
+  symm ok .117585794s
+  syr2k ok .090783379s
+  syrk ok .083386268s
+  trisolv ok .088911695s
+  trmm ok .086272087s
+blas
+  dot ok .083410024s
+  gemv ok .086682239s
+  ger ok .084874271s
+blend
+  color_burn_8 ok .087157058s
+  color_dodge_8 ok .085013922s
+  darken_blend_8 ok .086397788s
+  dissolve_blend_8 ok .084544812s
+  lighten_blend_8 ok .083244262s
+  linear_burn_8 ok .083556856s
+  linear_dodge_8 ok .084403428s
+  multiply_blend_8 ok .083855608s
+  normal_blend_8 ok .082929806s
+  normal_blend_f ok .085580570s
+  overlay_blend_8 ok .083724780s
+  screen_blend_8 ok .084238037s
+darknet
+  gemm_nn ok .084559935s
+  gemm_nt ok .083235549s
+  gemm_tn ok .084441896s
+  gemm_tt ok .084955774s
+  mag_array ok .080908625s
+  matrix_add_matrix ok .084299140s
+  mse_array ok .081333890s
+  mult_add_into_cpu ok .084128571s
+  ol_l2_cpu1 ok .084085216s
+  ol_l2_cpu2 ok .082300073s
+  scale_array ok .084665485s
+  scale_matrix ok .081467051s
+  sum_array ok .085159743s
+  translate_array ok .082318771s
+dsp
+  matadd ok .079509647s
+  matinit ok .078225583s
+  matmul ok .083439418s
+  matscal ok .083487210s
+  matsub ok .084815582s
+  vadd ok .082031656s
+  vcopy ok .081390225s
+  vfill ok .079592373s
+  vmul ok .081899486s
+  vneg ok .083223281s
+  voffset ok .082030905s
+  vrecip ok .085213775s
+  vscal ok .087001412s
+  vsub ok .081374852s
+  w_vec ok .083363584s
+dspstone
+  mat1x3 ok .085217651s
+  matrix1 ok .085196860s
+  matrix2 ok .087136937s
+  n_real_updates ok .080669324s
+  pin_down ok .082563251s
+llama
+  matmul ok .087494359s
+  rmsnorm_part1 ok .082751597s
+  rmsnorm_part2 ok .084015200s
+  softmax_part1 ok .082351621s
+  softmax_part2 ok .081486942s
+  softmax_part3 ok .084327613s
+  softmax_part4 ok .084431140s
+  transformer_part3 ok .085158310s
+  transformer_part4 ok .081505480s
+makespeare
+  sum_of_squares ok .083810430s
+mathfu
+  diveq ok .082939140s
+  diveq_sca ok .084375335s
+  len ok .083879905s
+  len_sq ok .082619977s
+  lerp ok .082519385s
+  matmul_sca ok .083286226s
+  muleq ok .081766455s
+  muleq_sca ok .083484146s
+  negate ok .080162476s
+  pluseq ok .079818024s
+  subeq ok .081618601s
+  subeq_sca ok .082833881s
+simpl_array
+  array_inc ok .083199655s
+  array_sum ok .083992315s
+  cube_in_place ok .082631916s
+  fourth_in_place ok .083777701s
+  sum_elts ok .083858793s
+utdsp
+  dct ok .085360006s
+  fir_small ok .082774642s
+  histogram ok .082040890s
+  lmsfir1 ok .084312270s
+  lmsfir2 ok .083556956s
+  mult_big ok .085762686s
+polybench
+  2mm rc=0
+  3mm rc=0
+  atax rc=0
+  bicg rc=0
+  bicg_1out rc=0
+  correlation rc=0
+  covariance rc=0
+  doitgen rc=0
+  gemm rc=0
+  gemver rc=0
+  gesummv rc=0
+  mvt rc=0
+  mvt_1out rc=0
+  symm skipped ($SKIP)
+  syr2k rc=0
+  syrk rc=0
+  trmm rc=0
+kiriko
+  2mm rc=0
+  3mm rc=0
+  adi rc=0
+  atax rc=0
+  bicg rc=0
+  bicg_1out rc=0
+  cholesky rc=124
+  correlation rc=0
+  covariance rc=0
+  doitgen rc=0
+  durbin rc=0
+  dynprog skipped ($SKIP)
+  fdtd-2d rc=0
+  fdtd-apml rc=0
+  floyd-warshall skipped ($SKIP)
+  gemm rc=0
+  gemver rc=0
+  gesummv rc=0
+  gramschmidt rc=0
+  jacobi-1d-imper rc=0
+  jacobi-2d-imper rc=0
+  ludcmp rc=124
+  lu rc=0
+  mvt rc=0
+  mvt_1out rc=0
+  reg_detect rc=0
+  seidel-2d rc=0
+  symm skipped ($SKIP)
+  syr2k rc=0
+  syrk rc=0
+  trisolv rc=0
+  trmm rc=124
+blas
+  dot rc=0
+  gemv rc=0
+  ger rc=0
+blend
+  color_burn_8 rc=0
+  color_dodge_8 rc=0
+  darken_blend_8 rc=0
+  dissolve_blend_8 rc=0
+  lighten_blend_8 rc=0
+  linear_burn_8 rc=0
+  linear_dodge_8 rc=0
+  multiply_blend_8 rc=0
+  normal_blend_8 rc=0
+  normal_blend_f rc=0
+  overlay_blend_8 rc=0
+  screen_blend_8 rc=0
+darknet
+  gemm_nn rc=0
+  gemm_nt rc=0
+  gemm_tn rc=0
+  gemm_tt rc=0
+  mag_array rc=0
+  matrix_add_matrix rc=0
+  mse_array rc=0
+  mult_add_into_cpu rc=0
+  ol_l2_cpu1 rc=0
+  ol_l2_cpu2 rc=0
+  scale_array rc=0
+  scale_matrix rc=0
+  sum_array rc=0
+  translate_array rc=0
+dsp
+  matadd rc=0
+  matinit rc=0
+  matmul rc=0
+  matscal rc=0
+  matsub rc=0
+  vadd rc=0
+  vcopy rc=0
+  vfill rc=0
+  vmul rc=0
+  vneg rc=0
+  voffset rc=0
+  vrecip rc=0
+  vscal rc=0
+  vsub rc=0
+  w_vec rc=0
+dspstone
+  mat1x3 rc=0
+  matrix1 rc=0
+  matrix2 rc=0
+  n_real_updates rc=0
+  pin_down rc=0
+llama
+  matmul rc=0
+  rmsnorm_part1 rc=0
+  rmsnorm_part2 rc=0
+  softmax_part1 rc=0
+  softmax_part2 rc=0
+  softmax_part3 rc=0
+  softmax_part4 rc=0
+  transformer_part3 rc=0
+  transformer_part4 rc=0
+makespeare
+  sum_of_squares rc=0
+mathfu
+  diveq rc=0
+  diveq_sca rc=0
+  len rc=0
+  len_sq rc=0
+  lerp rc=0
+  matmul_sca rc=0
+  muleq rc=0
+  muleq_sca rc=0
+  negate rc=0
+  pluseq rc=0
+  subeq rc=0
+  subeq_sca rc=0
+simpl_array
+  array_inc rc=0
+  array_sum rc=0
+  cube_in_place rc=0
+  fourth_in_place rc=0
+  sum_elts rc=0
+utdsp
+  dct rc=0
+  fir_small rc=0
+  histogram rc=0
+  lmsfir1 rc=0
+  lmsfir2 rc=0
+  mult_big rc=0
+tenspiler llama: 11 kernels
+tenspiler blas: 4 kernels
+tenspiler dsp: 15 kernels
+tenspiler blend: 12 kernels
+wrote ./out/tables.md

@@ -1,0 +1,7 @@
+# Kernels whose Tensorize-synthesized program is wrong (checked against a NumPy version
+# of the loop), with the reason. compare_suite.py reports their tensorize_* variants as broken.
+# kernel   reason
+color_burn_8       restore_sizes misses np.eye(3) -> 3x3 mask against 1000x1000 arrays
+darken_blend_8     synthesized where(a, b, a > b) instead of where(a > b, b, a)
+lighten_blend_8    synthesized where(a, b, a < b) instead of where(a < b, b, a)
+dissolve_blend_8   synthesized expression does not match the loop (rel err 3e2)

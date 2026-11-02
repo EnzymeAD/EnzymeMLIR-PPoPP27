@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+vneg.mlir: compiling
+vneg         tensorize_jax    median      0.057 ms  min      0.054 ms  compile   0.06 s  err 
+vneg         enzyme_while     median      0.059 ms  min      0.055 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/dsp/vneg.csv

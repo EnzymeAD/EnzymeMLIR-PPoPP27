@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+mvt.mlir: compiling
+mvt          tensorize_jax    median      0.088 ms  min      0.078 ms  compile   0.18 s  err 
+mvt          enzyme_while     median      0.094 ms  min      0.086 ms  compile   0.13 s  err 0.0e+00
+wrote ./out/timings/polybench/mvt_1out.csv

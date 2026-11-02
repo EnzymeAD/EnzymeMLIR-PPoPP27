@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+rmsnorm_part2.mlir: compiling
+rmsnorm_part2 tensorize_jax    median      0.076 ms  min      0.064 ms  compile   0.06 s  err 
+rmsnorm_part2 enzyme_while     median      0.070 ms  min      0.068 ms  compile   0.03 s  err 2.8e-16
+wrote ./out/timings/llama/rmsnorm_part2.csv

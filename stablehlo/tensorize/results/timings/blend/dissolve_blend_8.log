@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+dissolve_blend_8.mlir: compiling
+dissolve_blend_8 tensorize_jax    broken: synthesized expression does not match the loop (rel err 3e2)
+dissolve_blend_8 tensorize_numpy  broken: synthesized expression does not match the loop (rel err 3e2)
+dissolve_blend_8 enzyme_while     median      0.084 ms  min      0.060 ms  compile   0.06 s  err 
+wrote ./out/timings/blend/dissolve_blend_8.csv

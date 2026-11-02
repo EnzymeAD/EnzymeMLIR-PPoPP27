@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+color_burn_8.mlir: compiling
+color_burn_8 tensorize_jax    broken: restore_sizes misses np.eye(3) -> 3x3 mask against 1000x1000 arrays
+color_burn_8 tensorize_numpy  broken: restore_sizes misses np.eye(3) -> 3x3 mask against 1000x1000 arrays
+color_burn_8 enzyme_while     median      0.086 ms  min      0.085 ms  compile   0.07 s  err 
+wrote ./out/timings/blend/color_burn_8.csv

@@ -1,0 +1,5 @@
+(FnDeclRecursive:Function  softmax_part2_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i max_pos)) (Eq:Bool agg.result (vec_map:List Int (vec_scalar_sub:List Int max_val (list_take:List Int input i)) map_int_to_int))) agg.result cur i input max_pos max_val)
+
+(FnDeclRecursive:Function  softmax_part2_ps (Eq:Bool softmax_part2_rv (vec_map:List Int (vec_scalar_sub:List Int max_val (list_take:List Int input max_pos)) map_int_to_int)) input max_pos max_val softmax_part2_rv)
+
+(FnDeclRecursive:Function  map_int_to_int (integer_exp:Int int_x) int_x)

@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+array_inc.mlir: compiling
+array_inc    tensorize_jax    median      0.052 ms  min      0.049 ms  compile   0.06 s  err 
+array_inc    enzyme_while     median      0.051 ms  min      0.048 ms  compile   0.02 s  err 0.0e+00
+wrote ./out/timings/simpl_array/array_inc.csv

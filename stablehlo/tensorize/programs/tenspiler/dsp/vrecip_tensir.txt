@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  vrecip_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool agg.result (scalar_vec_div:List Int (Lit:Int 1) (list_take:List Int a i)))) a agg.result i ref.tmp)
+
+(FnDeclRecursive:Function  vrecip_ps (Eq:Bool vrecip_rv (scalar_vec_div:List Int (Lit:Int 1) a)) a vrecip_rv)

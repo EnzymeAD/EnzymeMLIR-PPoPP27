@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+dct.mlir: compiling
+dct          tensorize_jax    median      2.359 ms  min      2.333 ms  compile   2.60 s  err 
+dct          enzyme_while     median      2.364 ms  min      2.346 ms  compile   0.13 s  err 0.0e+00
+wrote ./out/timings/utdsp/dct.csv

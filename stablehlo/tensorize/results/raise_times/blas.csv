@@ -1,0 +1,4 @@
+kernel,variant,status,raise_s
+dot,while,ok,.083410024
+gemv,while,ok,.086682239
+ger,while,ok,.084874271

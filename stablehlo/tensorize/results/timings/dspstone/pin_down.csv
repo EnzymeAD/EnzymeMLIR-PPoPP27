@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+pin_down,tensorize_jax,"broken: restore_sizes misses np.full([3], 1) in the return -> length 3 instead of 1000",,,,,,,
+pin_down,tensorize_numpy,"broken: restore_sizes misses np.full([3], 1) in the return -> length 3 instead of 1000",,,,,,,
+pin_down,enzyme_while,ok,0.051767838187515736,0.05711102858185768,0.05376152694225311,,,0.06153493394682546,0.0756243 0.0537615 0.0880128 0.058528 0.055694

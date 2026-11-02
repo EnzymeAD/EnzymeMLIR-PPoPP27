@@ -1,0 +1,4 @@
+# Output buffers per kernel (see benchmark/polybench/outputs.txt); unlisted kernels
+# return every buffer they store to, plus their return value.
+# kernel        args      # names
+rmsnorm_part2   arg0      # out; arg2 (ss) is rescaled in place as scratch

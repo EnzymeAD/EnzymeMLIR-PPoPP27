@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+covariance.mlir: compiling
+covariance   tensorize_jax    median      1.250 ms  min      1.246 ms  compile   2.32 s  err 
+covariance   enzyme_while     median      1.254 ms  min      1.251 ms  compile   0.16 s  err 0.0e+00
+wrote ./out/timings/kiriko/covariance.csv

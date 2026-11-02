@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+fdtd-apml.mlir: compiling
+fdtd-apml    tensorize_jax    no synthesized program
+fdtd-apml    enzyme_while     median    635.048 ms  min    623.091 ms  compile   0.31 s  err 
+wrote ./out/timings/kiriko/fdtd-apml.csv

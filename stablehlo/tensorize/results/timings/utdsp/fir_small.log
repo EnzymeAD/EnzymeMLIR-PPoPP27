@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+fir_small.mlir: compiling
+fir_small    tensorize_jax    median      0.057 ms  min      0.053 ms  compile   0.12 s  err 
+fir_small    enzyme_while     median      0.062 ms  min      0.052 ms  compile   0.04 s  err 0.0e+00
+wrote ./out/timings/utdsp/fir_small.csv

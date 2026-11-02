@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+syr2k,tensorize_jax,broken: restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200,,,,,,,
+syr2k,tensorize_numpy,broken: restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200,,,,,,,
+syr2k,enzyme_while,ok,0.17278071120381355,16.615349799394608,16.572514548897743,,,16.62528967074482,16.6167 16.6984 16.6167 16.614 16.5725

@@ -1,0 +1,19 @@
+# Output buffers of each PolyBench kernel: the arrays PolyBench 4.2 dumps in print_array.
+# Every other buffer the kernel writes (tmp, sum, mean, stddev, ...) is scratch.
+# Used by memrefify.py (--outputs) via raise_suite.sh.
+# kernel      args            # PolyBench names
+2mm           arg10           # D
+3mm           arg11           # G
+atax          arg4            # y
+bicg          arg3,arg4       # s, q
+correlation   arg4            # corr
+covariance    arg4            # cov
+doitgen       arg3            # A
+gemm          arg5            # C
+gemver        arg8            # w
+gesummv       arg7            # y
+mvt           arg1,arg2       # x1, x2
+symm          arg4            # C
+syr2k         arg4            # C
+syrk          arg4            # C
+trmm          arg4            # B

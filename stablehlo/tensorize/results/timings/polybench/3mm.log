@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+3mm.mlir: compiling
+3mm          tensorize_jax    median      3.313 ms  min      3.301 ms  compile   4.01 s  err 
+3mm          enzyme_while     median      3.337 ms  min      3.316 ms  compile   0.09 s  err 0.0e+00
+wrote ./out/timings/polybench/3mm.csv

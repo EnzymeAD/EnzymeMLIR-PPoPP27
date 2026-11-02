@@ -1,0 +1,9 @@
+(FnDeclRecursive:Function  dissolve_blend_8_inv0 (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Le:Bool row (matrix_length:Int base))) (Eq:Bool agg.result (dissolve_matrix_selection_two_args:List Int (matrix_take:List Int base row) (matrix_take:List Int active row) opacity rand_cons dissolve_select_two_args))) active agg.result base col opacity pixel rand_cons rand_val row row_vec)
+
+(FnDeclRecursive:Function  dissolve_blend_8_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Le:Bool row (matrix_length:Int base))) (Ge:Bool col (Lit:Int 0))) (Le:Bool col (list_length:Int (matrix_get:Int base (Lit:Int 0))))) (Eq:Bool row_vec (dissolve_selection_two_args:List Int (list_take:Int (matrix_get:Int base row) col) (list_take:Int (matrix_get:Int active row) col) opacity rand_cons dissolve_select_two_args))) (Eq:Bool agg.result (dissolve_matrix_selection_two_args:List Int (matrix_take:List Int base row) (matrix_take:List Int active row) opacity rand_cons dissolve_select_two_args))) active base col opacity pixel rand_cons rand_val row_vec agg.result row)
+
+(FnDeclRecursive:Function  dissolve_blend_8_ps (Eq:Bool dissolve_blend_8_rv (dissolve_matrix_selection_two_args:List Int base active opacity rand_cons dissolve_select_two_args)) base active opacity rand_cons dissolve_blend_8_rv)
+
+(FnDeclRecursive:Function  dissolve_select_two_args (Ite:Int (Ge:Bool (Sub:Int opacity (Div:Int (Add:Int (Mod:Int rand_cons (Lit:Int 100)) (Lit:Int 1)) (Lit:Int 100))) (Lit:Int 0)) int_y int_x) int_x int_y opacity rand_cons)
+
+(FnDeclRecursive:Function  OUTER_LOOP_INDEX_FIRST (Lit:Bool True))

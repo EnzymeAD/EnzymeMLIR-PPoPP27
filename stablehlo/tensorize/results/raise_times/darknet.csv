@@ -1,0 +1,15 @@
+kernel,variant,status,raise_s
+gemm_nn,while,ok,.084559935
+gemm_nt,while,ok,.083235549
+gemm_tn,while,ok,.084441896
+gemm_tt,while,ok,.084955774
+mag_array,while,ok,.080908625
+matrix_add_matrix,while,ok,.084299140
+mse_array,while,ok,.081333890
+mult_add_into_cpu,while,ok,.084128571
+ol_l2_cpu1,while,ok,.084085216
+ol_l2_cpu2,while,ok,.082300073
+scale_array,while,ok,.084665485
+scale_matrix,while,ok,.081467051
+sum_array,while,ok,.085159743
+translate_array,while,ok,.082318771

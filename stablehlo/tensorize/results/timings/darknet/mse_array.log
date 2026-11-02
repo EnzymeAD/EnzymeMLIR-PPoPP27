@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+mse_array.mlir: compiling
+mse_array    tensorize_jax    median      0.063 ms  min      0.059 ms  compile   0.11 s  err 
+mse_array    enzyme_while     median      0.067 ms  min      0.058 ms  compile   0.04 s  err 0.0e+00
+wrote ./out/timings/darknet/mse_array.csv

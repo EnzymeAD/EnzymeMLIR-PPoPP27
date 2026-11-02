@@ -1,0 +1,6 @@
+kernel,variant,status,raise_s
+array_inc,while,ok,.083199655
+array_sum,while,ok,.083992315
+cube_in_place,while,ok,.082631916
+fourth_in_place,while,ok,.083777701
+sum_elts,while,ok,.083858793

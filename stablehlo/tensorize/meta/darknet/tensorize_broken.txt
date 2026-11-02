@@ -1,0 +1,4 @@
+# Kernels whose Tensorize-synthesized program is wrong (checked against a NumPy version
+# of the loop), with the reason. compare_suite.py reports their tensorize_* variants as broken.
+# kernel   reason
+ol_l2_cpu1         synthesized 2 ** (a - b) instead of (b - a) ** 2

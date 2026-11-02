@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+gemver.mlir: compiling
+gemver       tensorize_jax    median      0.427 ms  min      0.417 ms  compile   0.27 s  err 
+gemver       enzyme_while     median      0.373 ms  min      0.371 ms  compile   0.22 s  err 5.6e-16
+wrote ./out/timings/kiriko/gemver.csv

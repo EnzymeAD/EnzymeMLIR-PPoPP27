@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.exp(np.subtract(v1, v3))

@@ -1,0 +1,3 @@
+kernel,variant,status,raise_s
+bicg,while,ok,.085026341
+mvt,while,ok,.084998729

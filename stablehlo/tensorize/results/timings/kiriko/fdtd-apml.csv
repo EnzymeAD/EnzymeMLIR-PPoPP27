@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+fdtd-apml,tensorize_jax,no synthesized program,,,,,,,
+fdtd-apml,enzyme_while,ok,0.3127195592969656,635.0481896661222,623.0912115424871,,,633.713983796075,626.959 623.091 631.089 639.008 642.011

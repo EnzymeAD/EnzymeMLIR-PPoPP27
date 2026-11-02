@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  normal_blend_f_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int base))) (Eq:Bool agg.result (vec_elemwise_add:List Int (vec_scalar_mul:List Int opacity (list_take:List Int active i)) (vec_scalar_mul:List Int (Sub:Int (Lit:Int 1) opacity) (list_take:List Int base i))))) active agg.result base i opacity ref.tmp)
+
+(FnDeclRecursive:Function  normal_blend_f_ps (Eq:Bool normal_blend_f_rv (vec_elemwise_add:List Int (vec_scalar_mul:List Int opacity active) (vec_scalar_mul:List Int (Sub:Int (Lit:Int 1) opacity) base))) base active opacity normal_blend_f_rv)

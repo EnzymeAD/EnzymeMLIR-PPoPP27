@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  softmax_part3_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i max_pos)) (Eq:Bool sum (reduce_sum:Int (list_take:List Int output i)))) i max_pos output sum)
+
+(FnDeclRecursive:Function  softmax_part3_ps (Eq:Bool softmax_part3_rv (reduce_sum:Int (list_take:List Int output max_pos))) output max_pos softmax_part3_rv)

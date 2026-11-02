@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+sum_elts.mlir: compiling
+sum_elts     tensorize_jax    median      0.067 ms  min      0.060 ms  compile   0.11 s  err 
+sum_elts     enzyme_while     median      0.063 ms  min      0.061 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/simpl_array/sum_elts.csv

@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+cube_in_place.mlir: compiling
+cube_in_place tensorize_jax    no synthesized program
+cube_in_place enzyme_while     median      0.077 ms  min      0.073 ms  compile   0.05 s  err 
+wrote ./out/timings/simpl_array/cube_in_place.csv

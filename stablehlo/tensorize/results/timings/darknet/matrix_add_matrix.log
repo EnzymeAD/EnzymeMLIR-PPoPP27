@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+matrix_add_matrix.mlir: compiling
+matrix_add_matrix tensorize_jax    median      0.055 ms  min      0.050 ms  compile   0.05 s  err 
+matrix_add_matrix enzyme_while     median      0.053 ms  min      0.050 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/darknet/matrix_add_matrix.csv

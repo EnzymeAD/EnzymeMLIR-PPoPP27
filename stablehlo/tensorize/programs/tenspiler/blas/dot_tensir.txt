@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  dot_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool sum (reduce_sum:Int (vec_elemwise_mul:List Int (list_take:List Int b i) (list_take:List Int a i))))) a b i sum)
+
+(FnDeclRecursive:Function  dot_ps (Eq:Bool dot_rv (reduce_sum:Int (vec_elemwise_mul:List Int b a))) a b dot_rv)

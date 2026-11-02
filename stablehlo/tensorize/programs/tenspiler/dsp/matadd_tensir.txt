@@ -1,0 +1,5 @@
+(FnDeclRecursive:Function  matadd_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (matrix_length:Int A))) (Eq:Bool agg.result (matrix_elemwise_add:List Int (matrix_take:List Int A i) (matrix_take:List Int B i)))) A B agg.result i j ref.tmp row_vec)
+
+(FnDeclRecursive:Function  matadd_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Lt:Bool i (matrix_length:Int A))) (Ge:Bool j (Lit:Int 0))) (Le:Bool j (list_length:Int (matrix_get:Int A (Lit:Int 0))))) (Eq:Bool row_vec (vec_elemwise_add:List Int (list_take:Int (matrix_get:Int B i) j) (list_take:Int (matrix_get:Int A i) j)))) (Eq:Bool agg.result (matrix_elemwise_add:List Int (matrix_take:List Int A i) (matrix_take:List Int B i)))) A B j ref.tmp row_vec agg.result i)
+
+(FnDeclRecursive:Function  matadd_ps (Eq:Bool matadd_rv (matrix_elemwise_add:List Int B A)) A B matadd_rv)

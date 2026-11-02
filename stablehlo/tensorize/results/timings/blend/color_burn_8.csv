@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+color_burn_8,tensorize_jax,broken: restore_sizes misses np.eye(3) -> 3x3 mask against 1000x1000 arrays,,,,,,,
+color_burn_8,tensorize_numpy,broken: restore_sizes misses np.eye(3) -> 3x3 mask against 1000x1000 arrays,,,,,,,
+color_burn_8,enzyme_while,ok,0.06702283024787903,0.08605513721704483,0.08458737283945084,,,0.08604577797390635,0.0811331 0.0866102 0.0845874 0.0855001 0.0875434

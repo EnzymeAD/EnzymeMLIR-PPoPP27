@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+dissolve_blend_8,tensorize_jax,broken: synthesized expression does not match the loop (rel err 3e2),,,,,,,
+dissolve_blend_8,tensorize_numpy,broken: synthesized expression does not match the loop (rel err 3e2),,,,,,,
+dissolve_blend_8,enzyme_while,ok,0.06326854135841131,0.08395221084356308,0.05999114364385605,,,0.0823100200605555,0.190398 0.128465 0.0936221 0.0742823 0.0599911

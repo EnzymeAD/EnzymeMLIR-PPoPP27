@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+transformer_part3.mlir: compiling
+transformer_part3 tensorize_jax    median      0.078 ms  min      0.069 ms  compile   0.07 s  err 
+transformer_part3 enzyme_while     median      0.067 ms  min      0.057 ms  compile   0.04 s  err 2.9e-16
+wrote ./out/timings/llama/transformer_part3.csv

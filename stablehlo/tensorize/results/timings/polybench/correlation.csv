@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+correlation,tensorize_jax,no synthesized program,,,,,,,
+correlation,enzyme_while,ok,2.768044841475785,2.493946813046932,2.469579689204693,,,2.491076605780438,2.5462 2.46958 2.50717 2.50065 2.48725

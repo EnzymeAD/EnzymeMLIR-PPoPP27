@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+mult_add_into_cpu.mlir: compiling
+mult_add_into_cpu tensorize_jax    median      0.055 ms  min      0.051 ms  compile   0.05 s  err 
+mult_add_into_cpu enzyme_while     median      0.052 ms  min      0.050 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/darknet/mult_add_into_cpu.csv

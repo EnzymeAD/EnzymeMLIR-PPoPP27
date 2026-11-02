@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+fourth_in_place.mlir: compiling
+fourth_in_place tensorize_jax    median      0.063 ms  min      0.060 ms  compile   0.07 s  err 
+fourth_in_place enzyme_while     median      0.059 ms  min      0.057 ms  compile   0.02 s  err 4.1e-16
+wrote ./out/timings/simpl_array/fourth_in_place.csv

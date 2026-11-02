@@ -1,0 +1,9 @@
+date: 2026-11-01T10:46:51-06:00
+host: hydra  load: 4.97 37.91 42.11
+tensorize: 6c25396 
+enzymexlamlir-opt: ./build/Enzyme-JAX/bazel-bin/enzymexlamlir-opt (Enzyme-JAX 5d830a05e3164dc5b87713b01af986c776efc98b)
+jax 0.11.2 enzyme-ad 0.0.15 devices [CudaDevice(id=0)]
+NVIDIA GeForce RTX 5090, 575.57.08
+NVIDIA GeForce RTX 5090, 575.57.08
+protocol: warmup=1 reps=5 discard=1 timeout=1800s skip=[polybench/symm kiriko/symm kiriko/dynprog kiriko/floyd-warshall] cpus=all
+note: kiriko cholesky, ludcmp and trmm hit the 1800 s timeout in this run; they were then added to the default SKIP and tables.md was regenerated with it (scripts/tables.py out).

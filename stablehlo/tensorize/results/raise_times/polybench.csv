@@ -1,0 +1,16 @@
+kernel,variant,status,raise_s
+2mm,while,ok,.085364594
+3mm,while,ok,.090091642
+atax,while,ok,.084693196
+bicg,while,ok,.081961410
+correlation,while,ok,.100541115
+covariance,while,ok,.093730061
+doitgen,while,ok,.088313830
+gemm,while,ok,.090427169
+gemver,while,ok,.086672575
+gesummv,while,ok,.088089680
+mvt,while,ok,.083250633
+symm,while,ok,.119961452
+syr2k,while,ok,.089092088
+syrk,while,ok,.084931638
+trmm,while,ok,.093040927

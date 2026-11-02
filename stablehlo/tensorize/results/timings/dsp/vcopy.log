@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+vcopy.mlir: compiling
+vcopy        tensorize_jax    median      0.058 ms  min      0.055 ms  compile   0.03 s  err 
+vcopy        enzyme_while     median      0.059 ms  min      0.057 ms  compile   0.01 s  err 0.0e+00
+wrote ./out/timings/dsp/vcopy.csv

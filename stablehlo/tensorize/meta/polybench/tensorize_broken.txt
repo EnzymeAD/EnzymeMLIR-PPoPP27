@@ -1,0 +1,5 @@
+# Kernels whose Tensorize-synthesized program is known to be wrong, with the reason.
+# compare_suite.py skips their tensorize_* variants and reports them as broken.
+# kernel   reason
+syrk       restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200
+syr2k      restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200

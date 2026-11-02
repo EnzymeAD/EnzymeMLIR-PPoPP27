@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2, arg3, arg4, arg5):
+    return np.divide(np.tensordot(np.subtract(v4, np.divide(np.sum(v4, axis=0), v3)), np.subtract(v4, np.divide(np.sum(v4, axis=0), v3)), axes=(0, 0)), v3 - 1.0)

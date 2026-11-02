@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11):
+    return np.dot(np.dot(v7, v8), np.dot(v10, v11))

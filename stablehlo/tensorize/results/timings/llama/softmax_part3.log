@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+softmax_part3.mlir: compiling
+softmax_part3 tensorize_jax    median      0.073 ms  min      0.051 ms  compile   0.11 s  err 
+softmax_part3 enzyme_while     median      0.067 ms  min      0.051 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/llama/softmax_part3.csv

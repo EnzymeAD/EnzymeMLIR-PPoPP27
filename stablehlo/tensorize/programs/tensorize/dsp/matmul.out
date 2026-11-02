@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.dot(arg0, arg1)

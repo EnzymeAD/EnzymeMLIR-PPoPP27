@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+fdtd-2d,tensorize_jax,no synthesized program,,,,,,,
+fdtd-2d,enzyme_while,ok,0.1590248392894864,2.7894340455532074,2.763735130429268,,,2.797903674249492,2.86042 2.85067 2.77259 2.80628 2.76374

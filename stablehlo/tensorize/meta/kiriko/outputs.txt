@@ -1,0 +1,28 @@
+# Output buffers of each Kiriko (PolyBench/C 3.2) kernel: the arrays print_array dumps.
+# Kernels not listed return every buffer they store to.
+# kernel          args
+2mm               arg10
+3mm               arg11
+adi               arg2
+atax              arg4
+bicg              arg3,arg4
+cholesky          arg2
+correlation       arg4
+covariance        arg4
+doitgen           arg3
+durbin            arg6
+fdtd-2d           arg3,arg4,arg5
+floyd-warshall    arg1
+gemm              arg5
+gemver            arg8
+gesummv           arg7
+jacobi-1d-imper   arg2
+jacobi-2d-imper   arg2
+lu                arg1
+mvt               arg1,arg2
+seidel-2d         arg2
+symm              arg4
+syr2k             arg4
+syrk              arg4
+trisolv           arg2
+trmm              arg3

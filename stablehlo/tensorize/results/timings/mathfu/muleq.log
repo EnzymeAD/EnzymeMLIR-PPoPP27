@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+muleq.mlir: compiling
+muleq        tensorize_jax    median      0.060 ms  min      0.054 ms  compile   0.05 s  err 
+muleq        enzyme_while     median      0.063 ms  min      0.053 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/mathfu/muleq.csv

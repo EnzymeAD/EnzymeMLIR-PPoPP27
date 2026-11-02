@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  voffset_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool agg.result (vec_scalar_add:List Int c (list_take:List Int a i)))) a agg.result c i ref.tmp)
+
+(FnDeclRecursive:Function  voffset_ps (Eq:Bool voffset_rv (vec_scalar_add:List Int c a)) a c voffset_rv)

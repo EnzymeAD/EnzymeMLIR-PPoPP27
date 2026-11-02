@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  rmsnorm_part2_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int input))) (Eq:Bool agg.result (vec_scalar_mul:List Int (Div:Int (Lit:Int 1) (integer_sqrt:Int (Add:Int (Div:Int ss (list_length:Int input)) (Lit:Int 1)))) (vec_elemwise_mul:List Int (list_take:List Int weight i) (list_take:List Int input i))))) agg.result i input ref.tmp ss weight)
+
+(FnDeclRecursive:Function  rmsnorm_part2_ps (Eq:Bool rmsnorm_part2_rv (vec_scalar_mul:List Int (Div:Int (Lit:Int 1) (integer_sqrt:Int (Add:Int (Div:Int ss (list_length:Int input)) (Lit:Int 1)))) (vec_elemwise_mul:List Int weight input))) input weight ss rmsnorm_part2_rv)

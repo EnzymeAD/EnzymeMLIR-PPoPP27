@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+lu.mlir: compiling
+lu           tensorize_jax    no synthesized program
+lu           enzyme_while     median     10.750 ms  min     10.712 ms  compile   0.16 s  err 
+wrote ./out/timings/kiriko/lu.csv

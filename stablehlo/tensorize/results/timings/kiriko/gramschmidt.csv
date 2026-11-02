@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+gramschmidt,tensorize_jax,no synthesized program,,,,,,,
+gramschmidt,enzyme_while,ok,0.24638512078672647,7.710947655141354,7.706960663199425,,,7.71343498689207,7.7263 7.70894 7.70696 7.71296 7.72491

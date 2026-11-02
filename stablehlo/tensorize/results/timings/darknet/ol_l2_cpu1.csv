@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+ol_l2_cpu1,tensorize_jax,broken: synthesized 2 ** (a - b) instead of (b - a) ** 2,,,,,,,
+ol_l2_cpu1,tensorize_numpy,broken: synthesized 2 ** (a - b) instead of (b - a) ** 2,,,,,,,
+ol_l2_cpu1,enzyme_while,ok,0.055159526877105236,0.07055234163999557,0.06380584090948105,,,0.07809627674141272,0.185883 0.139922 0.0735624 0.0675423 0.0638058

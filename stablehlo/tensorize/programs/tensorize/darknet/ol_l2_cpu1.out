@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.power(np.full([1000], 2.0), np.subtract(v2, v1))

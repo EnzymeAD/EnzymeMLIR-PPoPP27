@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.where(np.add(np.where(np.eye(3, dtype=bool), np.full([1000, 1000], 32.0), np.divide(v1, np.subtract(np.full([1000, 1000], 0), v2))), np.divide(v1, np.subtract(np.full([1000, 1000], 0), v2))), np.full([1000, 1000], 32.0), np.equal(v2, np.full([1000, 1000], 0)))

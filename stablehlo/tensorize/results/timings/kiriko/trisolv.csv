@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+trisolv,tensorize_jax,no synthesized program,,,,,,,
+trisolv,enzyme_while,ok,0.25070900470018387,77943.54317709804,76709.89974029362,,,77779.77165923791,78256.8 76709.9 77939 78545.2 77948.1

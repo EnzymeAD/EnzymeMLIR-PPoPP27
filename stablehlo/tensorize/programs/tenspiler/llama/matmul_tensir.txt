@@ -1,0 +1,9 @@
+(FnDeclRecursive:Function  matmul_inv0 (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Le:Bool row (matrix_length:Int weight))) (Eq:Bool agg.result (matrix_vec_mul:List Int (matrix_take:List Int weight row) input))) agg.result col curr input row weight)
+
+(FnDeclRecursive:Function  matmul_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Lt:Bool row (matrix_length:Int weight))) (Ge:Bool col (Lit:Int 0))) (Le:Bool col (list_length:Int input))) (Eq:Bool curr (reduce_sum:Int (vec_elemwise_mul:List Int (list_take:Int (matrix_get:Int weight row) col) (list_take:List Int input col))))) (Eq:Bool agg.result (matrix_vec_mul:List Int (matrix_take:List Int weight row) input))) col curr input weight agg.result row)
+
+(FnDeclRecursive:Function  matmul_ps (Eq:Bool matmul_rv (matrix_vec_mul:List Int weight input)) weight input matmul_rv)
+
+(FnDeclRecursive:Function  MATRIX_OUTER_LOOP_INDEX_FIRST (Lit:Bool True))
+
+(FnDeclRecursive:Function  VECTOR_OUTER_LOOP_INDEX (Lit:Bool False))

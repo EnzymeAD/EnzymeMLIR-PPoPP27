@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+gemm_tt.mlir: compiling
+gemm_tt      tensorize_jax    median      1.274 ms  min      1.255 ms  compile   2.14 s  err 
+gemm_tt      enzyme_while     median      1.263 ms  min      1.254 ms  compile   0.07 s  err 0.0e+00
+wrote ./out/timings/darknet/gemm_tt.csv

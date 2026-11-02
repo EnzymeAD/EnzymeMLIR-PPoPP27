@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+syrk.mlir: compiling
+syrk         tensorize_jax    median      1.321 ms  min      1.317 ms  compile   2.32 s  err 
+syrk         enzyme_while     median      1.324 ms  min      1.317 ms  compile   0.07 s  err 0.0e+00
+wrote ./out/timings/kiriko/syrk.csv

@@ -1,0 +1,4 @@
+# Output buffers per kernel (see benchmark/polybench/outputs.txt); unlisted kernels
+# return every buffer they store to, plus their return value.
+# kernel        args      # names
+dct             arg0      # output; arg3 holds the intermediate product

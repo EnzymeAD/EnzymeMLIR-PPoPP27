@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+normal_blend_8.mlir: compiling
+normal_blend_8 tensorize_jax    median      0.061 ms  min      0.058 ms  compile   0.06 s  err 
+normal_blend_8 enzyme_while     median      0.062 ms  min      0.057 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/blend/normal_blend_8.csv

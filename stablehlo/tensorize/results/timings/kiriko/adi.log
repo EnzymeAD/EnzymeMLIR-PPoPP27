@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+adi.mlir: compiling
+adi          tensorize_jax    no synthesized program
+adi          enzyme_while     median   1333.779 ms  min   1321.822 ms  compile   0.20 s  err 
+wrote ./out/timings/kiriko/adi.csv

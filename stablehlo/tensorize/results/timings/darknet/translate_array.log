@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+translate_array.mlir: compiling
+translate_array tensorize_jax    median      0.055 ms  min      0.049 ms  compile   0.05 s  err 
+translate_array enzyme_while     median      0.055 ms  min      0.050 ms  compile   0.02 s  err 0.0e+00
+wrote ./out/timings/darknet/translate_array.csv

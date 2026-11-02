@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+lerp.mlir: compiling
+lerp         tensorize_jax    median      0.061 ms  min      0.056 ms  compile   0.06 s  err 
+lerp         enzyme_while     median      0.058 ms  min      0.056 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/mathfu/lerp.csv

@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.add(np.multiply(v2, np.transpose(np.multiply(v1, np.full([1000, 1000], 1)))), arg2)

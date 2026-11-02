@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2, arg3, arg4, arg5, arg6):
+    return np.add(np.multiply(v5, v4), np.multiply(np.tensordot(v6, v7, axes=(0, 0)), v3))

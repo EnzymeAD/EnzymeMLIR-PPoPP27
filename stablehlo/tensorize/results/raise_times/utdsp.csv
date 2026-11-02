@@ -1,0 +1,7 @@
+kernel,variant,status,raise_s
+dct,while,ok,.085360006
+fir_small,while,ok,.082774642
+histogram,while,ok,.082040890
+lmsfir1,while,ok,.084312270
+lmsfir2,while,ok,.083556956
+mult_big,while,ok,.085762686

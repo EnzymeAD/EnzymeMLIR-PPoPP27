@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+histogram.mlir: compiling
+histogram    tensorize_jax    broken: restore_sizes misses np.full([3], 0) in the return -> length 3 instead of 1000
+histogram    tensorize_numpy  broken: restore_sizes misses np.full([3], 0) in the return -> length 3 instead of 1000
+histogram    enzyme_while     median      0.059 ms  min      0.052 ms  compile   0.05 s  err 
+wrote ./out/timings/utdsp/histogram.csv

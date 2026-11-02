@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+bicg.mlir: compiling
+bicg         tensorize_jax    median      0.082 ms  min      0.078 ms  compile   0.16 s  err 
+bicg         enzyme_while     median      0.081 ms  min      0.079 ms  compile   0.11 s  err 0.0e+00
+wrote ./out/timings/polybench/bicg_1out.csv

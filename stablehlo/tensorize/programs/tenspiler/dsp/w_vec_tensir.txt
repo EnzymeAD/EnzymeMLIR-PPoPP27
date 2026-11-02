@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  w_vec_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool agg.result (vec_elemwise_add:List Int (vec_scalar_mul:List Int s (list_take:List Int a i)) (list_take:List Int b i)))) a agg.result b i ref.tmp s)
+
+(FnDeclRecursive:Function  w_vec_ps (Eq:Bool w_vec_rv (vec_elemwise_add:List Int (vec_scalar_mul:List Int s a) b)) a b s w_vec_rv)

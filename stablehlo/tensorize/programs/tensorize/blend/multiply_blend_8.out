@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.divide(arg0, np.divide(np.full([1000, 1000], 32.0), v2))

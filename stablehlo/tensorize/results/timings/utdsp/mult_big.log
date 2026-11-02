@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+mult_big.mlir: compiling
+mult_big     tensorize_jax    median      1.177 ms  min      1.176 ms  compile   2.54 s  err 
+mult_big     enzyme_while     median      1.180 ms  min      1.173 ms  compile   0.12 s  err 0.0e+00
+wrote ./out/timings/utdsp/mult_big.csv

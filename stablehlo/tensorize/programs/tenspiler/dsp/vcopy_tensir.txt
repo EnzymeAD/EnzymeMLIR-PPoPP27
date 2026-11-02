@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  vcopy_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int a))) (Eq:Bool agg.result (list_take:List Int a i))) a agg.result i)
+
+(FnDeclRecursive:Function  vcopy_ps (list_eq:Bool vcopy_rv a) a vcopy_rv)

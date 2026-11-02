@@ -1,3 +1,6 @@
 [submodule "Enzyme-JAX"]
 	path = Enzyme-JAX
 	url = https://github.com/EnzymeAD/Enzyme-JAX
+[submodule "stablehlo/tensorize/tensorize"]
+	path = stablehlo/tensorize/tensorize
+	url = https://github.com/alexanderb14/tensorize

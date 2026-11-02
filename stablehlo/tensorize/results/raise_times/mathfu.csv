@@ -1,0 +1,13 @@
+kernel,variant,status,raise_s
+diveq,while,ok,.082939140
+diveq_sca,while,ok,.084375335
+len,while,ok,.083879905
+len_sq,while,ok,.082619977
+lerp,while,ok,.082519385
+matmul_sca,while,ok,.083286226
+muleq,while,ok,.081766455
+muleq_sca,while,ok,.083484146
+negate,while,ok,.080162476
+pluseq,while,ok,.079818024
+subeq,while,ok,.081618601
+subeq_sca,while,ok,.082833881

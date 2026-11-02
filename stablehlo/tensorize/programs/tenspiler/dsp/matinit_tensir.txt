@@ -1,0 +1,5 @@
+(FnDeclRecursive:Function  matinit_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (matrix_length:Int A))) (Eq:Bool agg.result (matrix_scalar_add:List Int c (matrix_scalar_mul:List Int (Lit:Int 0) (matrix_take:List Int A i))))) A agg.result c i j row_vec)
+
+(FnDeclRecursive:Function  matinit_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Lt:Bool i (matrix_length:Int A))) (Ge:Bool j (Lit:Int 0))) (Le:Bool j (list_length:Int (matrix_get:Int A (Lit:Int 0))))) (Eq:Bool row_vec (vec_scalar_add:List Int c (vec_scalar_mul:List Int (Lit:Int 0) (list_take:Int (matrix_get:Int A i) j))))) (Eq:Bool agg.result (matrix_scalar_add:List Int c (matrix_scalar_mul:List Int (Lit:Int 0) (matrix_take:List Int A i))))) A c j row_vec agg.result i)
+
+(FnDeclRecursive:Function  matinit_ps (Eq:Bool matinit_rv (matrix_scalar_add:List Int c (matrix_scalar_mul:List Int (Lit:Int 0) A))) A c matinit_rv)

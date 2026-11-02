@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+atax,tensorize_jax,no synthesized program,,,,,,,
+atax,enzyme_while,ok,0.1718329330906272,0.35257404670119286,0.3147665411233902,,,0.3424414901924873,0.435851 0.353195 0.352854 0.352294 0.314767

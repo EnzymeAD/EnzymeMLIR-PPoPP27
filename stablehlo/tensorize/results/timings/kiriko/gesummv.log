@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+gesummv.mlir: compiling
+gesummv      tensorize_jax    median      0.244 ms  min      0.227 ms  compile   0.18 s  err 
+gesummv      enzyme_while     median      0.236 ms  min      0.229 ms  compile   0.05 s  err 2.4e-16
+wrote ./out/timings/kiriko/gesummv.csv

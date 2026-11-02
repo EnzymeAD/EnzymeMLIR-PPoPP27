@@ -1,0 +1,4 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+darken_blend_8,tensorize_jax,"broken: synthesized where(a, b, a > b) instead of where(a > b, b, a)",,,,,,,
+darken_blend_8,tensorize_numpy,"broken: synthesized where(a, b, a > b) instead of where(a > b, b, a)",,,,,,,
+darken_blend_8,enzyme_while,ok,0.057212838903069496,0.07410673424601555,0.06175413727760315,,,0.07923171675106187,0.186392 0.149587 0.0851983 0.0630151 0.0617541

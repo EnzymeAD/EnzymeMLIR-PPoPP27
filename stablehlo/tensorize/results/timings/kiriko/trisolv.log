@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+trisolv.mlir: compiling
+trisolv      tensorize_jax    no synthesized program
+trisolv      enzyme_while     median  77943.543 ms  min  76709.900 ms  compile   0.25 s  err 
+wrote ./out/timings/kiriko/trisolv.csv

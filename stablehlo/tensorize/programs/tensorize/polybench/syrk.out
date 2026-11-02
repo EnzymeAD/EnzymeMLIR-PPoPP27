@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2, arg3, arg4, arg5):
+    return np.where(np.tri(5, dtype=bool), np.add(np.multiply(v5, v4), np.multiply(np.tensordot(v6, v6, axes=(1, 1)), v3)), arg4)

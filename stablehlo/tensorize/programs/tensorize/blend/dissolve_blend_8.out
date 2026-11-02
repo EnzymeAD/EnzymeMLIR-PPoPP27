@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2, arg3):
+    return np.add(np.subtract(v3, np.full([1000, 1000], 100.0)), np.subtract(np.add(np.add(np.divide(np.subtract(np.full([1000, 1000], 0), v4), np.full([1000, 1000], 100.0)), np.remainder(v4, np.full([1000, 1000], 100.0))), v4), np.remainder(np.full([1000, 1000], -0.01), np.full([1000, 1000], 100.0))))

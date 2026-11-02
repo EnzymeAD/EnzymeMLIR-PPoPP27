@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+durbin.mlir: compiling
+durbin       tensorize_jax    no synthesized program
+durbin       enzyme_while     median 157860.798 ms  min 157594.971 ms  compile   0.23 s  err 
+wrote ./out/timings/kiriko/durbin.csv

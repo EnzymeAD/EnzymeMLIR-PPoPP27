@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.tensordot(arg1, arg0, axes=(1, 1))

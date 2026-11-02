@@ -1,0 +1,2 @@
+def foo(arg0, arg1, arg2):
+    return np.multiply(np.multiply(np.divide(1, np.sqrt(np.add(1, np.divide(v3, 3.0)))), v2), arg0)

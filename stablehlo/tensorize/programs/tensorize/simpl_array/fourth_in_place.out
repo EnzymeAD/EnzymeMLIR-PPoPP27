@@ -1,0 +1,2 @@
+def foo(arg0):
+    return np.power(arg0, np.full([1000], 4.0))

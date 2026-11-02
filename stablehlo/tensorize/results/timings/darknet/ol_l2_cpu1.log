@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+ol_l2_cpu1.mlir: compiling
+ol_l2_cpu1   tensorize_jax    broken: synthesized 2 ** (a - b) instead of (b - a) ** 2
+ol_l2_cpu1   tensorize_numpy  broken: synthesized 2 ** (a - b) instead of (b - a) ** 2
+ol_l2_cpu1   enzyme_while     median      0.071 ms  min      0.064 ms  compile   0.06 s  err 
+wrote ./out/timings/darknet/ol_l2_cpu1.csv

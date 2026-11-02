@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+jacobi-2d-imper,tensorize_jax,no synthesized program,,,,,,,
+jacobi-2d-imper,enzyme_while,ok,0.14877297449856997,0.5816761404275894,0.5775345489382744,,,0.5828842325435476,0.647931 0.590864 0.585527 0.577825 0.577535

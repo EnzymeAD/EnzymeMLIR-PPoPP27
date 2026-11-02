@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+gesummv.mlir: compiling
+gesummv      tensorize_jax    median      0.082 ms  min      0.079 ms  compile   0.14 s  err 
+gesummv      enzyme_while     median      0.077 ms  min      0.069 ms  compile   0.05 s  err 3.7e-16
+wrote ./out/timings/polybench/gesummv.csv

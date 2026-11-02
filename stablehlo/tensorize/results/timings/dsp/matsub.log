@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+matsub.mlir: compiling
+matsub       tensorize_jax    median      0.057 ms  min      0.051 ms  compile   0.06 s  err 
+matsub       enzyme_while     median      0.056 ms  min      0.051 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/dsp/matsub.csv

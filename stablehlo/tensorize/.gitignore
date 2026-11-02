@@ -1,0 +1,5 @@
+build/
+out/
+__pycache__/
+tenspiler_ports/*/cpp/*.ll
+tenspiler_ports/*/cpp/*.loops

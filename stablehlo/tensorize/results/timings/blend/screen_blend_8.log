@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+screen_blend_8.mlir: compiling
+screen_blend_8 tensorize_jax    median      0.058 ms  min      0.051 ms  compile   0.06 s  err 
+screen_blend_8 enzyme_while     median      0.055 ms  min      0.051 ms  compile   0.03 s  err 2.9e-16
+wrote ./out/timings/blend/screen_blend_8.csv

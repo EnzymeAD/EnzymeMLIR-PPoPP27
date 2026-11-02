@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  transformer_part4_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i hidden_dim)) (Eq:Bool agg.result (vec_elemwise_mul:List Int (list_take:List Int input1 i) (list_take:List Int input2 i)))) agg.result hidden_dim i input1 input2 ref.tmp)
+
+(FnDeclRecursive:Function  transformer_part4_ps (Eq:Bool transformer_part4_rv (vec_elemwise_mul:List Int (list_take:List Int input1 hidden_dim) (list_take:List Int input2 hidden_dim))) input1 input2 hidden_dim transformer_part4_rv)

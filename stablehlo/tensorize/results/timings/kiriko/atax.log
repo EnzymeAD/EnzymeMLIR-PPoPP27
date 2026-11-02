@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+atax.mlir: compiling
+atax         tensorize_jax    no synthesized program
+atax         enzyme_while     median      0.353 ms  min      0.315 ms  compile   0.17 s  err 
+wrote ./out/timings/kiriko/atax.csv

@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+vscal.mlir: compiling
+vscal        tensorize_jax    median      0.066 ms  min      0.062 ms  compile   0.05 s  err 
+vscal        enzyme_while     median      0.066 ms  min      0.062 ms  compile   0.03 s  err 0.0e+00
+wrote ./out/timings/dsp/vscal.csv

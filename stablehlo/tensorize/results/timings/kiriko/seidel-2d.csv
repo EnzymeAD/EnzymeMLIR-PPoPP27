@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+seidel-2d,tensorize_jax,no synthesized program,,,,,,,
+seidel-2d,enzyme_while,ok,0.17968003917485476,165124.2799074389,160866.68987758458,,,170136.19679000915,162199 192984 160867 164198 166050

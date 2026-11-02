@@ -1,0 +1,4 @@
+# Kernels whose Tensorize-synthesized program is wrong (checked against a NumPy version
+# of the loop), with the reason. compare_suite.py reports their tensorize_* variants as broken.
+# kernel   reason
+pin_down           restore_sizes misses np.full([3], 1) in the return -> length 3 instead of 1000

@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+seidel-2d.mlir: compiling
+seidel-2d    tensorize_jax    no synthesized program
+seidel-2d    enzyme_while     median 165124.280 ms  min 160866.690 ms  compile   0.18 s  err 
+wrote ./out/timings/kiriko/seidel-2d.csv

@@ -1,0 +1,7 @@
+(FnDeclRecursive:Function  multiply_blend_8_inv0 (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Le:Bool row (matrix_length:Int base))) (Eq:Bool agg.result (matrix_scalar_div:List Int (Lit:Int 32) (matrix_elemwise_mul:List Int (matrix_take:List Int base row) (matrix_take:List Int active row))))) active agg.result base col pixel row row_vec)
+
+(FnDeclRecursive:Function  multiply_blend_8_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool row (Lit:Int 0)) (Le:Bool row (matrix_length:Int base))) (Ge:Bool col (Lit:Int 0))) (Le:Bool col (list_length:Int (matrix_get:Int base (Lit:Int 0))))) (Eq:Bool row_vec (vec_scalar_div:List Int (Lit:Int 32) (vec_elemwise_mul:List Int (list_take:Int (matrix_get:Int base row) col) (list_take:Int (matrix_get:Int active row) col))))) (Eq:Bool agg.result (matrix_scalar_div:List Int (Lit:Int 32) (matrix_elemwise_mul:List Int (matrix_take:List Int base row) (matrix_take:List Int active row))))) active base col pixel row_vec agg.result row)
+
+(FnDeclRecursive:Function  multiply_blend_8_ps (Eq:Bool multiply_blend_8_rv (matrix_scalar_div:List Int (Lit:Int 32) (matrix_elemwise_mul:List Int base active))) base active multiply_blend_8_rv)
+
+(FnDeclRecursive:Function  OUTER_LOOP_INDEX_FIRST (Lit:Bool True))

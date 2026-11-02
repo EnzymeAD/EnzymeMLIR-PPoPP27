@@ -1,0 +1,16 @@
+kernel,variant,status,raise_s
+matadd,while,ok,.079509647
+matinit,while,ok,.078225583
+matmul,while,ok,.083439418
+matscal,while,ok,.083487210
+matsub,while,ok,.084815582
+vadd,while,ok,.082031656
+vcopy,while,ok,.081390225
+vfill,while,ok,.079592373
+vmul,while,ok,.081899486
+vneg,while,ok,.083223281
+voffset,while,ok,.082030905
+vrecip,while,ok,.085213775
+vscal,while,ok,.087001412
+vsub,while,ok,.081374852
+w_vec,while,ok,.083363584

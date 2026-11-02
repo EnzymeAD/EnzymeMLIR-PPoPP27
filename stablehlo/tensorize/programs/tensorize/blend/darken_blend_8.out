@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.where(arg0, arg1, np.greater(v1, v2))

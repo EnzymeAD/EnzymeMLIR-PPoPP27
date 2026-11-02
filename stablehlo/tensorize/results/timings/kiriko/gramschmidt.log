@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+gramschmidt.mlir: compiling
+gramschmidt  tensorize_jax    no synthesized program
+gramschmidt  enzyme_while     median      7.711 ms  min      7.707 ms  compile   0.25 s  err 
+wrote ./out/timings/kiriko/gramschmidt.csv

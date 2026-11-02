@@ -1,0 +1,5 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+mat1x3.mlir: compiling
+mat1x3       tensorize_jax    median      0.058 ms  min      0.057 ms  compile   0.13 s  err 
+mat1x3       enzyme_while     median      0.057 ms  min      0.053 ms  compile   0.04 s  err 0.0e+00
+wrote ./out/timings/dspstone/mat1x3.csv

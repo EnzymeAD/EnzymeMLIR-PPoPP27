@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+pin_down.mlir: compiling
+pin_down     tensorize_jax    broken: restore_sizes misses np.full([3], 1) in the return -> length 3 instead of 1000
+pin_down     tensorize_numpy  broken: restore_sizes misses np.full([3], 1) in the return -> length 3 instead of 1000
+pin_down     enzyme_while     median      0.057 ms  min      0.054 ms  compile   0.05 s  err 
+wrote ./out/timings/dspstone/pin_down.csv

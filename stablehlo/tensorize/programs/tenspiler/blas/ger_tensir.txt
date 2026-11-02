@@ -1,0 +1,5 @@
+(FnDeclRecursive:Function  ger_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (matrix_length:Int A))) (Eq:Bool agg.result (matrix_elemwise_add:List Int (matrix_take:List Int A i) (vec_outer:List Int (list_take:List Int x i) y)))) A agg.result i j ref.tmp row_vec x y)
+
+(FnDeclRecursive:Function  ger_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Lt:Bool i (matrix_length:Int A))) (Ge:Bool j (Lit:Int 0))) (Le:Bool j (list_length:Int (matrix_get:Int A (Lit:Int 0))))) (Eq:Bool row_vec (vec_elemwise_add:List Int (list_take:Int (matrix_get:Int A i) j) (vec_scalar_mul:List Int (list_get:Int x i) (list_take:List Int y j))))) (Eq:Bool agg.result (matrix_elemwise_add:List Int (matrix_take:List Int A i) (vec_outer:List Int (list_take:List Int x i) y)))) A j ref.tmp row_vec x y agg.result i)
+
+(FnDeclRecursive:Function  ger_ps (Eq:Bool ger_rv (matrix_elemwise_add:List Int A (matrix_transpose:List Int (vec_outer:List Int y x)))) A x y ger_rv)

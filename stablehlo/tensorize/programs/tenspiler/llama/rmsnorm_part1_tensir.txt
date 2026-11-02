@@ -1,0 +1,3 @@
+(FnDeclRecursive:Function  rmsnorm_part1_inv0 (And:Bool (And:Bool (Ge:Bool i (Lit:Int 0)) (Le:Bool i (list_length:Int input))) (Eq:Bool ss (reduce_sum:Int (vec_elemwise_mul:List Int (list_take:List Int input i) (list_take:List Int input i))))) i input ss weight)
+
+(FnDeclRecursive:Function  rmsnorm_part1_ps (Eq:Bool rmsnorm_part1_rv (reduce_sum:Int (vec_elemwise_mul:List Int input input))) input weight rmsnorm_part1_rv)

@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.multiply(arg0, arg1)

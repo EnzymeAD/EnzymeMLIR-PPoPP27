@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+lighten_blend_8.mlir: compiling
+lighten_blend_8 tensorize_jax    broken: synthesized where(a, b, a < b) instead of where(a < b, b, a)
+lighten_blend_8 tensorize_numpy  broken: synthesized where(a, b, a < b) instead of where(a < b, b, a)
+lighten_blend_8 enzyme_while     median      0.065 ms  min      0.062 ms  compile   0.06 s  err 
+wrote ./out/timings/blend/lighten_blend_8.csv

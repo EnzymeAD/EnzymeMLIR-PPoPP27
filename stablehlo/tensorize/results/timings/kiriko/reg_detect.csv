@@ -1,0 +1,3 @@
+kernel,variant,status,compile_s,median_ms,min_ms,err_vs_tensorize,err_vs_while,hmean_ms,samples_ms
+reg_detect,tensorize_jax,no synthesized program,,,,,,,
+reg_detect,enzyme_while,ok,0.18560469150543213,432.6450815424323,430.35172391682863,,,432.53904985511923,442.389 434.321 430.352 434.548 430.97

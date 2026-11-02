@@ -1,0 +1,6 @@
+kernel,variant,status,raise_s
+mat1x3,while,ok,.085217651
+matrix1,while,ok,.085196860
+matrix2,while,ok,.087136937
+n_real_updates,while,ok,.080669324
+pin_down,while,ok,.082563251

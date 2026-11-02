@@ -1,0 +1,15 @@
+(FnDeclRecursive:Function  transformer_part1_inv0 (And:Bool (And:Bool (Ge:Bool timestep (Lit:Int 0)) (Le:Bool timestep token_position)) (Eq:Bool agg.result (vec_scalar_div:List Int (integer_sqrt:Int (SQRT_ARG_FN:Int token_position head1 head_size)) (matrix_vec_mul:List Int (matrix_col_slice:List Int (matrix_row_slice:List Int key_cache_layer (Lit:Int 0) timestep) (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size)) (vec_slice:List Int q (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size)))))) agg.result head1 head_size i key_cache_layer q score timestep token_position)
+
+(FnDeclRecursive:Function  transformer_part1_inv1 (And:Bool (And:Bool (And:Bool (And:Bool (And:Bool (Ge:Bool timestep (Lit:Int 0)) (Lt:Bool timestep token_position)) (Ge:Bool i (Lit:Int 0))) (Le:Bool i head_size)) (Eq:Bool score (reduce_sum:Int (vec_elemwise_mul:List Int (vec_slice:Int (matrix_get:Int key_cache_layer timestep) (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) i)) (vec_slice:List Int q (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) i)))))) (Eq:Bool agg.result (vec_scalar_div:List Int (integer_sqrt:Int (SQRT_ARG_FN:Int token_position head1 head_size)) (matrix_vec_mul:List Int (matrix_col_slice:List Int (matrix_row_slice:List Int key_cache_layer (Lit:Int 0) timestep) (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size)) (vec_slice:List Int q (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size)))))) head1 head_size i key_cache_layer q score token_position agg.result timestep)
+
+(FnDeclRecursive:Function  transformer_part1_ps (Eq:Bool transformer_part1_rv (vec_scalar_div:List Int (integer_sqrt:Int (SQRT_ARG_FN:Int token_position head1 head_size)) (matrix_vec_mul:List Int (matrix_col_slice:List Int (matrix_row_slice:List Int key_cache_layer (Lit:Int 0) token_position) (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (MATRIX_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size)) (vec_slice:List Int q (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) (Add:Int (VEC_COMPOSED_INDEX_FN:Int token_position head1 head_size) head_size))))) token_position head1 head_size key_cache_layer q transformer_part1_rv)
+
+(FnDeclRecursive:Function  VEC_COMPOSED_INDEX_FN (Mul:Int head1 head_size) token_position head1 head_size)
+
+(FnDeclRecursive:Function  SQRT_ARG_FN (Mul:Int (Lit:Int 1) head_size) token_position head1 head_size)
+
+(FnDeclRecursive:Function  MATRIX_COMPOSED_INDEX_FN (Mul:Int head1 head_size) token_position head1 head_size)
+
+(FnDeclRecursive:Function  MATRIX_OUTER_LOOP_INDEX_FIRST (Lit:Bool True))
+
+(FnDeclRecursive:Function  VECTOR_OUTER_LOOP_INDEX (Lit:Bool False))

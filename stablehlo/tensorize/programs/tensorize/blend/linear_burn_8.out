@@ -1,0 +1,2 @@
+def foo(arg0, arg1):
+    return np.add(np.subtract(v1, np.full([1000, 1000], 32.0)), arg1)

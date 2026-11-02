@@ -1,0 +1,6 @@
+jax 0.11.2 on [CudaDevice(id=0)], pinned to 192 CPUs
+syr2k.mlir: compiling
+syr2k        tensorize_jax    broken: restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200
+syr2k        tensorize_numpy  broken: restore_sizes misses np.tri(5) -> mask stays 5x5 instead of 1200x1200
+syr2k        enzyme_while     median     16.615 ms  min     16.573 ms  compile   0.17 s  err 
+wrote ./out/timings/polybench/syr2k.csv
