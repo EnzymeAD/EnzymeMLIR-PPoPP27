@@ -32,6 +32,11 @@ RUN curl -fLO https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/b
     mv bazelisk-linux-amd64 .local/bin/bazel && \
     chmod +x .local/bin/bazel
 
+# Install Julia
+RUN wget https://julialang-s3.julialang.org/bin/linux/x64/1.11/julia-1.11.9-linux-x86_64.tar.gz
+RUN tar zxvf julia-1.7.3-linux-x86_64.tar.gz
+ENV PATH "$PATH:$HOME/julia-1.11.9/bin/"
+
 # Build Clang and MLIR (for EnzymeLLVM)
 RUN git clone https://github.com/llvm/llvm-project.git \
   && cd llvm-project \
