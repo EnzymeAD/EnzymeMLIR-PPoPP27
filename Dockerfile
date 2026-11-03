@@ -62,20 +62,19 @@ RUN mkdir Reactant/build && cd Reactant/build \
   && ninja -j $NJOBS \
   && cd ../..
 
-RUN python3 -m venv eval-env
-
-# Activate the Python virtual environment
-ENV PATH="$HOME/eval-env/bin:$PATH"
-
-# TODO move environment to a `requirements.txt` file (use pip freeze)
-# RUN pip install numpy==1.26.4 scipy==1.14.1 pandas==2.2.2 matplotlib==3.9.1.post1 "jax[cuda12]"
-RUN pip install -r requirements.txt
-
 # Build Enzyme-JAX (This builds EnzymeMLIR with a plugins for both Reactant and JAX)
 RUN git clone https://github.com/EnzymeAD/Enzyme-JAX \
   && cd Enzyme-JAX \
   && git checkout 5ff3f33
 RUN cd Enzyme-JAX && CC=clang-18 HERMETIC_PYTHON_VERSION=3.12 bazel build :wheel :libRaise.so --jobs=$NJOBS
+
+# Activate the Python virtual environment
+RUN python3 -m venv eval-env
+ENV PATH="$HOME/eval-env/bin:$PATH"
+
+# TODO move environment to a `requirements.txt` file (use pip freeze)
+# RUN pip install numpy==1.26.4 scipy==1.14.1 pandas==2.2.2 matplotlib==3.9.1.post1 "jax[cuda12]"
+RUN pip install -r requirements.txt
 
 COPY . $HOME
 RUN sudo chown -R $USERNAME cpp
