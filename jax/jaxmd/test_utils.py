@@ -356,13 +356,17 @@ class EnzymeJaxTest(absltest.TestCase):
         self.results = []
         self.skip_test_assert = False
 
-    def pretty_print_table(self, name, pname, backend, key, time):
-        print_str = "{:<20}\t{:<20}\t{:<15}\t{:<10}\t{:<15.8f}".format(
-            name, pname, backend, key, time
+    def pretty_print_table(self, name, pname, backend, key, timings):
+        avg_time_s = timings["avg_time_s"]
+        stdev_time_s = timings["stdev_time_s"]
+        min_time_s = timings["min_time_s"]
+        max_time_s = timings["max_time_s"]
+        print_str = "{:<20}\t{:<20}\t{:<15}\t{:<10}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}".format(
+            name, pname, backend, key, avg_time_s, stdev_time_s, min_time_s, max_time_s
         )
         print(print_str, flush=True)
 
-        result_str = "{}\t{}\t{}\t{}\t{}".format(name, pname, backend, key, time)
+        result_str = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(name, pname, backend, key, avg_time_s, stdev_time_s, min_time_s, max_time_s)
         self.results.append(result_str)
 
     def write_results_csv(self, filename=""):
@@ -377,7 +381,7 @@ class EnzymeJaxTest(absltest.TestCase):
         with open(outfile, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(
-                ["Benchmark Name", "Pass Pipeline", "Backend", "Key", "Time"]
+                ["Benchmark Name", "Pass Pipeline", "Backend", "Key", "Avg Time", "stdev Time", "Min Time", "Max Time"]
             )
             for line in self.results:
                 writer.writerow(line.split("\t"))
@@ -450,11 +454,10 @@ class EnzymeJaxTest(absltest.TestCase):
                     else:
                         recursive_check(self, ao, primres, "Primal " + pname)
 
-                    runtime = profile_compiled_function(
+                    timings = profile_compiled_function(
                         rfn_enzyme, ins_backend, nrepeat=self.repeat
-                    )["avg_time_s"]
-                    self.pretty_print_table(name, pname, backend, "Primal", runtime)
-
+                    )
+                    self.pretty_print_table(name, pname, backend, "Primal", timings)
             # assert primres is not None
             fwdres = None
 
@@ -497,11 +500,11 @@ class EnzymeJaxTest(absltest.TestCase):
                         else:
                             recursive_check(self, tangents, fwdres, "Forward " + pname)
 
-                        runtime = profile_compiled_function(
+                        timings = profile_compiled_function(
                             fwd_enzyme, all_ins, nrepeat=self.repeat
-                        )["avg_time_s"]
+                        )
                         self.pretty_print_table(
-                            name, pname, backend, "Forward", runtime
+                            name, pname, backend, "Forward", timings
                         )
 
             # assert fwdres is not None
@@ -552,11 +555,11 @@ class EnzymeJaxTest(absltest.TestCase):
                             else:
                                 recursive_check(self, grads, revres, "Reverse " + pname)
 
-                            runtime = profile_compiled_function(
+                            timings = profile_compiled_function(
                                 rev_enzyme, all_ins, nrepeat=self.repeat
-                            )["avg_time_s"]
+                            )
                             self.pretty_print_table(
-                                name, pname, backend, "PreRev", runtime
+                                name, pname, backend, "PreRev", timings
                             )
 
                         rfn_enzyme = in_fn
@@ -597,11 +600,11 @@ class EnzymeJaxTest(absltest.TestCase):
                         else:
                             recursive_check(self, grads, revres)
 
-                        runtime = profile_compiled_function(
+                        timings = profile_compiled_function(
                             rev_enzyme, all_ins, nrepeat=self.repeat
-                        )["avg_time_s"]
+                        )
                         self.pretty_print_table(
-                            name, pname, backend, "PostRev", runtime
+                            name, pname, backend, "PostRev", timings
                         )
 
                     if pipeline is None or (pipeline.mlir_ad() and self.mlirad_rev):
@@ -649,11 +652,11 @@ class EnzymeJaxTest(absltest.TestCase):
                         else:
                             recursive_check(self, grads, revres)
 
-                        runtime = profile_compiled_function(
+                        timings = profile_compiled_function(
                             rev_enzyme, all_ins, nrepeat=self.repeat
-                        )["avg_time_s"]
+                        )
                         self.pretty_print_table(
-                            name, pname, backend, "BothRev", runtime
+                            name, pname, backend, "BothRev", timings
                         )
 
 

@@ -7,6 +7,7 @@ import tempfile
 import timeit
 import warnings
 from typing import Any, Callable
+from statistics import mean, stdev
 
 try:
     from xprof.convert.raw_to_tool_data import xspace_to_tool_data
@@ -91,63 +92,68 @@ def profile_compiled_function(
     if kwargs is None:
         kwargs = {}
 
-    if not XPROF_AVAILABLE:
-        warnings.warn("xprof not found, falling back to timeit for profiling.")
+    # if not XPROF_AVAILABLE:
+        # warnings.warn("xprof not found, falling back to timeit for profiling.")
         # Fallback to timeit
-        times = []
-        for _ in range(nrepeat):
-            start = timeit.default_timer()
-            jax.block_until_ready(compiled_fn(*args, **kwargs))
-            end = timeit.default_timer()
-            times.append(end - start)
+    times = []
+    for _ in range(nrepeat):
+        start = timeit.default_timer()
+        jax.block_until_ready(compiled_fn(*args, **kwargs))
+        end = timeit.default_timer()
+        times.append(end - start)
 
-        min_time_s = min(times)
-        return {
-            "min_time_us": min_time_s * 1e6,
-            "min_time_ms": min_time_s * 1e3,
-            "min_time_s": min_time_s,
-            "avg_time_s": sum(times) / len(times),
-            "nrepeat": nrepeat,
-            "trace_dir": None,
-            "xplane_file": None,
-        }
-
-    # Create trace directory
-    if trace_dir is None:
-        trace_dir = tempfile.mkdtemp(prefix="jax_profile_")
-
-    # Profile the function with step annotations for proper wall-clock timing
-    with jax.profiler.trace(trace_dir):
-        for i in range(nrepeat):
-            # Use StepTraceAnnotation to mark each iteration as a step
-            # This allows xprof to compute proper wall-clock step times
-            with jax.profiler.StepTraceAnnotation("step", step_num=i):
-                jax.block_until_ready(compiled_fn(*args, **kwargs))
-
-    # Find the xplane.pb file
-    xplane_pattern = os.path.join(trace_dir, "plugins/profile/*/*.xplane.pb")
-    xplane_files = glob.glob(xplane_pattern)
-
-    if not xplane_files:
-        raise RuntimeError(
-            f"No xplane.pb file found in {trace_dir}. "
-            "Make sure the function executed on a device."
-        )
-
-    xplane_file = xplane_files[0]  # Take the most recent one
-
-    # Extract timing data
-    min_time_ms = extract_min_step_time([xplane_file], nrepeat)
-
+    min_time_s = min(times)
+    max_time_s = max(times)
+    avg_time_s = mean(times)
+    stdev_time_s = stdev(times)
     return {
-        "min_time_us": min_time_ms * 1000.0,
-        "min_time_ms": min_time_ms,
-        "min_time_s": min_time_ms / 1000.0,
-        "avg_time_s": min_time_ms / 1000.0,  # For compatibility with test harness
+        "min_time_us": min_time_s * 1e6,
+        "min_time_ms": min_time_s * 1e3,
+        "min_time_s": min_time_s,
+        "max_time_s": max_time_s,
+        "avg_time_s": avg_time_s,
+        "stdev_time_s": stdev_time_s,
         "nrepeat": nrepeat,
-        "trace_dir": trace_dir,
-        "xplane_file": xplane_file,
+        "trace_dir": None,
+        "xplane_file": None,
     }
+
+    # # Create trace directory
+    # if trace_dir is None:
+    #     trace_dir = tempfile.mkdtemp(prefix="jax_profile_")
+
+    # # Profile the function with step annotations for proper wall-clock timing
+    # with jax.profiler.trace(trace_dir):
+    #     for i in range(nrepeat):
+    #         # Use StepTraceAnnotation to mark each iteration as a step
+    #         # This allows xprof to compute proper wall-clock step times
+    #         with jax.profiler.StepTraceAnnotation("step", step_num=i):
+    #             jax.block_until_ready(compiled_fn(*args, **kwargs))
+
+    # # Find the xplane.pb file
+    # xplane_pattern = os.path.join(trace_dir, "plugins/profile/*/*.xplane.pb")
+    # xplane_files = glob.glob(xplane_pattern)
+
+    # if not xplane_files:
+    #     raise RuntimeError(
+    #         f"No xplane.pb file found in {trace_dir}. "
+    #         "Make sure the function executed on a device."
+    #     )
+
+    # xplane_file = xplane_files[0]  # Take the most recent one
+
+    # # Extract timing data
+    # min_time_ms = extract_min_step_time([xplane_file], nrepeat)
+
+    # return {
+    #     "min_time_us": min_time_ms * 1000.0,
+    #     "min_time_ms": min_time_ms,
+    #     "min_time_s": min_time_ms / 1000.0,
+    #     "avg_time_s": min_time_ms / 1000.0,  # For compatibility with test harness
+    #     "nrepeat": nrepeat,
+    #     "trace_dir": trace_dir,
+    #     "xplane_file": xplane_file,
+    # }
 
 
 def extract_min_step_time(xplane_files: list[str], nrepeat: int) -> float:
@@ -219,10 +225,3 @@ def extract_min_step_time_from_overview_data(
 
     # Return minimum step time for benchmarking (best case)
     return min(step_times_ms)
-
-
-def print_runtime_summary(result: dict) -> None:
-    """Pretty print the runtime summary."""
-    print(
-        f"Min Runtime: {result['min_time_ms']:.6f} ms ({result['min_time_us']:.3f} μs)"
-    )
