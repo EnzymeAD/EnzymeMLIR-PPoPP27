@@ -1,0 +1,3 @@
+data/mpas_nmc_case_*.npz
+results/
+.venv/

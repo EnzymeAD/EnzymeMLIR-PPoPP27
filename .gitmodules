@@ -1,3 +1,6 @@
 [submodule "Enzyme-JAX"]
 	path = Enzyme-JAX
 	url = https://github.com/EnzymeAD/Enzyme-JAX
+[submodule "jax/legoESM-MPAS-4DVar/legoESM"]
+	path = jax/legoESM-MPAS-4DVar/legoESM
+	url = https://github.com/climate-federation/legoESM.git
