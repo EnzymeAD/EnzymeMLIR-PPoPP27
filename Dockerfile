@@ -72,8 +72,7 @@ RUN cd Enzyme-JAX && CC=clang-18 HERMETIC_PYTHON_VERSION=3.12 bazel build :wheel
 RUN python3 -m venv eval-env
 ENV PATH="$HOME/eval-env/bin:$PATH"
 
-# TODO move environment to a `requirements.txt` file (use pip freeze)
-# RUN pip install numpy==1.26.4 scipy==1.14.1 pandas==2.2.2 matplotlib==3.9.1.post1 "jax[cuda12]"
+# Install Python dependencies
 RUN pip install -r requirements.txt
 RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
 
