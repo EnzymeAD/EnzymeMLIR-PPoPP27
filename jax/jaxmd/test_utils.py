@@ -1,0 +1,664 @@
+import os
+import subprocess
+import tempfile
+import ctypes
+import glob
+import platform
+
+
+def _has_cuda():
+    """Check if CUDA is available by running nvidia-smi."""
+    try:
+        subprocess.run(
+            ["nvidia-smi"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,
+        )
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+import jax.numpy as jnp  # noqa: E402
+import jax  # noqa: E402
+
+from absl.testing import absltest  # noqa: E402
+
+def get_cpp_include_args():
+    cpp_dir = "/usr/include/c++"
+    if not os.path.isdir(cpp_dir):
+        return ()
+
+    versions = [d for d in os.listdir(cpp_dir) if d.isdigit()]
+    if not versions:
+        return ()
+
+    latest_version = sorted(versions, key=int)[-1]
+    paths = [os.path.join(cpp_dir, latest_version)]
+
+    arch_dirs = glob.glob(f"/usr/include/*-linux-gnu/c++/{latest_version}")
+    if arch_dirs:
+        paths.append(arch_dirs[0])
+    else:
+        # Fallback to checking for specific known dirs if glob fails
+        arch = platform.machine()
+        if arch == "x86_64" and os.path.isdir(
+            f"/usr/include/x86_64-linux-gnu/c++/{latest_version}"
+        ):
+            paths.append(f"/usr/include/x86_64-linux-gnu/c++/{latest_version}")
+        elif arch == "aarch64" and os.path.isdir(
+            f"/usr/include/aarch64-linux-gnu/c++/{latest_version}"
+        ):
+            paths.append(f"/usr/include/aarch64-linux-gnu/c++/{latest_version}")
+
+    return tuple(f"-I{p}" for p in paths)
+
+
+argv = get_cpp_include_args()
+
+
+CurBackends = []
+AllBackends = []
+backends_initialized = False
+
+
+def setup_backends():
+    global backends_initialized, CurBackends, AllBackends
+
+    if backends_initialized:
+        return
+
+    backends = list(jax._src.xla_bridge.backends().keys())
+    AllBackends.extend(backends)
+    def_backend = jax.default_backend()
+    if def_backend == "gpu" and def_backend not in AllBackends:
+        CurBackends.append("cuda")
+    else:
+        CurBackends.append(def_backend)
+    backends_initialized = True
+
+
+partialopt = (
+    "inline{default-pipeline=canonicalize max-iterations=4}," + """canonicalize,cse,
+enzyme-hlo-generate-td{
+            patterns=compare_op_canon<16>;
+transpose_transpose<16>;
+broadcast_in_dim_op_canon<16>;
+convert_op_canon<16>;
+dynamic_broadcast_in_dim_op_not_actually_dynamic<16>;
+chained_dynamic_broadcast_in_dim_canonicalization<16>;
+dynamic_broadcast_in_dim_all_dims_non_expanding<16>;
+noop_reduce_op_canon<16>;
+empty_reduce_op_canon<16>;
+dynamic_reshape_op_canon<16>;
+get_tuple_element_op_canon<16>;
+real_op_canon<16>;
+imag_op_canon<16>;
+get_dimension_size_op_canon<16>;
+gather_op_canon<16>;
+reshape_op_canon<16>;
+merge_consecutive_reshapes<16>;
+transpose_is_reshape<16>;
+zero_extent_tensor_canon<16>;
+reorder_elementwise_and_shape_op<16>;
+
+cse_broadcast_in_dim<16>;
+cse_slice<16>;
+cse_transpose<16>;
+cse_convert<16>;
+cse_pad<16>;
+cse_dot_general<16>;
+cse_reshape<16>;
+cse_mul<16>;
+cse_div<16>;
+cse_add<16>;
+cse_subtract<16>;
+cse_min<16>;
+cse_max<16>;
+cse_neg<16>;
+cse_concatenate<16>;
+
+concatenate_op_canon<16>(1024);
+select_op_canon<16>(1024);
+add_simplify<16>;
+sub_simplify<16>;
+and_simplify<16>;
+reduce_or_and_pad;
+max_simplify<16>;
+min_simplify<16>;
+or_simplify<16>;
+mul_simplify<16>;
+div_simplify<16>;
+rem_simplify<16>;
+pow_simplify<16>;
+noop_slice<16>;
+const_prop_through_barrier<16>;
+slice_slice<16>;
+shift_right_logical_simplify<16>;
+pad_simplify<16>(1024);
+negative_pad_to_slice<16>;
+slice_simplify<16>;
+convert_simplify<16>;
+dynamic_slice_to_static<16>;
+dynamic_update_slice_elim<16>;
+concat_to_broadcast<16>;
+reduce_to_reshape<16>;
+broadcast_to_reshape<16>;
+iota_simplify<16>(1024);
+broadcast_in_dim_simplify<16>(1024);
+convert_concat<1>;
+dynamic_update_to_concat<1>;
+slice_of_dynamic_update<1>;
+slice_elementwise<1>;
+slice_pad<1>;
+dot_reshape_dot<1>;
+concat_const_prop<1>(1024);
+reduce_or_and;
+concat_fuse<1>;
+pad_reshape_pad<1>;
+pad_pad<1>;
+concat_push_binop_add<1>;
+concat_push_binop_mul<1>;
+scatter_to_dynamic_update_slice<1>;
+reduce_concat<1>;
+slice_concat<1>;
+
+bin_broadcast_splat_add<1>;
+bin_broadcast_splat_subtract<1>;
+bin_broadcast_splat_div<1>;
+bin_broadcast_splat_mul<1>;
+slice_reshape<1>;
+
+dot_reshape_pad<1>;
+pad_dot_general<1>(1);
+broadcast_reduce<1>;
+            },
+            transform-interpreter,
+            enzyme-hlo-remove-transform,cse"""
+)
+
+
+def get_pipeline(name: str):
+    from enzyme_ad.jax import (
+        JaXPipeline,
+        full_optimization_pass_pipeline,
+    )
+
+    if name == "JaxPipe":
+        return ("JaXPipe", JaXPipeline(), CurBackends)
+    elif name == "Jax":
+        return ("Jax", None, CurBackends)
+    elif name == "PartOpt":
+        return ("PartOpt", JaXPipeline(partialopt), CurBackends)
+    elif name == "HLOOpt":
+        return (
+            "HLOOpt",
+            JaXPipeline(
+                "inline{default-pipeline=canonicalize inlining-threshold=4294967295 max-iterations=4},"
+                + "canonicalize,cse,enzyme-hlo-opt,cse"
+            ),
+            CurBackends,
+        )
+    elif name == "DefOpt":
+        return (
+            "DefOpt",
+            JaXPipeline(full_optimization_pass_pipeline(inline=False)),
+            CurBackends,
+        )
+    elif name == "IPartOpt":
+        return (
+            "IPartOpt",
+            JaXPipeline(
+                "inline{default-pipeline=canonicalize inlining-threshold=4294967295 max-iterations=4},"
+                + partialopt
+            ),
+            CurBackends,
+        )
+    elif name == "IDefOpt":
+        return ("IDefOpt", JaXPipeline(full_optimization_pass_pipeline()), CurBackends)
+
+
+def pipelines():
+    setup_backends()
+
+    return [
+        get_pipeline("JaxPipe"),
+        get_pipeline("Jax"),
+        get_pipeline("HLOOpt"),
+        get_pipeline("PartOpt"),
+        get_pipeline("IPartOpt"),
+        get_pipeline("DefOpt"),
+        get_pipeline("IDefOpt"),
+    ]
+
+
+def no_newxla(x):
+    return x
+
+
+def no_newxlamlir(x):
+    return x
+
+
+def nomlir(x):
+    return [(name, a, b) for (name, a, b) in x if name == "XLA"]
+
+
+def justjax(x):
+    from enzyme_ad.jax import JaXPipeline
+
+    return [
+        (name, a, b) for (name, a, b) in x if a is None or isinstance(a, JaXPipeline)
+    ]
+
+
+def splatjvp(in_fn):
+    def fwd(*args):
+        assert len(args) % 2 == 0
+        return jax.jvp(
+            in_fn, tuple(args[: len(args) // 2]), tuple(args[len(args) // 2 :])
+        )
+
+    return fwd
+
+
+def sync(x):
+    return jax.block_until_ready(x)
+
+
+def splatvjp(in_fn):
+    def rev(dout, *args):
+        primals, f_vjp = jax.vjp(in_fn, *args)
+        grads = f_vjp(dout)
+        return primals, grads
+
+    return rev
+
+
+def splatvjp_noprim(in_fn):
+    def rev(dout, *args):
+        primals, f_vjp = jax.vjp(in_fn, *args)
+        grads = f_vjp(dout)
+        return grads
+
+    return rev
+
+
+def to_backend(x, backend):
+    dev = jax.local_devices(backend=backend)[0]
+    return jax.device_put(x, dev)
+
+
+def recursive_check(tester, lhs, rhs, pname=None):
+    def leaves_allclose(leaf1, leaf2):
+        legal = jnp.allclose(leaf1, leaf2, atol=tester.atol, rtol=tester.rtol)
+        if not legal:
+            max_err = jnp.max(jnp.abs(leaf1 - leaf2))
+            if tester.skip_test_assert:
+                print(
+                    f"Skipping test assert for {tester.name} {pname} but test"
+                    + f" failed with max error {max_err}."
+                )
+                return legal
+
+            if pname is not None:
+                print("lhs (", pname, ")", leaf1)
+            else:
+                print("lhs", leaf1)
+            print("rhs", leaf2)
+            print("abs", jnp.abs(leaf1 - leaf2))
+            print("eq", jnp.abs(leaf1 - leaf2) < tester.atol)
+            print("max", max_err)
+        tester.assertTrue(legal)
+        return legal
+
+    comparison_tree = jax.tree.map(leaves_allclose, lhs, rhs)
+    legal = jax.tree.all(comparison_tree)
+    if not legal and tester.skip_test_assert:
+        print(f"Skipping test assert for {tester.name} {pname}")
+        return
+    tester.assertTrue(legal)
+
+
+def _dump_mlir_to_file(loweredfn, key: str, dump_mlir_dir: str):
+    source = loweredfn.as_text()
+
+    # bazel will zip up the outputs in this directory
+    env_dir = os.environ.get("TEST_UNDECLARED_OUTPUTS_DIR", None)
+    if env_dir is not None:
+        dump_mlir_dir = env_dir
+
+    tmpfile = tempfile.NamedTemporaryFile(
+        suffix=key.replace(" ", "") + ".mlir", dir=dump_mlir_dir, delete=False
+    )
+    with open(tmpfile.name, "w") as f:
+        f.write(str(source))
+
+    # print(f"Dumped mlir to {tmpfile.name}")
+    return tmpfile.name
+
+
+class EnzymeJaxTest(absltest.TestCase):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        setup_backends()
+        self.primfilter = lambda x: x
+        self.fwdfilter = lambda x: x
+        self.revfilter = lambda x: x
+        self.repeat = 50
+        self.AllBackends = AllBackends
+        self.AllPipelines = pipelines()
+        self.revprimal = True
+        self.atol = 1e-6
+        self.rtol = 0.0
+        self.mlirad_fwd = True
+        self.mlirad_rev = True
+        self.results = []
+        self.skip_test_assert = False
+
+    def pretty_print_table(self, name, pname, backend, key, timings):
+        avg_time_s = timings["avg_time_s"]
+        stdev_time_s = timings["stdev_time_s"]
+        min_time_s = timings["min_time_s"]
+        max_time_s = timings["max_time_s"]
+        print_str = "{:<20}\t{:<20}\t{:<15}\t{:<10}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}".format(
+            name, pname, backend, key, avg_time_s, stdev_time_s, min_time_s, max_time_s
+        )
+        print(print_str, flush=True)
+
+        result_str = "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}".format(name, pname, backend, key, avg_time_s, stdev_time_s, min_time_s, max_time_s)
+        self.results.append(result_str)
+
+    def write_results_csv(self, filename=""):
+        import os
+        import csv
+
+        if filename == "":
+            filename = f"results_{self.__class__.__name__}.csv"
+
+        outdir = os.environ.get("TEST_UNDECLARED_OUTPUTS_DIR", ".")
+        outfile = os.path.join(outdir, filename)
+        with open(outfile, "w", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow(
+                ["Benchmark Name", "Pass Pipeline", "Backend", "Key", "Avg Time", "stdev Time", "Min Time", "Max Time"]
+            )
+            for line in self.results:
+                writer.writerow(line.split("\t"))
+        print(f"Results written to {outfile}")
+
+    def setUp(self):
+        self.name = None
+
+    def test(self):
+        if self.name is None:
+            return
+        setup_backends()
+        self.harness(self.name, self.fn, self.ins, self.dins, self.douts)
+        self.write_results_csv()
+
+    def harness(self, name, in_fn, ins, dins, douts):
+        from enzyme_ad.jax import enzyme_jax_ir
+        from xprof_utils import profile_compiled_function
+
+        dump_mlir_dir = tempfile.gettempdir()
+
+        if self.mlirad_fwd:
+            assert len(ins) == len(dins)
+
+        revtransform = splatvjp if self.revprimal else splatvjp_noprim
+
+        for backend in self.AllBackends:
+            ins_backend = [to_backend(x, backend) for x in ins]
+            dins_backend = [to_backend(x, backend) for x in dins]
+            douts_backend = None
+            if isinstance(douts, jax.Array):
+                douts_backend = to_backend(douts, backend)
+            else:
+                douts_backend = tuple([to_backend(x, backend) for x in douts])
+
+            primalins = {("in" + str(i)): ins_backend[i] for i in range(len(ins))}
+            primalins["sync"] = sync
+            primres = None
+
+            for pname, pipeline, pbackends in self.primfilter(self.AllPipelines):
+                if backend in pbackends:
+                    rfn_enzyme = (
+                        jax.jit(
+                            (
+                                in_fn
+                                if pipeline is None
+                                else enzyme_jax_ir(
+                                    pipeline_options=pipeline,
+                                    argv=argv,
+                                    inner_jit=False,
+                                )(in_fn)
+                            )
+                        )
+                        .trace(*ins_backend)
+                        .lower()
+                    )
+
+                    _dump_mlir_to_file(
+                        rfn_enzyme,
+                        pname + "_" + backend + "_primal",
+                        dump_mlir_dir,
+                    )
+
+                    rfn_enzyme = rfn_enzyme.compile()
+
+                    ao = rfn_enzyme(*ins_backend)
+
+                    if primres is None:
+                        primres = ao
+                    else:
+                        recursive_check(self, ao, primres, "Primal " + pname)
+
+                    timings = profile_compiled_function(
+                        rfn_enzyme, ins_backend, nrepeat=self.repeat
+                    )
+                    self.pretty_print_table(name, pname, backend, "Primal", timings)
+            # assert primres is not None
+            fwdres = None
+
+            for pname, pipeline, pbackends in self.fwdfilter(self.AllPipelines):
+                if backend in pbackends:
+                    if self.mlirad_fwd or pipeline is None:
+                        all_ins = ins_backend + dins_backend
+
+                        rfn_enzyme = (
+                            in_fn
+                            if pipeline is None
+                            else jax.jit(
+                                enzyme_jax_ir(
+                                    pipeline_options=pipeline,
+                                    argv=argv,
+                                    inner_jit=False,
+                                )(in_fn)
+                            )
+                        )
+                        fwd_enzyme = (
+                            jax.jit(splatjvp(rfn_enzyme)).trace(*all_ins).lower()
+                        )
+
+                        _dump_mlir_to_file(
+                            fwd_enzyme,
+                            pname + "_" + backend + "_forward",
+                            dump_mlir_dir,
+                        )
+
+                        fwd_enzyme = fwd_enzyme.compile()
+                        primals, tangents = fwd_enzyme(*all_ins)
+
+                        if primres is None:
+                            primres = primals
+                        else:
+                            recursive_check(self, primals, primres, "Primal " + pname)
+
+                        if fwdres is None:
+                            fwdres = tangents
+                        else:
+                            recursive_check(self, tangents, fwdres, "Forward " + pname)
+
+                        timings = profile_compiled_function(
+                            fwd_enzyme, all_ins, nrepeat=self.repeat
+                        )
+                        self.pretty_print_table(
+                            name, pname, backend, "Forward", timings
+                        )
+
+            # assert fwdres is not None
+
+            revres = None
+
+            for pname, pipeline, pbackends in self.revfilter(self.AllPipelines):
+                if backend in pbackends:
+                    adout = douts_backend
+                    if pipeline is not None:
+                        all_ins = [adout] + ins_backend
+                        if self.mlirad_rev or pipeline is None:
+                            rfn_enzyme = (
+                                in_fn
+                                if pipeline is None
+                                else enzyme_jax_ir(
+                                    pipeline_options=pipeline,
+                                    argv=argv,
+                                    inner_jit=False,
+                                )(in_fn)
+                            )
+                            rev_enzyme = (
+                                jax.jit(revtransform(rfn_enzyme))
+                                .trace(*all_ins)
+                                .lower()
+                            )
+
+                            _dump_mlir_to_file(
+                                rev_enzyme,
+                                pname + "_" + backend + "_prerev",
+                                dump_mlir_dir,
+                            )
+
+                            rev_enzyme = rev_enzyme.compile()
+                            if self.revprimal:
+                                primals, grads = rev_enzyme(*all_ins)
+                            else:
+                                grads = rev_enzyme(*all_ins)
+                                assert grads is not None
+
+                            if self.revprimal and primres is not None:
+                                recursive_check(
+                                    self, primals, primres, "Primal " + pname
+                                )
+
+                            if revres is None:
+                                revres = grads
+                            else:
+                                recursive_check(self, grads, revres, "Reverse " + pname)
+
+                            timings = profile_compiled_function(
+                                rev_enzyme, all_ins, nrepeat=self.repeat
+                            )
+                            self.pretty_print_table(
+                                name, pname, backend, "PreRev", timings
+                            )
+
+                        rfn_enzyme = in_fn
+                        rev_enzyme = (
+                            jax.jit(
+                                (
+                                    revtransform(rfn_enzyme)
+                                    if pipeline is None
+                                    else enzyme_jax_ir(
+                                        pipeline_options=pipeline,
+                                        argv=argv,
+                                        inner_jit=False,
+                                    )(revtransform(rfn_enzyme))
+                                )
+                            )
+                            .trace(*all_ins)
+                            .lower()
+                        )
+
+                        _dump_mlir_to_file(
+                            rev_enzyme,
+                            pname + "_" + backend + "_postrev",
+                            dump_mlir_dir,
+                        )
+
+                        rev_enzyme = rev_enzyme.compile()
+                        if self.revprimal:
+                            primals, grads = rev_enzyme(*all_ins)
+                        else:
+                            grads = rev_enzyme(*all_ins)
+                            assert grads is not None
+
+                        if self.revprimal and primres is not None:
+                            recursive_check(self, primals, primres)
+
+                        if revres is None:
+                            revres = grads
+                        else:
+                            recursive_check(self, grads, revres)
+
+                        timings = profile_compiled_function(
+                            rev_enzyme, all_ins, nrepeat=self.repeat
+                        )
+                        self.pretty_print_table(
+                            name, pname, backend, "PostRev", timings
+                        )
+
+                    if pipeline is None or (pipeline.mlir_ad() and self.mlirad_rev):
+                        rfn_enzyme = (
+                            in_fn
+                            if pipeline is None
+                            else enzyme_jax_ir(
+                                pipeline_options=pipeline, argv=argv, inner_jit=False
+                            )(in_fn)
+                        )
+                        rev_enzyme = (
+                            jax.jit(
+                                (
+                                    revtransform(rfn_enzyme)
+                                    if pipeline is None
+                                    else enzyme_jax_ir(
+                                        pipeline_options=pipeline,
+                                        argv=argv,
+                                        inner_jit=False,
+                                    )(revtransform(rfn_enzyme))
+                                )
+                            )
+                            .trace(*all_ins)
+                            .lower()
+                        )
+
+                        _dump_mlir_to_file(
+                            rev_enzyme,
+                            pname + "_" + backend + "_bothrev",
+                            dump_mlir_dir,
+                        )
+
+                        rev_enzyme = rev_enzyme.compile()
+                        if self.revprimal:
+                            primals, grads = rev_enzyme(*all_ins)
+                        else:
+                            grads = rev_enzyme(*all_ins)
+                            assert grads is not None
+
+                        if self.revprimal and primres is not None:
+                            recursive_check(self, primals, primres)
+
+                        if revres is None:
+                            revres = grads
+                        else:
+                            recursive_check(self, grads, revres)
+
+                        timings = profile_compiled_function(
+                            rev_enzyme, all_ins, nrepeat=self.repeat
+                        )
+                        self.pretty_print_table(
+                            name, pname, backend, "BothRev", timings
+                        )
+
+
+class EnzymeJaxBenchmark(EnzymeJaxTest):
+    """Benchmark case that checks and times primal, JVP, and VJP execution."""
