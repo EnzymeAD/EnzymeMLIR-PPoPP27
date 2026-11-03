@@ -109,9 +109,6 @@ if __name__ == "__main__":
     # Deps not available on macos
     # PostRev introduces numerical error -- need to investigate
     if platform.system() != "Darwin" and platform.machine() == "x86_64":
-        # from test_utils import fix_paths
-
-        # fix_paths()
         import jax
 
         jax.config.update("jax_enable_x64", True)
