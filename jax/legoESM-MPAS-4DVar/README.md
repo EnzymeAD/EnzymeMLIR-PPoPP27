@@ -89,16 +89,11 @@ Configurations:
 | `enzyme_periodic<N>` | EnzymeMLIR periodic checkpointing of the time loop, `enzyme.checkpoint_period = N` |
 | `enzyme_binomial<N>` | EnzymeMLIR binomial checkpointing of the time loop, budget `N` |
 
-Every Enzyme configuration skips the `broadcastindim_licm` pattern. It hoists
-broadcasts that grow their operand out of the time loop, which turns each into a
-full-size buffer carried through the loop. With enzyme-ad 0.0.16 at 10 steps
-this costs 10.1 GB and 1.80 s per call, against 7.5 GB and 1.13 s without it.
-
 Loop checkpointing is requested by tagging the time-stepping `stablehlo.while`
 with `enzyme.enable_checkpointing`, `enzyme.checkpoint_period` and, for
 binomial, `enzyme.binomial_checkpointing`.
 
 Other switches read by `enzyme_4dvar_grad.py`: `JAX_CHECKPOINT=0` (JAX without
 per-step checkpointing), `ENZYME_EXCLUDED_PASSES` (comma-separated
-optimization patterns to drop, in addition to `broadcastindim_licm`), `COMPILE_ONLY=1` (print XLA's memory plan
+optimization patterns to drop), `COMPILE_ONLY=1` (print XLA's memory plan
 without running), `IR_DUMP_DIR`, `ENZYME_IR_DUMP`, `JAX_PROFILE_DIR`.
