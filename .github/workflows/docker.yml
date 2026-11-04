@@ -5,14 +5,12 @@ on:
   push:
     branches: ["main"]
     tags: ["*"]
-    paths:
+    paths: &docker_paths
       - "docker/**"
       - ".github/workflows/docker.yml"
   pull_request:
     branches: ["main"]
-    paths:
-      - "docker/**"
-      - ".github/workflows/docker.yml"
+    paths: *docker_paths
 
 concurrency:
   # Cancel in-progress jobs on PRs and branches when newer commits are pushed.
