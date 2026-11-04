@@ -7,24 +7,36 @@
 # env:   WARMUP=1  RESULTS_DIR=timings  SKIP_BUILD=0  CUDA_VISIBLE_DEVICES=0
 #        MEMORY=1       also run each config once under Nsight Systems to get the
 #                       peak allocated device memory (cudaMalloc/cudaFree tracking)
-#        NSYS           nsys binary (default $CUDA_PATH/bin/nsys)
-#        REACTANT_BIN   dir with reactant-clang  (default ../Reactant/enzyme/bazel-bin, next to the repo)
-#        ENZYME_ROOT    Enzyme checkout with llvm-project/buildRelease and enzyme/buildRelease
-#                       (default ../Enzyme, next to the repo)
-#        any Makefile variable (CUDA_PATH, SM_VERSION, ...)
+#        NSYS           nsys binary (default $CUDA_PATH/bin/nsys, else nsys on PATH)
+#        any Makefile variable (CUDA_PATH, SM_VERSION, CLANG_PATH, ...)
+#
+# Toolchains: by default the Makefile's paths are used, which match the Docker
+# image (docker/Dockerfile, everything built under $HOME):
+#   EnzymeMLIR  $HOME/llvm-project/build/bin/clang++ with the Reactant plugin
+#               $HOME/Reactant/build/Enzyme/libClangReactant-24.so and
+#               $HOME/Enzyme-JAX/bazel-bin/libRaise.so
+#   EnzymeLLVM  the same clang with $HOME/Enzyme/build/Enzyme/ClangEnzyme-24.so
+# For other setups:
+#        REACTANT_BIN   Bazel output dir of Reactant with reactant-clang (the
+#                       plugin embedded in clang), e.g. Reactant/enzyme/bazel-bin
+#        ENZYME_ROOT    Enzyme checkout with llvm-project/buildRelease and
+#                       enzyme/buildRelease, used for EnzymeLLVM
 set -u
 cd "$(dirname "$0")"
-REPO_PARENT=$(cd ../../.. && pwd)
 
-# EnzymeMLIR: Reactant's clang, with the plugin embedded
-REACTANT_BIN=${REACTANT_BIN:-$REPO_PARENT/Reactant/enzyme/bazel-bin}
-MLIR_VARS=(EMBEDDED_CLANG=yes
-  "CLANG_PATH=$REACTANT_BIN/reactant-clang -resource-dir $REACTANT_BIN/reactant-clang-resource")
+# EnzymeMLIR: clang with the Reactant plugin, or Reactant's own clang with the
+# plugin embedded
+MLIR_VARS=()
+if [ -n "${REACTANT_BIN:-}" ]; then
+  MLIR_VARS=(EMBEDDED_CLANG=yes
+    "CLANG_PATH=$REACTANT_BIN/reactant-clang -resource-dir $REACTANT_BIN/reactant-clang-resource")
+fi
 # EnzymeLLVM: upstream clang + ClangEnzyme plugin built against it
-ENZYME_ROOT=${ENZYME_ROOT:-$REPO_PARENT/Enzyme}
-LLVM_VARS=(USE_ENZYME_LLVM=yes
-  "CLANG_PATH=$ENZYME_ROOT/llvm-project/buildRelease/bin/clang++"
-  "CLANG_ENZYME=$ENZYME_ROOT/enzyme/buildRelease/Enzyme/ClangEnzyme-24.so")
+LLVM_VARS=(USE_ENZYME_LLVM=yes)
+if [ -n "${ENZYME_ROOT:-}" ]; then
+  LLVM_VARS+=("CLANG_PATH=$ENZYME_ROOT/llvm-project/buildRelease/bin/clang++"
+    "CLANG_ENZYME=$ENZYME_ROOT/enzyme/buildRelease/Enzyme/ClangEnzyme-24.so")
+fi
 
 STEPS=${1:-${STEPS:-100}}
 REPS=${2:-${REPS:-12}}
@@ -34,7 +46,10 @@ RESULTS_DIR=${RESULTS_DIR:-timings}
 INPUT=datasets/lbm/short/input/120_120_150_ldc.of
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
 MEMORY=${MEMORY:-1}
-NSYS=${NSYS:-${CUDA_PATH:-/usr/local/cuda-12.9}/bin/nsys}
+if [ -z "${NSYS:-}" ]; then
+  NSYS=${CUDA_PATH:-/usr/local/cuda-12.9}/bin/nsys
+  [ -x "$NSYS" ] || NSYS=$(command -v nsys || echo "$NSYS")
+fi
 mkdir -p "$RESULTS_DIR"
 if [ "$MEMORY" = 1 ] && [ ! -x "$NSYS" ]; then
   echo "nsys not found at $NSYS (set NSYS=... or MEMORY=0)"; exit 1
@@ -137,7 +152,7 @@ SUMMARY="$RESULTS_DIR/summary_${STEPS}.txt"
     echo "    \"$name\": [$(sed 's/ /, /g' <<< "${TIMES[$tag]}")],"
   done
   echo "  },"
-  if [ ${#MEM[@]} -gt 0 ]; then
+  if [ -n "${MEM[*]:-}" ]; then
     echo
     echo "  \"LBM\": { # peak allocated device memory in bytes, $STEPS Iterations"
     for cfg in "${CONFIGS[@]}"; do

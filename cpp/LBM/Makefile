@@ -195,5 +195,17 @@ $(program): $(obj) lbm_kernel.cu Makefile
 clean:
 	rm -rf $(program) *.o *.re_export
 
-run: $(program)
-	./$(program) 10 -o out.txt
+# Time every AD configuration for each step count in RUN_STEPS, writing
+# timings/summary_<steps>.txt (plotted by lbm.jl). The binaries are built on
+# the first step count only, pass SKIP_BUILD=1 to reuse existing ones.
+# Other knobs of run_timings.sh (REPS, WARMUP, MEMORY, ...) can be set here too.
+# The toolchain paths default to the ones above, i.e. the Docker image layout;
+# outside of it pass e.g. REACTANT_BIN=... ENZYME_ROOT=... (see run_timings.sh).
+RUN_STEPS ?= 25 50 100 200 400 800 1200
+
+run:
+	@skip=$${SKIP_BUILD:-0}; for n in $(RUN_STEPS); do \
+	  SKIP_BUILD=$$skip ./run_timings.sh $$n || exit 1; skip=1; \
+	done
+
+.PHONY: run clean
