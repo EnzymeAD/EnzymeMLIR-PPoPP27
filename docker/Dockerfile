@@ -77,7 +77,4 @@ COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
 
-# Install legoESM
-RUN python jax/legoESM-MPAS-4DVar/legoESM/script/experiment/install_federation.py core atmosphere ml
-
 COPY --chown=$USERNAME:$USERNAME . $HOME
