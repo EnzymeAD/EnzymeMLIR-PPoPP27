@@ -9,9 +9,9 @@ on:
     branches: ["main"]
 
 concurrency:
-  # Cancel intermediate builds on pull requests, but build and push every commit on main and tags.
-  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name == 'pull_request' && 'pr' || github.run_id }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # Cancel in-progress jobs on PRs and branches when newer commits are pushed.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   docker:
