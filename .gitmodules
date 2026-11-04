@@ -1,3 +1,7 @@
 [submodule "jax/legoESM-MPAS-4DVar/legoESM"]
 	path = jax/legoESM-MPAS-4DVar/legoESM
 	url = https://github.com/climate-federation/legoESM.git
+[submodule "Oceananigans"]
+	path = Oceananigans
+	url = https://github.com/DJ4Earth/Channelanigans.git
+	branch = artifact
