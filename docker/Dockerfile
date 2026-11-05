@@ -2,7 +2,6 @@ FROM nvidia/cuda:12.9.0-cudnn-devel-ubuntu24.04
 
 ARG USERNAME=evaluator
 ARG NJOBS
-ARG JULIA_VERSION=1.12.7
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/home/$USERNAME
@@ -16,16 +15,10 @@ RUN groupadd -r $USERNAME && \
 RUN apt-get -q update \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
-    opencl-headers numactl procps \
-  && rm -rf /var/lib/apt/lists/*
+    opencl-headers
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME
-
-# Install Julia directly
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then JULIA_ARCH="x64"; else JULIA_ARCH="$ARCH"; fi && \
-    curl -fL "https://julialang-s3.julialang.org/bin/linux/${JULIA_ARCH}/1.12/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" | tar -xz -C /usr/local --strip-components=1
 
 RUN chown $USERNAME $HOME
 USER $USERNAME
@@ -84,12 +77,22 @@ COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
 
+# Install system utilities needed for Julia benchmarks (numactl, procps) and download Julia directly
+USER root
+RUN apt-get -q update \
+  && apt-get install -y --no-install-recommends numactl procps \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG JULIA_VERSION=1.12.7
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then JULIA_ARCH="x64"; else JULIA_ARCH="$ARCH"; fi && \
+    curl -fL "https://julialang-s3.julialang.org/bin/linux/${JULIA_ARCH}/1.12/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" | tar -xz -C /usr/local --strip-components=1
+
 # Configure Julia and precompile relevant package versions (kept in the docker dir)
 ENV JULIA_DEPOT_PATH=/opt/julia_depot \
     JULIA_NUM_THREADS=1 \
     JULIA_PKG_PRECOMPILE_AUTO=0
 
-USER root
 RUN mkdir -p /opt/julia_depot /opt/julia_project \
  && chown -R $USERNAME:$USERNAME /opt/julia_depot /opt/julia_project
 USER $USERNAME
