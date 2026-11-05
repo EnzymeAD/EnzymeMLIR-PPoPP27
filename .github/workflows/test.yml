@@ -4,8 +4,16 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
+    paths:
+      - "Oceananigans/**"
+      - "docker/**"
+      - ".github/workflows/test.yml"
   pull_request:
     branches: ["main"]
+    paths:
+      - "Oceananigans/**"
+      - "docker/**"
+      - ".github/workflows/test.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,7 +57,6 @@ jobs:
     timeout-minutes: 60
     container:
       image: ghcr.io/enzymead/enzymemlir-ppopp27:latest
-      options: --user root
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
