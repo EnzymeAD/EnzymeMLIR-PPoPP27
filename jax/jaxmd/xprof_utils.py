@@ -16,10 +16,16 @@ def profile_compiled_function(compiled_fn, args, nrepeat: int) -> dict[str, floa
     Time `compiled_fn(*args)` `nrepeat` times, each run in its own xprof trace,
     and return avg/stdev/min/max of the per-run step time in seconds, plus the
     peak device memory in use (bytes) over all runs.
+
+    The peak memory is the allocator's total bytes in use, so it also counts
+    every buffer alive in the process during the run (e.g. `args`), not only the
+    memory allocated by `compiled_fn`. It is NaN if xprof recorded no memory
+    profile (e.g. on CPU).
     """
     trace_dir = tempfile.mkdtemp(prefix="jax_profile_")
     try:
         times_s = []
+        peak_mems = []
         for i in range(nrepeat):
             repeat_dir = os.path.join(trace_dir, f"repeat_{i}")
             with jax.profiler.trace(repeat_dir):
@@ -28,6 +34,7 @@ def profile_compiled_function(compiled_fn, args, nrepeat: int) -> dict[str, floa
                     jax.block_until_ready(compiled_fn(*args))
             xplane_file = _find_xplane_file(repeat_dir)
             times_s.append(_extract_step_time(xplane_file))
+            peak_mems.append(_extract_peak_memory(xplane_file))
     finally:
         shutil.rmtree(trace_dir, ignore_errors=True)
 
@@ -36,6 +43,7 @@ def profile_compiled_function(compiled_fn, args, nrepeat: int) -> dict[str, floa
         "stdev_time_s": stdev(times_s) if len(times_s) > 1 else 0.0,
         "min_time_s": min(times_s),
         "max_time_s": max(times_s),
+        "peak_mem_bytes": max(peak_mems),
     }
 
 
@@ -47,6 +55,21 @@ def _find_xplane_file(trace_dir: str) -> str:
             "Make sure the function executed on a device."
         )
     return max(xplane_files, key=os.path.getmtime)  # most recent one
+
+
+def _extract_peak_memory(xplane_file: str) -> float:
+    """
+    Peak bytes in use during the trace, taken as the max over the memory
+    allocators (e.g. GPU_0_bfc) of xprof's memory_profile. NaN if there are none.
+    """
+    memory_profile = json.loads(
+        xspace_to_tool_data([xplane_file], "memory_profile", {})[0]
+    )
+    peaks = [
+        int(alloc["profileSummary"]["peakStats"]["peakBytesInUse"])
+        for alloc in memory_profile.get("memoryProfilePerAllocator", {}).values()
+    ]
+    return max(peaks) if peaks else float("nan")
 
 
 def _extract_step_time(xplane_file: str) -> float:
