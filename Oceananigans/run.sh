@@ -169,7 +169,7 @@ cmd_run() {
     host_info > "$dir/host_$(date -u +%Y%m%dT%H%M%SZ).json"
     echo "results: $dir"
     # shellcheck disable=SC2086  # word splitting of the preset's option strings is intended
-    in_image "$dir" julia --project=. bench/run_cases.jl \
+    in_image "$dir" julia --project=/opt/julia_project bench/run_cases.jl \
         --out results --configs "$configs" --nsteps "$nsteps" --timeout "$timeout" \
         --core "$CORE" $perf $events --skip-existing \
         ${orch[@]+"${orch[@]}"} \
@@ -192,12 +192,12 @@ cmd_report() {
     [ "$ARCHIVE" = 1 ] && archive="--archive"
     local rc=0
     echo "== table"
-    in_image "$dir" julia --project=. bench/make_table.jl --out results --ci --delta $flops || rc=1
+    in_image "$dir" julia --project=/opt/julia_project bench/make_table.jl --out results --ci --delta $flops || rc=1
     echo "== gradient check"
-    in_image "$dir" julia --project=. bench/check_gradients.jl --out results ||
+    in_image "$dir" julia --project=/opt/julia_project bench/check_gradients.jl --out results ||
         { echo "run.sh: gradient check reported failures (see above)" >&2; rc=1; }
     echo "== raw-data export"
-    in_image "$dir" julia --project=. bench/export_raw.jl --out results $archive || rc=1
+    in_image "$dir" julia --project=/opt/julia_project bench/export_raw.jl --out results $archive || rc=1
     echo "outputs in $dir (table.tex, table.csv, export/)"
     return $rc
 }

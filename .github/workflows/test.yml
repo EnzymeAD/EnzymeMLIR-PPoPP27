@@ -27,15 +27,21 @@ jobs:
         run: |
           julia -e 'using InteractiveUtils; versioninfo()'
 
+      - name: Link Manifest
+        run: |
+          if [ -f /opt/julia_project/Manifest.toml ]; then
+            ln -sf /opt/julia_project/Manifest.toml Oceananigans/Manifest.toml
+          fi
+
       - name: Oceananigans forward consistency check (CPU)
         run: |
           cd Oceananigans
-          REACTANT_BACKEND=cpu julia --project=. bench/forward_consistency.jl 1 --reactant-init
+          REACTANT_BACKEND=cpu julia --project=/opt/julia_project bench/forward_consistency.jl 1 --reactant-init
 
       - name: Oceananigans Enzyme driver smoke run (CPU)
         run: |
           cd Oceananigans
-          julia --project=. bench/driver_enzyme.jl --config enzyme_naive --nsteps 4 --repeats 2
+          julia --project=/opt/julia_project bench/driver_enzyme.jl --config enzyme_naive --nsteps 4 --repeats 2
 
   test-gpu:
     name: Oceananigans Test (GPU)
@@ -54,12 +60,18 @@ jobs:
           julia -e 'using InteractiveUtils; versioninfo()'
           julia -e 'using CUDA; @show CUDA.functional(); if CUDA.functional() @show CUDA.devices() end'
 
+      - name: Link Manifest
+        run: |
+          if [ -f /opt/julia_project/Manifest.toml ]; then
+            ln -sf /opt/julia_project/Manifest.toml Oceananigans/Manifest.toml
+          fi
+
       - name: Oceananigans forward consistency check (GPU)
         run: |
           cd Oceananigans
-          REACTANT_BACKEND=gpu julia --project=. bench/forward_consistency.jl 1 --reactant-init
+          REACTANT_BACKEND=gpu julia --project=/opt/julia_project bench/forward_consistency.jl 1 --reactant-init
 
       - name: Oceananigans Reactant driver smoke run (GPU)
         run: |
           cd Oceananigans
-          REACTANT_BACKEND=gpu julia --project=. bench/driver_reactant.jl --config reactant_full --nsteps 4 --repeats 2
+          REACTANT_BACKEND=gpu julia --project=/opt/julia_project bench/driver_reactant.jl --config reactant_full --nsteps 4 --repeats 2
