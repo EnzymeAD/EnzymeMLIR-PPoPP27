@@ -26,7 +26,7 @@
 #                  results directory, e.g. results/quick or data/vista_2026-11
 #
 # environment:
-#   IMAGE          image tag (default channelanigans-artifact)
+#   IMAGE          image tag (default ghcr.io/enzymead/enzymemlir-ppopp27:latest)
 #   DOCKER         container engine CLI (default docker)
 #   PLATFORM       build/run for another platform, e.g. linux/amd64 (default: native)
 #   RESULTS_DIR    results directory for `run` (default results/PRESET)
@@ -43,7 +43,7 @@
 set -u
 
 HERE=$(cd "$(dirname "$0")" && pwd)
-IMAGE=${IMAGE:-channelanigans-artifact}
+IMAGE=${IMAGE:-ghcr.io/enzymead/enzymemlir-ppopp27:latest}
 DOCKER=${DOCKER:-docker}
 PLATFORM=${PLATFORM:-}
 CORE=${CORE:-0}
@@ -61,15 +61,18 @@ require_image() {
         die "image '$IMAGE' not found; build it with './run.sh build' (or set IMAGE=...)"
 }
 
-# Run a command inside the image with a host directory mounted at /work/results.
+# Run a command inside the image with host directories mounted.
 # Runs as the calling user so the results are owned by them, not by root.
 in_image() {
     local dir=$1; shift
     local extra=""
     [ "$FLOPS" = 1 ] && extra="--privileged"
+    local repo_root
+    repo_root=$(cd "$HERE/.." && pwd)
     "$DOCKER" run --rm --init $(platform_args) $extra \
         --user "$(id -u):$(id -g)" -e HOME=/tmp \
-        -v "$dir:/work/results" -w /work \
+        -v "$repo_root:/opt/EnzymeMLIR-PPoPP27" \
+        -v "$dir:/work/results" -w /opt/EnzymeMLIR-PPoPP27/Oceananigans \
         "$IMAGE" "$@"
 }
 
@@ -119,11 +122,12 @@ EOF
 }
 
 cmd_build() {
-    local commit
+    local repo_root commit
+    repo_root=$(cd "$HERE/.." && pwd)
     commit=$(git -C "$HERE" rev-parse HEAD 2>/dev/null || echo unknown)
     [ "$commit" != unknown ] && ! git -C "$HERE" diff --quiet HEAD -- . 2>/dev/null && commit="$commit-dirty"
-    echo "building $IMAGE (repo commit $commit${PLATFORM:+, platform $PLATFORM})"
-    "$DOCKER" build $(platform_args) --build-arg GIT_COMMIT="$commit" -t "$IMAGE" "$HERE"
+    echo "building $IMAGE from $repo_root/docker/Dockerfile (repo commit $commit${PLATFORM:+, platform $PLATFORM})"
+    "$DOCKER" build $(platform_args) --build-arg GIT_COMMIT="$commit" -t "$IMAGE" -f "$repo_root/docker/Dockerfile" "$repo_root"
 }
 
 cmd_run() {
@@ -165,7 +169,7 @@ cmd_run() {
     host_info > "$dir/host_$(date -u +%Y%m%dT%H%M%SZ).json"
     echo "results: $dir"
     # shellcheck disable=SC2086  # word splitting of the preset's option strings is intended
-    in_image "$dir" julia /opt/channelanigans/bench/run_cases.jl \
+    in_image "$dir" julia --project=. bench/run_cases.jl \
         --out results --configs "$configs" --nsteps "$nsteps" --timeout "$timeout" \
         --core "$CORE" $perf $events --skip-existing \
         ${orch[@]+"${orch[@]}"} \
@@ -188,12 +192,12 @@ cmd_report() {
     [ "$ARCHIVE" = 1 ] && archive="--archive"
     local rc=0
     echo "== table"
-    in_image "$dir" julia /opt/channelanigans/bench/make_table.jl --out results --ci --delta $flops || rc=1
+    in_image "$dir" julia --project=. bench/make_table.jl --out results --ci --delta $flops || rc=1
     echo "== gradient check"
-    in_image "$dir" julia /opt/channelanigans/bench/check_gradients.jl --out results ||
+    in_image "$dir" julia --project=. bench/check_gradients.jl --out results ||
         { echo "run.sh: gradient check reported failures (see above)" >&2; rc=1; }
     echo "== raw-data export"
-    in_image "$dir" julia /opt/channelanigans/bench/export_raw.jl --out results $archive || rc=1
+    in_image "$dir" julia --project=. bench/export_raw.jl --out results $archive || rc=1
     echo "outputs in $dir (table.tex, table.csv, export/)"
     return $rc
 }

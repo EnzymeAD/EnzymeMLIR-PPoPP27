@@ -27,7 +27,10 @@ using Oceananigans.Architectures: ReactantState
 using CUDA        # required by Reactant for KernelAbstractions kernels, even on CPU
 using Reactant
 using Printf
-Reactant.set_default_backend("cpu")
+const BACKEND = let i = findfirst(==("--backend"), ARGS)
+    i === nothing ? get(ENV, "REACTANT_BACKEND", "cpu") : ARGS[i+1]
+end
+Reactant.set_default_backend(BACKEND)
 
 const NS = something(tryparse(Int, get(filter(a -> !startswith(a, "--"), ARGS), 1, "1")), 1)
 const DIVISION = let i = findfirst(==("--weno-division"), ARGS)
@@ -67,7 +70,7 @@ r = build_problem(ReactantState(); to_device = Reactant.to_rarray, weno_weight_c
 rforward! = @compile raise_first=true raise=true sync=true forward!(r.model, r.Tᵢ, r.Sᵢ, r.u_wind_stress, r.v_wind_stress, r.T_flux, r.Δz)
 Jr = Float64(rforward!(r.model, r.Tᵢ, r.Sᵢ, r.u_wind_stress, r.v_wind_stress, r.T_flux, r.Δz))
 
-println("\n== Forward consistency after N = $NS step(s), WENO division = $(something(DIVISION, "architecture default")), reactant-init = $REACTANT_INIT")
+println("\n== Forward consistency after N = $NS step(s), WENO division = $(something(DIVISION, "architecture default")), reactant-init = $REACTANT_INIT, backend = $BACKEND")
 @printf("objective  CPU %.16e   Reactant %.16e   rel. diff %.2e\n", Jc, Jr, abs(Jr - Jc) / abs(Jc))
 for (k, fc) in pairs(state(c.model))
     a, b = host(fc), host(getproperty(state(r.model), k))

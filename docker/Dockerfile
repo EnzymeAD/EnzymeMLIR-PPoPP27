@@ -77,4 +77,42 @@ COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
 
+# Install system utilities needed for Julia benchmarks (numactl, procps) and download Julia directly
+USER root
+RUN apt-get -q update \
+  && apt-get install -y --no-install-recommends numactl procps \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG JULIA_VERSION=1.12.7
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then JULIA_ARCH="x64"; else JULIA_ARCH="$ARCH"; fi && \
+    curl -fL "https://julialang-s3.julialang.org/bin/linux/${JULIA_ARCH}/1.12/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" | tar -xz -C /usr/local --strip-components=1
+
+# Configure Julia and precompile relevant package versions (kept in the docker dir)
+ENV JULIA_DEPOT_PATH=/opt/julia_depot \
+    JULIA_NUM_THREADS=1 \
+    JULIA_PKG_PRECOMPILE_AUTO=0
+
+RUN mkdir -p /opt/julia_depot /opt/julia_project \
+ && chown -R $USERNAME:$USERNAME /opt/julia_depot /opt/julia_project
+USER $USERNAME
+
+COPY --chown=$USERNAME:$USERNAME docker/Project.toml /opt/julia_project/Project.toml
+
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+        TARGET="generic;neoverse-v2,clone_all"; \
+    else \
+        TARGET="generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)"; \
+    fi \
+ && export JULIA_CPU_TARGET="$TARGET" \
+ && julia --project=/opt/julia_project -e 'using Pkg; Pkg.instantiate(); Pkg.precompile(); Pkg.status()'
+
+USER root
+RUN chmod -R a+rX /opt/julia_depot /opt/julia_project
+USER $USERNAME
+
+# Stack a writable /tmp depot in front of the precompiled /opt depot at runtime
+ENV JULIA_DEPOT_PATH=/tmp/julia_depot:/opt/julia_depot \
+    XLA_FLAGS="--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"
+
 COPY --chown=$USERNAME:$USERNAME . $HOME
