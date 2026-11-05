@@ -1,6 +1,7 @@
-import csv
 import glob
+import json
 import os
+from statistics import mean, stdev
 
 import jax
 import jax.numpy as jnp
@@ -208,40 +209,41 @@ class EnzymeJaxTest(absltest.TestCase):
         if self.name is None:
             return
         self.harness(self.name, self.fn, self.ins, self.dins, self.douts)
-        self.write_results_csv()
+        self.write_results_json()
 
-    def record(self, name, pname, backend, key, timings):
-        row = [
-            name,
-            pname,
-            backend,
-            key,
-            timings["avg_time_s"],
-            timings["stdev_time_s"],
-            timings["min_time_s"],
-            timings["max_time_s"],
-            timings["peak_mem_bytes"],
-        ]
+    def record(self, name, pname, backend, key, samples):
+        times_s = samples["time_s"]
+        peak_mems = [m for m in samples["peak_memory_bytes"] if m is not None]
         print(
-            "{:<20}\t{:<20}\t{:<15}\t{:<10}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}\t{:<15.8f}\t{:<15.0f}".format(
-                *row
+            "{:<20}\t{:<20}\t{:<15}\t{:<10}\tavg {:.8f}s\tstdev {:.8f}s\tpeak mem {} B".format(
+                name,
+                pname,
+                backend,
+                key,
+                mean(times_s),
+                stdev(times_s) if len(times_s) > 1 else 0.0,
+                max(peak_mems) if peak_mems else "n/a",
             ),
             flush=True,
         )
-        self.results.append(row)
+        self.results.append(
+            {
+                "benchmark": name,
+                "pipeline": pname,
+                "backend": backend,
+                "key": key,
+                **samples,
+            }
+        )
 
-    def write_results_csv(self, filename=""):
+    def write_results_json(self, filename=""):
         if filename == "":
-            filename = f"results_{self.__class__.__name__}.csv"
+            filename = f"results_{self.__class__.__name__}.json"
 
         outdir = os.environ.get("TEST_UNDECLARED_OUTPUTS_DIR", ".")
         outfile = os.path.join(outdir, filename)
-        with open(outfile, "w", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(
-                ["Benchmark Name", "Pass Pipeline", "Backend", "Key", "Avg Time", "stdev Time", "Min Time", "Max Time", "Peak Memory (bytes)"]
-            )
-            writer.writerows(self.results)
+        with open(outfile, "w") as f:
+            json.dump(self.results, f, indent=2)
         print(f"Results written to {outfile}")
 
     def harness(self, name, in_fn, ins, dins, douts):
@@ -274,8 +276,8 @@ class EnzymeJaxTest(absltest.TestCase):
             return compiled, compiled(*args)
 
         def time(compiled, args, pname, key):
-            timings = profile_compiled_function(compiled, args, nrepeat=self.repeat)
-            self.record(name, pname, backend, key, timings)
+            samples = profile_compiled_function(compiled, args, nrepeat=self.repeat)
+            self.record(name, pname, backend, key, samples)
 
         def enzyme(pipeline, fn):
             return enzyme_jax_ir(pipeline_options=pipeline, argv=argv, inner_jit=False)(fn)
