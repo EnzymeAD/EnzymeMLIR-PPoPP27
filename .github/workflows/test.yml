@@ -18,6 +18,7 @@ jobs:
     timeout-minutes: 60
     container:
       image: ghcr.io/enzymead/enzymemlir-ppopp27:latest
+      options: --user root
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -42,6 +43,7 @@ jobs:
     timeout-minutes: 60
     container:
       image: ghcr.io/enzymead/enzymemlir-ppopp27:latest
+      options: --user root
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
