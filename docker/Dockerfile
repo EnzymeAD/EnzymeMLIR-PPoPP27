@@ -16,7 +16,7 @@ RUN groupadd -r $USERNAME && \
 RUN apt-get -q update \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
-    opencl-headers numactl procps linux-perf \
+    opencl-headers numactl procps \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
