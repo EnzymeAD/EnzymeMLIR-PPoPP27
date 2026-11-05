@@ -100,11 +100,11 @@ USER $USERNAME
 COPY --chown=$USERNAME:$USERNAME docker/Project.toml /opt/julia_project/Project.toml
 
 RUN if [ "$(uname -m)" = "aarch64" ]; then \
-        echo 'generic;neoverse-v2,clone_all' > /opt/julia_cpu_target; \
+        TARGET="generic;neoverse-v2,clone_all"; \
     else \
-        echo 'generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)' > /opt/julia_cpu_target; \
+        TARGET="generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)"; \
     fi \
- && export JULIA_CPU_TARGET="$(cat /opt/julia_cpu_target)" \
+ && export JULIA_CPU_TARGET="$TARGET" \
  && julia --project=/opt/julia_project -e 'using Pkg; Pkg.instantiate(); Pkg.precompile(); Pkg.status()'
 
 USER root
