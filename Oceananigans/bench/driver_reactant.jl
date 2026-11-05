@@ -17,7 +17,9 @@ using CUDA
 using Reactant
 using Enzyme
 
-Reactant.set_default_backend("cpu")
+const BACKEND = get(OPTS, "backend", get(ENV, "REACTANT_BACKEND", "cpu"))
+Reactant.set_default_backend(BACKEND)
+@info "Reactant backend" backend=BACKEND
 
 #####
 ##### Configuration → compile-time constants

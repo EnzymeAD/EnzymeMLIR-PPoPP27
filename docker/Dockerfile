@@ -2,6 +2,7 @@ FROM nvidia/cuda:12.9.0-cudnn-devel-ubuntu24.04
 
 ARG USERNAME=evaluator
 ARG NJOBS
+ARG JULIA_VERSION=1.12.7
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/home/$USERNAME
@@ -15,10 +16,16 @@ RUN groupadd -r $USERNAME && \
 RUN apt-get -q update \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
-    opencl-headers
+    opencl-headers numactl procps linux-perf \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME
+
+# Install Julia directly
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "x86_64" ]; then JULIA_ARCH="x64"; else JULIA_ARCH="$ARCH"; fi && \
+    curl -fL "https://julialang-s3.julialang.org/bin/linux/${JULIA_ARCH}/1.12/julia-${JULIA_VERSION}-linux-${ARCH}.tar.gz" | tar -xz -C /usr/local --strip-components=1
 
 RUN chown $USERNAME $HOME
 USER $USERNAME
@@ -76,5 +83,33 @@ ENV PATH="$HOME/eval-env/bin:$PATH"
 COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
+
+# Configure Julia and precompile relevant package versions (kept in the docker dir)
+ENV JULIA_DEPOT_PATH=/opt/julia_depot \
+    JULIA_NUM_THREADS=1 \
+    JULIA_PKG_PRECOMPILE_AUTO=0
+
+USER root
+RUN mkdir -p /opt/julia_depot /opt/julia_project \
+ && chown -R $USERNAME:$USERNAME /opt/julia_depot /opt/julia_project
+USER $USERNAME
+
+COPY --chown=$USERNAME:$USERNAME docker/Project.toml /opt/julia_project/Project.toml
+
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+        echo 'generic;neoverse-v2,clone_all' > /opt/julia_cpu_target; \
+    else \
+        echo 'generic;sandybridge,-xsaveopt,clone_all;haswell,-rdrnd,base(1);x86-64-v4,-rdrnd,base(1)' > /opt/julia_cpu_target; \
+    fi \
+ && export JULIA_CPU_TARGET="$(cat /opt/julia_cpu_target)" \
+ && julia --project=/opt/julia_project -e 'using Pkg; Pkg.instantiate(); Pkg.precompile(); Pkg.status()'
+
+USER root
+RUN chmod -R a+rX /opt/julia_depot /opt/julia_project
+USER $USERNAME
+
+# Stack a writable /tmp depot in front of the precompiled /opt depot at runtime
+ENV JULIA_DEPOT_PATH=/tmp/julia_depot:/opt/julia_depot \
+    XLA_FLAGS="--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"
 
 COPY --chown=$USERNAME:$USERNAME . $HOME
