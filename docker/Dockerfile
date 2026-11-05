@@ -63,6 +63,12 @@ RUN mkdir Reactant/build && cd Reactant/build \
   && ninja -j ${NJOBS:-$(nproc)} \
   && cd ../..
 
+# Build libRaise.so (EnzymeMLIR raising plugin for Reactant C++ frontend)
+RUN git clone https://github.com/EnzymeAD/Enzyme-JAX \
+  && cd Enzyme-JAX \
+  && git checkout 5ff3f33
+RUN cd Enzyme-JAX && CC=clang-18 HERMETIC_PYTHON_VERSION=3.12 bazel build :libRaise.so --jobs=${NJOBS:-$(nproc)}
+
 # Activate the Python virtual environment
 RUN python3 -m venv eval-env
 ENV PATH="$HOME/eval-env/bin:$PATH"
