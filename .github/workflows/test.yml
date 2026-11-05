@@ -1,4 +1,4 @@
-name: GPU Tests
+name: Tests
 
 on:
   workflow_dispatch:
@@ -12,13 +12,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test-cpu:
+    name: Oceananigans Test (CPU)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: ghcr.io/enzymead/enzymemlir-ppopp27:latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: System Information
+        run: |
+          julia -e 'using InteractiveUtils; versioninfo()'
+
+      - name: Oceananigans forward consistency check (CPU)
+        run: |
+          cd Oceananigans
+          REACTANT_BACKEND=cpu julia --project=. bench/forward_consistency.jl 1 --reactant-init
+
+      - name: Oceananigans Enzyme driver smoke run (CPU)
+        run: |
+          cd Oceananigans
+          julia --project=. bench/driver_enzyme.jl --config enzyme_naive --nsteps 4 --repeats 2
+
   test-gpu:
     name: Oceananigans Test (GPU)
     runs-on: linux-x86-a2-48-a100-4gpu
     timeout-minutes: 60
     container:
       image: ghcr.io/enzymead/enzymemlir-ppopp27:latest
-      options: --gpus all
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,13 +61,3 @@ jobs:
         run: |
           cd Oceananigans
           REACTANT_BACKEND=gpu julia --project=. bench/driver_reactant.jl --config reactant_full --nsteps 4 --repeats 2
-
-      - name: Oceananigans forward consistency check (CPU)
-        run: |
-          cd Oceananigans
-          REACTANT_BACKEND=cpu julia --project=. bench/forward_consistency.jl 1 --reactant-init
-
-      - name: Oceananigans Enzyme driver smoke run (CPU)
-        run: |
-          cd Oceananigans
-          julia --project=. bench/driver_enzyme.jl --config enzyme_naive --nsteps 4 --repeats 2
