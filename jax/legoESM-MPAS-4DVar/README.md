@@ -89,6 +89,24 @@ Configurations:
 | `enzyme_periodic<N>` | EnzymeMLIR periodic checkpointing of the time loop, `enzyme.checkpoint_period = N` |
 | `enzyme_binomial<N>` | EnzymeMLIR binomial checkpointing of the time loop, budget `N` |
 
+### Binomial checkpointing sweep
+
+```bash
+GPUS="0 1" PYTHON=.venv/bin/python ./run_binomial_sweep.sh
+STEPS="60 120" BUDGETS="4 16" ./run_binomial_sweep.sh   # subset
+```
+
+Runs `enzyme_binomial<N>` for every step count in `STEPS` (default
+`10 30 60 120 240`) and budget in `BUDGETS` (default `2 4 8 16 n`, where `n`
+sets the budget to the step count so every step is checkpointed, as JAX does),
+plus the `jax` reference (`BASELINES`). Runs are spread over `GPUS`, and a run
+whose log already has a result is skipped (`RERUN=1` redoes it). Logs go to
+`results/binomial_sweep/`, together with `summary.csv` (runtime of the second
+call, peak memory, gradient difference from JAX). The Pluto notebook
+`plot_binomial_sweep.jl` plots it to
+`results/binomial_sweep/mpas4dvar_binomial_sweep.{pdf,png}`. The results and
+figure are also in the repository's top-level `results/`.
+
 Loop checkpointing is requested by tagging the time-stepping `stablehlo.while`
 with `enzyme.enable_checkpointing`, `enzyme.checkpoint_period` and, for
 binomial, `enzyme.binomial_checkpointing`.
