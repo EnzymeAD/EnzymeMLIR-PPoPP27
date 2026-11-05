@@ -63,20 +63,14 @@ RUN mkdir Reactant/build && cd Reactant/build \
   && ninja -j ${NJOBS:-$(nproc)} \
   && cd ../..
 
-# Build Enzyme-JAX (This builds EnzymeMLIR with a plugins for both Reactant and JAX)
-RUN git clone https://github.com/EnzymeAD/Enzyme-JAX \
-  && cd Enzyme-JAX \
-  && git checkout 5ff3f33
-RUN cd Enzyme-JAX && CC=clang-18 HERMETIC_PYTHON_VERSION=3.12 bazel build :wheel :libRaise.so --jobs=${NJOBS:-$(nproc)}
-
 # Activate the Python virtual environment
 RUN python3 -m venv eval-env
 ENV PATH="$HOME/eval-env/bin:$PATH"
 
-# Install Python dependencies
+# Install Python dependencies and latest Enzyme-JAX (enzyme-ad) from PyPI
 COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
-RUN pip install -r requirements.txt
-RUN pip install Enzyme-JAX/bazel-bin/enzyme_ad-0.0.10-py312-none-manylinux2014_x86_64.whl
+RUN pip install --no-cache-dir -r requirements.txt \
+  && pip install --no-cache-dir --ignore-requires-python --upgrade enzyme-ad
 
 # Install system utilities needed for Julia benchmarks (numactl, procps) and download Julia directly
 USER root
