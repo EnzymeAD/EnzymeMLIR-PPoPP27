@@ -5,9 +5,15 @@ from statistics import mean, stdev
 
 import jax
 import jax.numpy as jnp
+from absl import flags
 from absl.testing import absltest
 
 from xprof_utils import profile_compiled_function
+
+# parsed by absltest.main(), e.g. `python main.py --warmup=2 --repeat=12`
+flags.DEFINE_integer("warmup", 2, "Unrecorded runs per configuration before measuring.")
+flags.DEFINE_integer("repeat", 12, "Measured runs (samples) per configuration.")
+FLAGS = flags.FLAGS
 
 
 def get_cpp_include_args():
@@ -196,7 +202,8 @@ def recursive_check(tester, lhs, rhs, pname):
 class EnzymeJaxTest(absltest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.repeat = 50
+        self.repeat = FLAGS.repeat  # measured runs per configuration
+        self.warmup = FLAGS.warmup  # unrecorded runs before the measured ones
         self.atol = 1e-6
         self.rtol = 0.0
         self.results = []
@@ -276,7 +283,9 @@ class EnzymeJaxTest(absltest.TestCase):
             return compiled, compiled(*args)
 
         def time(compiled, args, pname, key):
-            samples = profile_compiled_function(compiled, args, nrepeat=self.repeat)
+            samples = profile_compiled_function(
+                compiled, args, nrepeat=self.repeat, warmup=self.warmup
+            )
             self.record(name, pname, backend, key, samples)
 
         def enzyme(pipeline, fn):

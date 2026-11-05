@@ -10,10 +10,12 @@ import jax
 from xprof.convert.raw_to_tool_data import xspace_to_tool_data
 
 
-def profile_compiled_function(compiled_fn, args, nrepeat: int) -> dict[str, list]:
+def profile_compiled_function(
+    compiled_fn, args, nrepeat: int, warmup: int = 0
+) -> dict[str, list]:
     """
-    Run `compiled_fn(*args)` `nrepeat` times, each in its own xprof trace, and
-    return the per-run samples:
+    Run `compiled_fn(*args)` `warmup` times without recording anything, then
+    `nrepeat` times, each in its own xprof trace, and return the per-run samples:
         - "time_s": step time in seconds
         - "peak_memory_bytes": peak device memory in use during the run
 
@@ -24,6 +26,13 @@ def profile_compiled_function(compiled_fn, args, nrepeat: int) -> dict[str, list
     """
     trace_dir = tempfile.mkdtemp(prefix="jax_profile_")
     try:
+        # Warmup runs inside a (discarded) trace, so they also absorb the one-time
+        # cost of starting the profiler, which otherwise slows down the first sample.
+        if warmup > 0:
+            with jax.profiler.trace(os.path.join(trace_dir, "warmup")):
+                for _ in range(warmup):
+                    jax.block_until_ready(compiled_fn(*args))
+
         times_s = []
         peak_mems = []
         for i in range(nrepeat):
