@@ -15,7 +15,8 @@ RUN groupadd -r $USERNAME && \
 RUN apt-get -q update \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
-    opencl-headers
+    opencl-headers \
+    cuda-nsight-systems-12-9
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME
