@@ -109,8 +109,10 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
  && julia --project=/opt/julia_project -e 'using Pkg; Pkg.instantiate(); Pkg.precompile(); Pkg.status()'
 
 USER root
-RUN chmod -R a+rX /opt/julia_depot /opt/julia_project
-USER $USERNAME
+RUN chmod -R a+rX /opt/julia_depot /opt/julia_project \
+ && mkdir -p /github \
+ && chown $USERNAME:$USERNAME /github \
+ && chmod 0777 /github
 
 # Stack a writable /tmp depot in front of the precompiled /opt depot at runtime
 ENV JULIA_DEPOT_PATH=/tmp/julia_depot:/opt/julia_depot \
