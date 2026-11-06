@@ -1,5 +1,7 @@
 # jax is pinned to 0.10.0: jax >= 0.12 lowers lax.cumsum_p on GPU to chlo.scan, which
 # enzyme-ad (0.0.16) cannot differentiate yet (used by legoESM-MPAS-4DVar).
+# cuda12-local uses the CUDA/cuDNN already in the nvidia/cuda base image instead of
+# pulling ~4 GB of duplicate nvidia-*-cu12 wheels into the image.
 absl-py==2.5.1
 numpy==2.5.4
 scipy==1.18.1
@@ -7,5 +9,5 @@ pandas==3.1.0
 matplotlib==3.11.2
 jaxlib==0.10.0
 jax-md==0.2.27
-jax[cuda]==0.10.0
+jax[cuda12-local]==0.10.0
 xprof==2.24.2

@@ -64,6 +64,9 @@ jobs:
           push: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # zstd layers decompress several times faster than gzip; image extraction on the
+          # K8s GPU runners is the bottleneck behind the 10-minute pod-readiness timeout.
+          outputs: type=image,compression=zstd,compression-level=3,force-compression=true,oci-mediatypes=true
           # See: https://docs.docker.com/build/ci/github-actions/cache/#github-cache
           cache-from: type=gha
           cache-to: type=gha,mode=min
