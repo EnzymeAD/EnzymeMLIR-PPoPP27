@@ -4,6 +4,13 @@ import sys, time
 from pathlib import Path
 import numpy as np
 import jax, jax.numpy as jnp, jax.extend
+if len(sys.argv) > 2 and sys.argv[2].startswith("enzyme"):
+    # JAX >= 0.12 registers a GPU-specific lowering for lax.cumsum_p that emits chlo.scan,
+    # which Enzyme-JAX does not yet have an AD rule for. Popping it restores JAX's common
+    # reduce_window lowering (used on GPU in JAX <= 0.10 and differentiated natively by Enzyme-JAX).
+    from jax._src.interpreters import mlir as _jax_mlir
+    for _plat_rules in list(_jax_mlir._platform_specific_lowerings.values()):
+        _plat_rules.pop(jax.lax.cumsum_p, None)
 from legoesm.da.control_vector import build_control_spec, control_to_increment
 from legoesm.da.gen_be import GenBETransform, load_gen_be_params
 from scripts.run.mpas_4dvar_single import common
