@@ -63,6 +63,7 @@ CONFIGS=(
   "binomial4_nomincut|Binomial b=4 (no mincut)|mlir|BINOMIAL=yes BINOMIAL_BUDGET=4 MINCUT=no"
   "binomial16|Binomial b=16|mlir|BINOMIAL=yes BINOMIAL_BUDGET=16"
   "binomial16_nomincut|Binomial b=16 (no mincut)|mlir|BINOMIAL=yes BINOMIAL_BUDGET=16 MINCUT=no"
+  "mlir_with_atomics|EnzymeMLIR (with atomics)|mlir|RMATOMICS=no"
 )
 
 build() { # build TAG MAKEVARS...
