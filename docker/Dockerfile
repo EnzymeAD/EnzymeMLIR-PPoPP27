@@ -34,9 +34,10 @@ RUN curl -fLO https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/b
     chmod +x .local/bin/bazel
 
 # Build Clang and MLIR (for EnzymeLLVM)
-RUN git clone https://github.com/llvm/llvm-project.git \
+RUN git init -q llvm-project \
   && cd llvm-project \
-  && git checkout 9d618fc
+  && git fetch -q --depth 1 https://github.com/llvm/llvm-project.git 9d618fc0243103263ebf9bdcd08ef25e871d9c78 \
+  && git checkout -q FETCH_HEAD
 
 RUN mkdir llvm-project/build && cd llvm-project/build \
   && cmake ../llvm -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18 -DLLVM_ENABLE_PROJECTS='clang;mlir' -DLLVM_BUILD_EXAMPLES=OFF -DLLVM_TARGETS_TO_BUILD="Native;NVPTX" -DLLVM_ENABLE_LLD=ON \
@@ -44,9 +45,10 @@ RUN mkdir llvm-project/build && cd llvm-project/build \
   && cd ../..
 
 # Build Enzyme
-RUN git clone https://github.com/EnzymeAD/Enzyme.git \
+RUN git init -q Enzyme \
   && cd Enzyme \
-  && git checkout 4433004
+  && git fetch -q --depth 1 https://github.com/EnzymeAD/Enzyme.git 4433004499bb2a38076f5a4608ffa3012efc19a5 \
+  && git checkout -q FETCH_HEAD
 
 RUN mkdir Enzyme/build && cd Enzyme/build \
   && cmake ../enzyme -G Ninja -DLLVM_DIR=$HOME/llvm-project/build/lib/cmake/llvm \
@@ -54,9 +56,10 @@ RUN mkdir Enzyme/build && cd Enzyme/build \
   && cd ../..
 
 # Build Reactant (this is the EnzymeMLIR C++ frontend)
-RUN git clone https://github.com/EnzymeAD/Reactant.git \
+RUN git init -q Reactant \
   && cd Reactant \
-  && git checkout a38313b
+  && git fetch -q --depth 1 https://github.com/EnzymeAD/Reactant.git a38313b8decc4861eb127a57bab5275eb08968b9 \
+  && git checkout -q FETCH_HEAD
 
 RUN mkdir Reactant/build && cd Reactant/build \
   && cmake ../enzyme -G Ninja -DLLVM_DIR=$HOME/llvm-project/build/lib/cmake/llvm \
