@@ -89,7 +89,7 @@ RUN python3 -m venv eval-env
 ENV PATH="$HOME/eval-env/bin:$PATH"
 
 # Install Python dependencies and latest Enzyme-JAX (enzyme-ad) from PyPI
-COPY --chown=$USERNAME:$USERNAME requirements.txt $HOME/requirements.txt
+COPY --chown=$USERNAME:$USERNAME docker/requirements.txt $HOME/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt \
   && pip install --no-cache-dir --ignore-requires-python --upgrade enzyme-ad
 
