@@ -12,11 +12,16 @@ WORKDIR $HOME
 RUN groupadd -r $USERNAME && \
   useradd -r -g $USERNAME -d /home/$USERNAME -m $USERNAME
 
+# cuDNN is upgraded from the base image's 9.9.0 to 9.27.0.42 (the version in
+# jax/legoESM-MPAS-4DVar/env_lock.txt): jax's CUDA plugin (used via jax[cuda12-local])
+# refuses cuDNN < 9.10.1 together with cuBLASLt >= 12.9 and falls back to CPU.
+ARG CUDNN_VERSION=9.27.0.42-1
 RUN apt-get -q update \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
     opencl-headers \
     cuda-nsight-systems-12-9 \
+    libcudnn9-cuda-12=${CUDNN_VERSION} libcudnn9-dev-cuda-12=${CUDNN_VERSION} libcudnn9-headers-cuda-12=${CUDNN_VERSION} \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
