@@ -66,6 +66,6 @@ jobs:
           # zstd layers decompress several times faster than gzip; image extraction on the
           # K8s GPU runners is the bottleneck behind the 10-minute pod-readiness timeout.
           outputs: type=image,compression=zstd,compression-level=3,force-compression=true,oci-mediatypes=true
-          # See: https://docs.docker.com/build/ci/github-actions/cache/#github-cache
-          cache-from: type=gha
-          cache-to: type=gha,mode=min
+          # No GitHub Actions cache: the image (~11 GB compressed) exceeds the 10 GB GHA cache
+          # cap, and exporting it hung the self-hosted runner for 30+ minutes after each push.
+          # The persistent docker1 runner keeps BuildKit's local layer cache between builds.
