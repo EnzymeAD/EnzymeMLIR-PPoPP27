@@ -17,11 +17,13 @@ RUN groupadd -r $USERNAME && \
 # refuses cuDNN < 9.10.1 together with cuBLASLt >= 12.9 and falls back to CPU.
 ARG CUDNN_VERSION=9.27.0.42-1
 RUN apt-get -q update \
+  && apt-mark unhold libcudnn9-cuda-12 libcudnn9-dev-cuda-12 \
   && apt-get install -y --no-install-recommends ca-certificates software-properties-common curl gnupg2 \
     cmake gcc g++ clang-18 lld python3-venv python3-pip ninja-build git time sudo \
     opencl-headers \
     cuda-nsight-systems-12-9 \
     libcudnn9-cuda-12=${CUDNN_VERSION} libcudnn9-dev-cuda-12=${CUDNN_VERSION} libcudnn9-headers-cuda-12=${CUDNN_VERSION} \
+  && apt-mark hold libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libcudnn9-headers-cuda-12 \
   && rm -rf /var/lib/apt/lists/*
 
 RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
