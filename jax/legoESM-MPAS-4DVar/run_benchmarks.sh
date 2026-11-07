@@ -51,6 +51,18 @@ echo "Starting legoESM MPAS-4DVar Benchmark"
 echo "Python: $($RUN_PY --version 2>&1) (enzyme-ad=${ENZYME_VER:-unknown})"
 echo "================================================================="
 
+
+# Refuse to benchmark on a silent CPU fallback (e.g. CUDA plugin rejected the cuDNN version)
+if [ "${ALLOW_CPU:-0}" != "1" ]; then
+  "$RUN_PY" - <<'EOF'
+import sys, jax
+devs = jax.devices()
+print("JAX", jax.__version__, "devices:", devs)
+if not any(d.platform in ("gpu", "cuda") for d in devs):
+    sys.exit("ERROR: JAX has no GPU backend (set ALLOW_CPU=1 to override)")
+EOF
+fi
+
 # Ensure background sample data/mpas_nmc_case_009_20170115000000.npz exists
 SAMPLE_NPZ="data/mpas_nmc_case_009_20170115000000.npz"
 if [ ! -f "$SAMPLE_NPZ" ]; then
