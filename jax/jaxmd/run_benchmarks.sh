@@ -27,6 +27,17 @@ echo "Starting JAX-MD Benchmark (warmup=$JAXMD_WARMUP, repeat=$JAXMD_REPEAT)"
 echo "Python: $($PYTHON --version 2>&1)"
 echo "================================================================="
 
+# Refuse to benchmark on a silent CPU fallback (e.g. CUDA plugin rejected the cuDNN version)
+if [ "${ALLOW_CPU:-0}" != "1" ]; then
+  "$PYTHON" - <<'EOF'
+import sys, jax
+devs = jax.devices()
+print("JAX", jax.__version__, "devices:", devs)
+if not any(d.platform in ("gpu", "cuda") for d in devs):
+    sys.exit("ERROR: JAX has no GPU backend (set ALLOW_CPU=1 to override)")
+EOF
+fi
+
 cd "$HERE"
 export TEST_UNDECLARED_OUTPUTS_DIR="$OUT_DIR"
 "$PYTHON" main.py --warmup="$JAXMD_WARMUP" --repeat="$JAXMD_REPEAT"
