@@ -1,0 +1,62 @@
+name: legoESM MPAS-4DVar Benchmarks
+
+on:
+  workflow_dispatch:
+    inputs:
+      mpas_mode:
+        description: "MPAS 4D-Var mode (comparison, binomial_sweep, or both)"
+        required: false
+        default: "both"
+      docker_tag:
+        description: "Docker image tag on ghcr.io/enzymead/enzymemlir-ppopp27"
+        required: false
+        default: "latest"
+  push:
+    branches: ["main"]
+    paths:
+      - "jax/legoESM-MPAS-4DVar/**"
+      - ".github/workflows/legoesm.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "jax/legoESM-MPAS-4DVar/**"
+      - ".github/workflows/legoesm.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  legoesm-benchmarks:
+    name: legoESM MPAS-4DVar Benchmark (A100 GPU)
+    runs-on: linux-x86-a2-48-a100-4gpu
+    timeout-minutes: 90
+    container:
+      image: ghcr.io/enzymead/enzymemlir-ppopp27:${{ inputs.docker_tag || 'latest' }}
+      options: --user root
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: System and GPU Information
+        run: |
+          nvidia-smi
+          /home/evaluator/eval-env/bin/python3 -c "import jax; print('JAX version:', jax.__version__, 'Devices:', jax.devices())" || python3 -c "import jax; print('JAX version:', jax.__version__, 'Devices:', jax.devices())"
+
+      - name: Run legoESM MPAS-4DVar Benchmark
+        env:
+          MPAS_MODE: ${{ inputs.mpas_mode || 'both' }}
+        run: |
+          bash jax/legoESM-MPAS-4DVar/run_benchmarks.sh
+
+      - name: Upload legoESM MPAS-4DVar Benchmark Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legoesm-benchmark-results
+          path: |
+            results/mpas_4dvar/*.log
+            results/binomial_sweep/summary.csv
+            results/binomial_sweep/*.log
