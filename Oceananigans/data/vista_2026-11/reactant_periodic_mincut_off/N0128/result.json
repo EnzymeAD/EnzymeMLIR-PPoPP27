@@ -1,223 +1,342 @@
 {
-  "calls": [
+  "batches": [
     {
-      "base_rss_bytes": 5191761920,
-      "delta_rss_bytes": 51068993536,
-      "kind": "warmup",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56260755456,
-      "perf_counted": false,
-      "wall_s": 1291.707979227,
-      "window_end_unix": 1.793789243349823e9,
-      "window_start_unix": 1.793787951641842e9
+      "batch": 1,
+      "compile_s": 137.881735115,
+      "delta_rss_bytes_mean": 5.0842238976e10,
+      "elapsed_s": 2100.0480120182037,
+      "flops_mean": 6.098456252465e11,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "n_measured": 4,
+      "objective": 2.494933003334412,
+      "peak_rss_bytes_mean": 5.613453312e10,
+      "perf_attribution": "ok",
+      "reason": "",
+      "slurm_job_id": "1132197",
+      "status": "ok",
+      "wall_s_mean": 365.86990709074996
     },
     {
-      "base_rss_bytes": 5288165376,
-      "delta_rss_bytes": 50828673024,
-      "flops": 2430058990498,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56116838400,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430058990498
-      },
-      "wall_s": 1284.567202553,
-      "window_end_unix": 1.793790537079803e9,
-      "window_start_unix": 1.793789252512598e9
+      "batch": 2,
+      "compile_s": 131.910964175,
+      "delta_rss_bytes_mean": 5.0839273472e10,
+      "elapsed_s": 2088.086405992508,
+      "flops_mean": 6.097965370625e11,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "n_measured": 4,
+      "objective": 2.494933003334412,
+      "peak_rss_bytes_mean": 5.6186011648e10,
+      "perf_attribution": "ok",
+      "reason": "",
+      "slurm_job_id": "1132307",
+      "status": "ok",
+      "wall_s_mean": 364.24372420275
     },
     {
-      "base_rss_bytes": 5282988032,
-      "delta_rss_bytes": 50828673024,
-      "flops": 2430044302523,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56111661056,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430044302523
-      },
-      "wall_s": 1284.024961188,
-      "window_end_unix": 1.793791827418529e9,
-      "window_start_unix": 1.793790543393566e9
-    },
-    {
-      "base_rss_bytes": 5282398208,
-      "delta_rss_bytes": 50824019968,
-      "flops": 2430059461866,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56106418176,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430059461866
-      },
-      "wall_s": 1286.551856981,
-      "window_end_unix": 1.793793120280546e9,
-      "window_start_unix": 1.793791833728687e9
-    },
-    {
-      "base_rss_bytes": 5283119104,
-      "delta_rss_bytes": 50823954432,
-      "flops": 2430079528643,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56107073536,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430079528643
-      },
-      "wall_s": 1286.463435388,
-      "window_end_unix": 1.793794413049765e9,
-      "window_start_unix": 1.793793126586327e9
-    },
-    {
-      "base_rss_bytes": 5282660352,
-      "delta_rss_bytes": 50823954432,
-      "flops": 2430051072374,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56106614784,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430051072374
-      },
-      "wall_s": 1288.315964126,
-      "window_end_unix": 1.793795707658524e9,
-      "window_start_unix": 1.793794419342558e9
-    },
-    {
-      "base_rss_bytes": 5283840000,
-      "delta_rss_bytes": 50823954432,
-      "flops": 2430025150439,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56107794432,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430025150439
-      },
-      "wall_s": 1284.332386477,
-      "window_end_unix": 1.793796998268555e9,
-      "window_start_unix": 1.793795713936167e9
-    },
-    {
-      "base_rss_bytes": 5283184640,
-      "delta_rss_bytes": 50823954432,
-      "flops": 2430027494648,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56107139072,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430027494648
-      },
-      "wall_s": 1288.024341749,
-      "window_end_unix": 1.79379829257054e9,
-      "window_start_unix": 1.793797004546196e9
-    },
-    {
-      "base_rss_bytes": 5291966464,
-      "delta_rss_bytes": 50828673024,
-      "flops": 2430043043016,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56120639488,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430043043016
-      },
-      "wall_s": 1287.313182294,
-      "window_end_unix": 1.793799586158494e9,
-      "window_start_unix": 1.79379829884531e9
-    },
-    {
-      "base_rss_bytes": 5283512320,
-      "delta_rss_bytes": 50823888896,
-      "flops": 2430031032574,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56107401216,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430031032574
-      },
-      "wall_s": 1286.37021461,
-      "window_end_unix": 1.793800878868499e9,
-      "window_start_unix": 1.793799592498283e9
-    },
-    {
-      "base_rss_bytes": 5284233216,
-      "delta_rss_bytes": 50823954432,
-      "flops": 2430031065278,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56108187648,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430031065278
-      },
-      "wall_s": 1285.165157673,
-      "window_end_unix": 1.793802170288566e9,
-      "window_start_unix": 1.793800885123406e9
-    },
-    {
-      "base_rss_bytes": 5292949504,
-      "delta_rss_bytes": 50828673024,
-      "flops": 2430053469164,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56121622528,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430053469164
-      },
-      "wall_s": 1285.277418617,
-      "window_end_unix": 1.793803461838505e9,
-      "window_start_unix": 1.793802176561085e9
-    },
-    {
-      "base_rss_bytes": 5289672704,
-      "delta_rss_bytes": 50828673024,
-      "flops": 2430060056253,
-      "kind": "measured",
-      "memory_method": "linux_vmhwm",
-      "objective": 2.494933003334408,
-      "peak_rss_bytes": 56118345728,
-      "perf_counted": true,
-      "perf_counts": {
-        "r80C0": 0,
-        "r80C1": 2430060056253
-      },
-      "wall_s": 1287.095486542,
-      "window_end_unix": 1.793804755189134e9,
-      "window_start_unix": 1.793803468093645e9
+      "batch": 3,
+      "compile_s": 132.991387078,
+      "delta_rss_bytes_mean": 5.084348416e10,
+      "elapsed_s": 2090.0889608860016,
+      "flops_mean": 6.0979578550625e11,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "n_measured": 4,
+      "objective": 2.494933003334412,
+      "peak_rss_bytes_mean": 5.611749376e10,
+      "perf_attribution": "ok",
+      "reason": "",
+      "slurm_job_id": "1132447",
+      "status": "ok",
+      "wall_s_mean": 364.15847027974996
     }
   ],
-  "compile_s": 140.220107889,
+  "calls": [
+    {
+      "base_rss_bytes": 5242814464,
+      "batch": 1,
+      "delta_rss_bytes": 50932219904,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "kind": "warmup",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56175034368,
+      "perf_counted": false,
+      "slurm_job_id": "1132197",
+      "wall_s": 364.887084478,
+      "window_end_unix": 1.794250205252086e9,
+      "window_start_unix": 1.794249840365001e9
+    },
+    {
+      "base_rss_bytes": 5290000384,
+      "batch": 1,
+      "delta_rss_bytes": 50834309120,
+      "flops": 609887552281,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56124309504,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609887552281
+      },
+      "slurm_job_id": "1132197",
+      "wall_s": 366.116826148,
+      "window_end_unix": 1.794250580315478e9,
+      "window_start_unix": 1.794250214198651e9
+    },
+    {
+      "base_rss_bytes": 5293473792,
+      "batch": 1,
+      "delta_rss_bytes": 50847547392,
+      "flops": 609821359779,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56141021184,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609821359779
+      },
+      "slurm_job_id": "1132197",
+      "wall_s": 365.532152585,
+      "window_end_unix": 1.794250952146717e9,
+      "window_start_unix": 1.794250586614564e9
+    },
+    {
+      "base_rss_bytes": 5293473792,
+      "batch": 1,
+      "delta_rss_bytes": 50847547392,
+      "flops": 609868459991,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56141021184,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609868459991
+      },
+      "slurm_job_id": "1132197",
+      "wall_s": 366.53988672,
+      "window_end_unix": 1.794251325005455e9,
+      "window_start_unix": 1.794250958465567e9
+    },
+    {
+      "base_rss_bytes": 5292228608,
+      "batch": 1,
+      "delta_rss_bytes": 50839552000,
+      "flops": 609805128935,
+      "hostname": "i614-113.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56131780608,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609805128935
+      },
+      "slurm_job_id": "1132197",
+      "wall_s": 365.29076291,
+      "window_end_unix": 1.794251696605449e9,
+      "window_start_unix": 1.794251331314685e9
+    },
+    {
+      "base_rss_bytes": 5297471488,
+      "batch": 2,
+      "delta_rss_bytes": 50922913792,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "kind": "warmup",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56220385280,
+      "perf_counted": false,
+      "slurm_job_id": "1132307",
+      "wall_s": 366.759559802,
+      "window_end_unix": 1.794252810592171e9,
+      "window_start_unix": 1.794252443832609e9
+    },
+    {
+      "base_rss_bytes": 5345771520,
+      "batch": 2,
+      "delta_rss_bytes": 50834309120,
+      "flops": 609783687894,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56180080640,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609783687894
+      },
+      "slurm_job_id": "1132307",
+      "wall_s": 364.046683367,
+      "window_end_unix": 1.794253183502177e9,
+      "window_start_unix": 1.794252819455492e9
+    },
+    {
+      "base_rss_bytes": 5346557952,
+      "batch": 2,
+      "delta_rss_bytes": 50834374656,
+      "flops": 609779222033,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56180932608,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609779222033
+      },
+      "slurm_job_id": "1132307",
+      "wall_s": 364.202308168,
+      "window_end_unix": 1.794253553982141e9,
+      "window_start_unix": 1.79425318977983e9
+    },
+    {
+      "base_rss_bytes": 5347278848,
+      "batch": 2,
+      "delta_rss_bytes": 50844205056,
+      "flops": 609782463593,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56191483904,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609782463593
+      },
+      "slurm_job_id": "1132307",
+      "wall_s": 364.397695571,
+      "window_end_unix": 1.794253924652196e9,
+      "window_start_unix": 1.794253560254497e9
+    },
+    {
+      "base_rss_bytes": 5347344384,
+      "batch": 2,
+      "delta_rss_bytes": 50844205056,
+      "flops": 609840774730,
+      "hostname": "i617-062.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56191549440,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609840774730
+      },
+      "slurm_job_id": "1132307",
+      "wall_s": 364.328209705,
+      "window_end_unix": 1.794254295247576e9,
+      "window_start_unix": 1.794253930919364e9
+    },
+    {
+      "base_rss_bytes": 5224005632,
+      "batch": 3,
+      "delta_rss_bytes": 50931171328,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "kind": "warmup",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56155176960,
+      "perf_counted": false,
+      "slurm_job_id": "1132447",
+      "wall_s": 366.661272022,
+      "window_end_unix": 1.794256147438579e9,
+      "window_start_unix": 1.794255780777306e9
+    },
+    {
+      "base_rss_bytes": 5273616384,
+      "batch": 3,
+      "delta_rss_bytes": 50847547392,
+      "flops": 609868500063,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56121163776,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609868500063
+      },
+      "slurm_job_id": "1132447",
+      "wall_s": 365.409023652,
+      "window_end_unix": 1.794256521678545e9,
+      "window_start_unix": 1.794256156269521e9
+    },
+    {
+      "base_rss_bytes": 5273026560,
+      "batch": 3,
+      "delta_rss_bytes": 50839355392,
+      "flops": 609765989751,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56112381952,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609765989751
+      },
+      "slurm_job_id": "1132447",
+      "wall_s": 363.766970286,
+      "window_end_unix": 1.794256891728594e9,
+      "window_start_unix": 1.794256527961623e9
+    },
+    {
+      "base_rss_bytes": 5274271744,
+      "batch": 3,
+      "delta_rss_bytes": 50839486464,
+      "flops": 609765952608,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56113758208,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609765952608
+      },
+      "slurm_job_id": "1132447",
+      "wall_s": 363.687953907,
+      "window_end_unix": 1.794257261688565e9,
+      "window_start_unix": 1.79425689800061e9
+    },
+    {
+      "base_rss_bytes": 5275123712,
+      "batch": 3,
+      "delta_rss_bytes": 50847547392,
+      "flops": 609782699603,
+      "hostname": "i614-083.vista.tacc.utexas.edu",
+      "kind": "measured",
+      "memory_method": "linux_vmhwm",
+      "objective": 2.494933003334412,
+      "peak_rss_bytes": 56122671104,
+      "perf_counted": true,
+      "perf_counts": {
+        "r80C0": 0,
+        "r80C1": 609782699603
+      },
+      "slurm_job_id": "1132447",
+      "wall_s": 363.769933274,
+      "window_end_unix": 1.794257631708579e9,
+      "window_start_unix": 1.794257267938644e9
+    }
+  ],
+  "compile_s": 137.881735115,
   "config": "reactant_periodic_mincut_off",
   "config_spec": {
     "checkpointing": "periodic",
@@ -226,32 +345,32 @@
     "mincut": false,
     "optimize": "default"
   },
-  "delta_rss_bytes": 5.0825920512e10,
+  "delta_rss_bytes": 5.0841665536e10,
   "delta_rss_stats": {
     "ci95": [
-      5.082437661748448e10,
-      5.082746440651552e10
+      5.083820010698995e10,
+      5.084513096501005e10
     ],
-    "ci95_halfwidth": 1.5438945155201396e6,
-    "max": 5.0828673024e10,
-    "mean": 5.0825920512e10,
-    "median": 5.08239872e10,
-    "min": 5.0823888896e10,
+    "ci95_halfwidth": 3.465429010046057e6,
+    "max": 5.0847547392e10,
+    "mean": 5.0841665536e10,
+    "median": 5.0841878528e10,
+    "min": 5.083430912e10,
     "n": 12,
-    "std": 2.429898902687704e6,
+    "std": 5.454156397476499e6,
     "values": [
-      5.0828673024e10,
-      5.0828673024e10,
-      5.0824019968e10,
-      5.0823954432e10,
-      5.0823954432e10,
-      5.0823954432e10,
-      5.0823954432e10,
-      5.0828673024e10,
-      5.0823888896e10,
-      5.0823954432e10,
-      5.0828673024e10,
-      5.0828673024e10
+      5.083430912e10,
+      5.0847547392e10,
+      5.0847547392e10,
+      5.0839552e10,
+      5.083430912e10,
+      5.0834374656e10,
+      5.0844205056e10,
+      5.0844205056e10,
+      5.0847547392e10,
+      5.0839355392e10,
+      5.0839486464e10,
+      5.0847547392e10
     ]
   },
   "driver": "reactant",
@@ -262,13 +381,13 @@
       "BENCH_JULIA_FLAGS": "-O0",
       "JULIA_NUM_THREADS": "1",
       "OMP_NUM_THREADS": null,
-      "PERF_CTL_FIFO": "/tmp/jl_ROnEJOnwl6.perf_ctl",
-      "SLURM_JOB_ID": "1120567",
+      "PERF_CTL_FIFO": "/tmp/jl_D0xKFkXUXA.perf_ctl",
+      "SLURM_JOB_ID": "1132197",
       "SLURM_JOB_PARTITION": "gg",
       "XLA_FLAGS": "--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"
     },
-    "git_commit": "8fcc665421191cb84c1d203829c0e17a89865834",
-    "hostname": "i615-144.vista.tacc.utexas.edu",
+    "git_commit": "3f6c63da496e9bcdb5acf77948578a963ccbd711",
+    "hostname": "i614-113.vista.tacc.utexas.edu;i617-062.vista.tacc.utexas.edu;i614-083.vista.tacc.utexas.edu",
     "julia_cmd": "`/usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -O0 -g1`",
     "julia_opt_level": 0,
     "julia_version": "1.12.7",
@@ -287,18 +406,18 @@
       },
       "Enzyme": {
         "git_revision": "",
-        "tree_hash": "74e912b796cec5fab7cd1eb982e460499d51207f",
-        "version": "0.13.216"
+        "tree_hash": "49a2f5cefe1810e44e898377f4de6e1ec7b97c19",
+        "version": "0.13.219"
       },
       "EnzymeCore": {
         "git_revision": "",
-        "tree_hash": "04c4269956f90d8f5c9acc73b774c5293481f4d7",
-        "version": "0.8.26"
+        "tree_hash": "d88c803e26799193db42e47f6e1e28eeb0322e4d",
+        "version": "0.8.27"
       },
       "Enzyme_jll": {
         "git_revision": "",
-        "tree_hash": "1044bbf0dd0d642940c05f0895f651878f0ffb9e",
-        "version": "0.0.303+1"
+        "tree_hash": "5464e555af2b36b35ac10ceda173b35a5eee63ef",
+        "version": "0.0.307+0"
       },
       "GPUArraysCore": {
         "git_revision": "",
@@ -342,8 +461,8 @@
       },
       "Reactant": {
         "git_revision": "",
-        "tree_hash": "06d298413e4399ee20b868dc7261939fe6dfaf66",
-        "version": "0.2.304"
+        "tree_hash": "40fa851949b2b8d7884cbace6a6a401c88b21b29",
+        "version": "0.2.308"
       },
       "ReactantCore": {
         "git_revision": "",
@@ -352,8 +471,8 @@
       },
       "Reactant_jll": {
         "git_revision": "",
-        "tree_hash": "e22463ed2ed458de83c9f1b029bff6efc4233d8e",
-        "version": "0.0.438+0"
+        "tree_hash": "13ca059626d979ebeb114147cd1c1bc0adffc109",
+        "version": "0.0.443+0"
       },
       "Statistics": {
         "git_revision": "",
@@ -369,83 +488,83 @@
     "perf_active": true,
     "threads": 1,
     "total_memory_bytes": 255094751232,
-    "versioninfo": "Julia Version 1.12.7\nCommit 6d172b025e4 (2026-08-15 08:05 UTC)\nBuild Info:\n  Official https://julialang.org release\nPlatform Info:\n  OS: Linux (aarch64-linux-gnu)\n  CPU: 144 × unknown\n  WORD_SIZE: 64\n  LLVM: libLLVM-18.1.7 (ORCJIT, neoverse-v2)\n  GC: Built with stock GC\nThreads: 1 default, 0 interactive, 1 GC (on 144 virtual cores)\nEnvironment:\n  JULIA_PROJECT = /opt/channelanigans\n  JULIA_PKG_OFFLINE = true\n  JULIA_PATH = /usr/local/julia\n  JULIA_GPG = 64B779A570972FFF7BFC2B54EAD471E1A1F2C10A\n  LD_LIBRARY_PATH = /.singularity.d/libs\n  JULIA_VERSION = 1.12.7\n  JULIA_PKG_PRECOMPILE_AUTO = 0\n  JULIA_DEPOT_PATH = /tmp/channelanigans_depot_1120567:/opt/julia_depot\n  JULIA_NUM_THREADS = 1\n"
+    "versioninfo": "Julia Version 1.12.7\nCommit 6d172b025e4 (2026-08-15 08:05 UTC)\nBuild Info:\n  Official https://julialang.org release\nPlatform Info:\n  OS: Linux (aarch64-linux-gnu)\n  CPU: 144 × unknown\n  WORD_SIZE: 64\n  LLVM: libLLVM-18.1.7 (ORCJIT, neoverse-v2)\n  GC: Built with stock GC\nThreads: 1 default, 0 interactive, 1 GC (on 144 virtual cores)\nEnvironment:\n  JULIA_PROJECT = /opt/channelanigans\n  JULIA_PKG_OFFLINE = true\n  JULIA_PATH = /usr/local/julia\n  JULIA_GPG = 64B779A570972FFF7BFC2B54EAD471E1A1F2C10A\n  LD_LIBRARY_PATH = /.singularity.d/libs\n  JULIA_VERSION = 1.12.7\n  JULIA_PKG_PRECOMPILE_AUTO = 0\n  JULIA_DEPOT_PATH = /tmp/channelanigans_depot_1132197:/opt/julia_depot\n  JULIA_NUM_THREADS = 1\n"
   },
-  "flops_per_call": 2.4300470556063335e12,
+  "flops_per_call": 6.0981264927175e11,
   "flops_stats": {
     "ci95": [
-      2.4300366053050063e12,
-      2.4300575059076606e12
+      6.097849605446925e11,
+      6.098403379988075e11
     ],
-    "ci95_halfwidth": 1.0450301327040099e7,
-    "max": 2.430079528643e12,
-    "mean": 2.4300470556063335e12,
-    "median": 2.4300476874485e12,
-    "min": 2.430025150439e12,
+    "ci95_halfwidth": 2.768872705753256e7,
+    "max": 6.09887552281e11,
+    "mean": 6.0981264927175e11,
+    "median": 6.097944084145e11,
+    "min": 6.09765952608e11,
     "n": 12,
-    "std": 1.6447481011211189e7,
+    "std": 4.357862976879009e7,
     "values": [
-      2.430058990498e12,
-      2.430044302523e12,
-      2.430059461866e12,
-      2.430079528643e12,
-      2.430051072374e12,
-      2.430025150439e12,
-      2.430027494648e12,
-      2.430043043016e12,
-      2.430031032574e12,
-      2.430031065278e12,
-      2.430053469164e12,
-      2.430060056253e12
+      6.09887552281e11,
+      6.09821359779e11,
+      6.09868459991e11,
+      6.09805128935e11,
+      6.09783687894e11,
+      6.09779222033e11,
+      6.09782463593e11,
+      6.0984077473e11,
+      6.09868500063e11,
+      6.09765989751e11,
+      6.09765952608e11,
+      6.09782699603e11
     ]
   },
   "gradients": {
     "dDz": {
-      "l2": 0.0963693104361294,
-      "maxabs": 0.09537448709640288,
+      "l2": 0.09636931043612935,
+      "maxabs": 0.09537448709640285,
       "nonfinite": 0,
       "size": [
         1,
         32
       ],
-      "sum": 0.12916348725280627
+      "sum": 0.1291634872528056
     },
     "dS": {
       "l2": 0.3239910193797009,
-      "maxabs": 0.004178526022459831,
+      "maxabs": 0.004178526022459773,
       "nonfinite": 0,
       "size": [
         80,
         160,
         32
       ],
-      "sum": 2.37330906880176e-14
+      "sum": 6.641565010630235e-15
     },
     "dT": {
-      "l2": 0.06936492314716469,
-      "maxabs": 0.0008946300225024507,
+      "l2": 0.06936492314716468,
+      "maxabs": 0.0008946300225024386,
       "nonfinite": 0,
       "size": [
         80,
         160,
         32
       ],
-      "sum": 0.01092255497825628
+      "sum": 0.010922554978258073
     },
     "dT_flux": {
-      "l2": 2.9656165084131976,
-      "maxabs": 0.061226609380383996,
+      "l2": 2.9656165084131954,
+      "maxabs": 0.061226609380382914,
       "nonfinite": 0,
       "size": [
         80,
         160,
         1
       ],
-      "sum": 0.1446213216169142
+      "sum": 0.14462132161675856
     },
     "du_wind_stress": {
       "l2": 193.3470317440315,
-      "maxabs": 10.808790197352767,
+      "maxabs": 10.808790197352785,
       "nonfinite": 0,
       "size": [
         80,
@@ -455,101 +574,116 @@
       "sum": -16643.58519382303
     },
     "dv_wind_stress": {
-      "l2": 85.27485983383944,
-      "maxabs": 9.619436632206018,
+      "l2": 85.27485983383943,
+      "maxabs": 9.61943663220602,
       "nonfinite": 0,
       "size": [
         80,
         161,
         1
       ],
-      "sum": 1511.2347403709027
+      "sum": 1511.2347403709068
     }
+  },
+  "gradients_max_rel_spread_across_batches": {
+    "dDz": 0.0,
+    "dS": 0.0,
+    "dT": 0.0,
+    "dT_flux": 0.0,
+    "du_wind_stress": 0.0,
+    "dv_wind_stress": 0.0
   },
   "memory_method": "linux_vmhwm",
   "nsteps": 128,
-  "objective": 2.494933003334408,
+  "objective": 2.494933003334412,
   "objectives_consistent": true,
-  "peak_rss_bytes": 5.6111644672e10,
+  "peak_rss_bytes": 5.6146012842666664e10,
   "peak_rss_stats": {
     "ci95": [
-      5.610785687416972e10,
-      5.611543246983028e10
+      5.6126309412732956e10,
+      5.616571627260037e10
     ],
-    "ci95_halfwidth": 3.7877978302727984e6,
-    "max": 5.6121622528e10,
-    "mean": 5.6111644672e10,
-    "median": 5.610799104e10,
-    "min": 5.6106418176e10,
+    "ci95_halfwidth": 1.9703429933708046e7,
+    "max": 5.619154944e10,
+    "mean": 5.6146012842666664e10,
+    "median": 5.6136400896e10,
+    "min": 5.6112381952e10,
     "n": 12,
-    "std": 5.961525025744336e6,
+    "std": 3.1010760316724945e7,
     "values": [
-      5.61168384e10,
-      5.6111661056e10,
-      5.6106418176e10,
-      5.6107073536e10,
-      5.6106614784e10,
-      5.6107794432e10,
-      5.6107139072e10,
-      5.6120639488e10,
-      5.6107401216e10,
-      5.6108187648e10,
-      5.6121622528e10,
-      5.6118345728e10
+      5.6124309504e10,
+      5.6141021184e10,
+      5.6141021184e10,
+      5.6131780608e10,
+      5.618008064e10,
+      5.6180932608e10,
+      5.6191483904e10,
+      5.619154944e10,
+      5.6121163776e10,
+      5.6112381952e10,
+      5.6113758208e10,
+      5.6122671104e10
     ]
   },
   "perf": {
     "attribution": "ok",
     "events": "r80C0,r80C1",
     "interval_ms": 100,
-    "n_measured": 12,
-    "n_windows": 12,
+    "n_measured": 4,
+    "n_windows": 4,
     "totals_all_windows": {
       "r80C0": 0,
-      "r80C1": 29160564667276
+      "r80C1": 2439382500986
     }
   },
   "protocol": {
+    "batches_pooled": [
+      1,
+      2,
+      3
+    ],
+    "n_batches": 3,
     "n_measured": 12,
     "repeat_budget_s": null,
-    "repeats": 12,
-    "statistic": "mean ± 95% Student-t CI",
+    "repeats": 4,
+    "statistic": "mean ± 95% Student-t CI over the pooled measured calls of all ok batches",
     "warmup": 1
   },
   "reactant_options": {
     "checkpointing": "ReactantCore.Periodic(11)",
+    "first_step_init": true,
     "mincut": false,
     "optimize": "true"
   },
-  "runtime_ci95_halfwidth_s": 0.9149138532034147,
-  "runtime_s": 1286.1251340165,
+  "runtime_ci95_halfwidth_s": 0.6225728422814601,
+  "runtime_s": 364.75736719108335,
   "runtime_stats": {
     "ci95": [
-      1285.2102201632965,
-      1287.0400478697034
+      364.1347943488019,
+      365.3799400333648
     ],
-    "ci95_halfwidth": 0.9149138532034147,
-    "max": 1288.315964126,
-    "mean": 1286.1251340165,
-    "median": 1286.416824999,
-    "min": 1284.024961188,
+    "ci95_halfwidth": 0.6225728422814601,
+    "max": 366.53988672,
+    "mean": 364.75736719108335,
+    "median": 364.362952638,
+    "min": 363.687953907,
     "n": 12,
-    "std": 1.4399611797336915,
+    "std": 0.9798526072185864,
     "values": [
-      1284.567202553,
-      1284.024961188,
-      1286.551856981,
-      1286.463435388,
-      1288.315964126,
-      1284.332386477,
-      1288.024341749,
-      1287.313182294,
-      1286.37021461,
-      1285.165157673,
-      1285.277418617,
-      1287.095486542
+      366.116826148,
+      365.532152585,
+      366.53988672,
+      365.29076291,
+      364.046683367,
+      364.202308168,
+      364.397695571,
+      364.328209705,
+      365.409023652,
+      363.766970286,
+      363.687953907,
+      363.769933274
     ]
   },
   "seed": 1234,
-  "xla_cost_analysis_flops": 7.10636544e9
+  "xla_cost_analysis_flops": 7.110843392e9
 }

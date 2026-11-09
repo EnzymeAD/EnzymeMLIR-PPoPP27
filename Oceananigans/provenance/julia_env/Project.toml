@@ -1,0 +1,45 @@
+# Package environment of the container image that produced data/vista_2026-11
+# (image digest sha256:bc5ed0f2..., built from commit 3f6c63d of the original benchmark
+# repository). Kept as a record; the image instantiated this Project.toml with this
+# Manifest.toml.
+#
+# Relative to an earlier run (Reactant 0.2.304, Reactant_jll 0.0.438, Enzyme 0.13.216):
+#   * Reactant 0.2.308: the registered release that switched to Reactant_jll 0.0.443;
+#   * Reactant_jll 0.0.443 pinned as a direct dependency, so the build records exactly
+#     which XLA/MLIR binary ran;
+#   * Enzyme 0.13.219.
+# The Manifest started from the earlier run's Manifest and was re-resolved only as far
+# as these pins required, so every other package kept its version.
+#
+# The repository's own environment (docker/Project.toml, linked as Oceananigans/Project.toml)
+# has the same direct pins, but no Manifest.
+
+[deps]
+CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
+Checkpointing = "eb46d486-4f9c-4c3d-b445-a617f2a2f1ca"
+Enzyme = "7da242da-08ed-463a-9acd-ee780be4f1d9"
+GPUArraysCore = "46192b85-c4d5-4398-a991-12ede77f4527"
+InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
+JLD2 = "033835bb-8acc-5ee8-8aae-3f567f8a3819"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+Oceananigans = "9e8cae18-63c1-5223-a75c-80ca9d6e9a09"
+Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+Reactant = "3c362404-f566-11ee-1572-e11a4b42c853"
+Reactant_jll = "0192cb87-2b54-54ad-80e0-3be72ad8a3c0"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
+
+[compat]
+CUDA = "=6.2.2"
+Checkpointing = "=0.13.0"
+Enzyme = "=0.13.219"
+GPUArraysCore = "=0.2.1"
+JLD2 = "=0.6.7"
+JSON = "=1.13.4"
+Oceananigans = "=0.116.1"
+Reactant = "=0.2.308"
+Reactant_jll = "=0.0.443"
+Statistics = "=1.11.5"
+julia = "1.12"
