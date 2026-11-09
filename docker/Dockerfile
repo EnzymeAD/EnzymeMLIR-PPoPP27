@@ -95,10 +95,10 @@ RUN git init -q Enzyme-JAX \
 RUN python3 -m venv eval-env
 ENV PATH="$HOME/eval-env/bin:$PATH"
 
-# Install Python dependencies and latest Enzyme-JAX (enzyme-ad) from PyPI
+# Install Python dependencies and Enzyme-JAX (enzyme-ad), pinned to a released version from PyPI
 COPY --chown=$USERNAME:$USERNAME docker/requirements.txt $HOME/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt \
-  && pip install --no-cache-dir --ignore-requires-python --upgrade enzyme-ad
+  && pip install --no-cache-dir --ignore-requires-python enzyme-ad==0.0.16
 
 # Install system utilities needed for Julia benchmarks (numactl, procps) and download Julia directly
 USER root
