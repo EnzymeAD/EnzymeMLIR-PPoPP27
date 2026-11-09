@@ -101,14 +101,33 @@ Inside the container, verify all toolchains:
 # 1. Verify Clang & MLIR build
 /home/evaluator/llvm-project/build/bin/clang++ --version
 
+# Expected output:
+#   clang version 24.0.0git
+#   Target: x86_64-unknown-linux-gnu
+#   Thread model: posix
+#   InstalledDir: /home/evaluator/llvm-project/build/bin
+
 # 2. Verify Futhark compiler
 ./futhark-nightly-linux-x86_64/bin/futhark --version
+
+# Expected output:
+#   Futhark 0.29.0 (prerelease - include info below when reporting bugs).
+#   git: 5eb30afc3b28c9acc6c344753483152ffcc87adc
+#   ...
 
 # 3. Verify Julia environment
 julia --project=/opt/julia_project -e 'using InteractiveUtils; versioninfo()'
 
+# Expected output:
+#   Julia Version 1.12.7
+#   Commit 6d172b025e4 (2026-08-15 08:05 UTC)
+#   ...
+
 # 4. Verify JAX & GPU availability
 /home/evaluator/eval-env/bin/python3 -c "import jax; print('JAX devices:', jax.devices())"
+
+# Expected output:
+#   JAX devices: [CudaDevice(id=0)]
 ```
 
 ---
@@ -208,7 +227,7 @@ julia --project=/opt/julia_project bench/make_table.jl --out results/full --ci -
 
 #### 1. JAX-MD Molecular Dynamics Simulation (`jax/jaxmd/`, Section 6.2, Figure 7)
 
-Reference timings and peak device memory across optimization pipelines (`Jax`, `HLOOpt`, `PartOpt`, `IPartOpt`, `DefOpt`, `IDefOpt`) are checked into `results/results_JAXMD.json`, and the plotting notebook is in `results/plot-jaxmd.ipynb`.
+Reference timings and peak device memory across optimization pipelines (`Jax`, `HLOOpt`, `DefOpt`, `IDefOpt`) are checked into `results/results_JAXMD.json`, and the plotting notebook is in `results/plot-jaxmd.ipynb`.
 
 To run the benchmark inside the container (8,000 Lennard-Jones particles, `jaxmd20`, under a Nose-Hoover thermostat):
 ```bash
