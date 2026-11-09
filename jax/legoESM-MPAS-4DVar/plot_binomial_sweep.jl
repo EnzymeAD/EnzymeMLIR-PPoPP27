@@ -8,19 +8,8 @@ using InteractiveUtils
 md"""
 # MPAS 4D-Var gradient: binomial checkpointing sweep
 
-Choose the checked-in reference CSV (default) or a newly collected sweep:
-
-```sh
-julia plot_binomial_sweep.jl --source reference
-julia plot_binomial_sweep.jl --source new
-```
-
-In Pluto, set `PLOT_SOURCE=reference` or `PLOT_SOURCE=new` before starting Pluto.
-`PLOT_INPUT` and `PLOT_OUTPUT_DIR` override the CSV and output directory.
-The selected input path is printed, and PDF/PNG outputs are separated under
-`results/plots/mpas/reference/` or `results/plots/mpas/new/` at the repository root.
-
-`run_binomial_sweep.sh` writes one row per configuration and step count:
+Plots the results of `run_binomial_sweep.sh`, which writes one
+`results/binomial_sweep/summary.csv` row per configuration and step count:
 
 ```sh
 ./run_binomial_sweep.sh                              # 10 .. 240 steps, budgets 2 4 8 16 n
@@ -39,9 +28,16 @@ using CairoMakie, DataFrames, Dates, Printf, Unitful
 
 # ╔═╡ 488c4e5b-432d-459b-9a0f-8247599f1595
 begin
-    include(joinpath(@__DIR__, "..", "..", "plotting", "mpas_paths.jl"))
-    plot_paths = mpas_plot_paths(isdefined(Main, :PlutoRunner) ? String[] : ARGS)
-    @info "MPAS plot data" source=plot_paths.source input=plot_paths.input output=plot_paths.output
+    source = get(ENV, "PLOT_SOURCE", "reference")
+    source in ("reference", "new") || error("PLOT_SOURCE must be reference or new")
+    root = normpath(joinpath(@__DIR__, "..", ".."))
+    default_input = source == "reference" ?
+        joinpath(root, "results", "mpas4dvar_binomial_sweep.csv") :
+        joinpath(root, "results", "binomial_sweep", "summary.csv")
+    input_path = get(ENV, "PLOT_INPUT", haskey(ENV, "RESULTS_DIR") ?
+        joinpath(ENV["RESULTS_DIR"], "summary.csv") : default_input)
+    results_dir = get(ENV, "PLOT_OUTPUT_DIR", joinpath(root, "results", "plots", "mpas", source))
+    @info "MPAS plot data" source input_path results_dir
 end
 
 # ╔═╡ 95b33d51-6de2-44e7-8d98-bad8c54f309b
@@ -78,7 +74,8 @@ end
 
 # ╔═╡ 8f39a978-cd73-491a-ba14-8644c31fc398
 sweep = let
-	read_summary(plot_paths.input)
+	isfile(input_path) || error("no $source data at $input_path; run the sweep or set PLOT_INPUT")
+	read_summary(input_path)
 end
 
 # ╔═╡ 2c6faa54-c626-44a1-b08d-bb1c7337aaeb
@@ -175,9 +172,9 @@ let
 	Legend(f[2, 1:2], legend_handles, [label[n] for n in order];
 		   orientation=:horizontal, framevisible=false, tellwidth=false, tellheight=true, nbanks=2)
 
-	mkpath(plot_paths.output)
-	save(joinpath(plot_paths.output, "mpas4dvar_binomial_sweep.pdf"), f)
-	save(joinpath(plot_paths.output, "mpas4dvar_binomial_sweep.png"), f; px_per_unit=3)
+	mkpath(results_dir)
+	save(joinpath(results_dir, "mpas4dvar_binomial_sweep.pdf"), f)
+	save(joinpath(results_dir, "mpas4dvar_binomial_sweep.png"), f; px_per_unit=3)
 
 	f
 end
