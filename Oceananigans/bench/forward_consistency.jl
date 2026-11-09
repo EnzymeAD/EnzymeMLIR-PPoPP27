@@ -67,7 +67,8 @@ c = build_problem(CPU(); weno_weight_computation = DIVISION)
 Jc = forward!(c.model, c.Tᵢ, c.Sᵢ, c.u_wind_stress, c.v_wind_stress, c.T_flux, c.Δz)
 
 r = build_problem(ReactantState(); to_device = Reactant.to_rarray, weno_weight_computation = DIVISION)
-rforward! = @compile raise_first=true raise=true sync=true forward!(r.model, r.Tᵢ, r.Sᵢ, r.u_wind_stress, r.v_wind_stress, r.T_flux, r.Δz)
+# Same compile options as bench/driver_reactant.jl (see the note there on dot formation).
+rforward! = @compile compile_options=Reactant.CompileOptions(; raise = true, raise_first = true, sync = true, disable_dot_formation_passes = true) forward!(r.model, r.Tᵢ, r.Sᵢ, r.u_wind_stress, r.v_wind_stress, r.T_flux, r.Δz)
 Jr = Float64(rforward!(r.model, r.Tᵢ, r.Sᵢ, r.u_wind_stress, r.v_wind_stress, r.T_flux, r.Δz))
 
 println("\n== Forward consistency after N = $NS step(s), WENO division = $(something(DIVISION, "architecture default")), reactant-init = $REACTANT_INIT, backend = $BACKEND")

@@ -100,8 +100,16 @@ pr0, sh0 = build()
 @info "Built $(pr0.model)"
 
 @info "Compiling..."
+# `disable_dot_formation_passes`: Enzyme-JAX otherwise rewrites the vertical integrals
+# `reduce(mul)` over z into `dot_general(31-vector, [31,166,86])`; on XLA:CPU that forces a
+# {0,1,2} layout for the operand and inserts a 4.5 MiB transpose of a halo'd field (plus two
+# bitcast-transpose fusions) in every time step. Keeping them as fused reductions is faster
+# on CPU (−6% primal at N = 8) and keeps the loop-carried fields in their natural layout.
+const COMPILE_OPTIONS = Reactant.CompileOptions(;
+    optimization_passes = OPTIMIZE, raise = true, raise_first = true, sync = true,
+    disable_dot_formation_passes = true)
 const compile_t0 = time_ns()
-const rdifferentiate_tracer_error = @compile optimize=OPTIMIZE raise_first=true raise=true sync=true differentiate_tracer_error(args(pr0, sh0)...)
+const rdifferentiate_tracer_error = @compile compile_options=COMPILE_OPTIONS differentiate_tracer_error(args(pr0, sh0)...)
 const compile_s = (time_ns() - compile_t0) / 1e9
 @info "compile time $(round(compile_s, digits=2)) s"
 
