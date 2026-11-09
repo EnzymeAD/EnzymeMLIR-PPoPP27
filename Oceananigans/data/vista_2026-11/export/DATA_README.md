@@ -98,3 +98,22 @@ Within every case all calls return the identical objective. Across configuration
 (`bench/check_gradients.jl`) the objective and all gradient fields of the warmup
 calls agree to within 1e-10 relative (observed ≤ 1e-14 among Reactant
 configurations and ≤ 8e-13 between Reactant and Enzyme-only).
+
+## Batches
+
+This sweep ran every case as several independent *batches*: separate jobs, usually
+on different nodes, each a fresh process with its own compilation, one warmup call
+(`kind = warmup`, `call_index = 0`) and R measured calls. The statistics pool the
+measured calls of every batch of a case that finished ok (`n_measured` = number of
+batches × R, column `n_batches`), and `call_index` numbers the pooled measured calls.
+`batch` and `hostname` in raw_runs.csv give each call's batch and node.
+
+Because the batches ran on different nodes, the pooled confidence interval includes
+node-to-node variation (on TACC Vista up to ~20 % in runtime), which a single
+process cannot show; with only a few nodes per case it still understates that
+variation. `batches.csv` lists every batch of every case (also ones that did not
+finish ok) with its outcome, node, SLURM job and per-batch means.
+
+The cross-configuration gradient check uses the warmup call of the first ok batch.
+Within a case, every call of every batch returns the identical objective
+(`objectives_consistent`).

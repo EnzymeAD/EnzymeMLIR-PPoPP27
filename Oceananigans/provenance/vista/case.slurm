@@ -9,8 +9,9 @@
 #     killed by the kernel (e.g. OOM killer) is then seen as SIGKILL and classified
 #     "m". Under perf the kill is hidden: perf exits 0 and the case looks like "e".
 #   * move any earlier non-ok attempt aside to $WORK_ROOT/_superseded/ (kept, not deleted);
-#   * run the orchestrator (1 warmup + 12 measured calls, numactl-pinned, perf-counted)
-#     on $SCRATCH with a timeout below the SLURM walltime;
+#   * run the orchestrator (1 warmup + 12 measured calls, numactl-pinned, perf-counted;
+#     a batched profile: one batch of 1 warmup + BATCH_REPEATS measured calls, results
+#     in ${SWEEP}_b$CH_BATCH) on $SCRATCH with a timeout below the SLURM walltime;
 #   * copy the case directory to $WORK and add job_info.json (job, node, image digest).
 #
 #SBATCH -p gg
@@ -21,6 +22,11 @@ set -uo pipefail
 source "${HPC_DIR:-$SLURM_SUBMIT_DIR/provenance/vista}/env.sh"
 load_apptainer
 : "${CONFIG:?}" "${NSTEPS:?}" "${TIMEOUT_S:?}"
+# Batched profile: this job is one batch (CH_BATCH, exported by submit.sh --batches).
+if [[ -n ${BATCH_REPEATS:-} ]]; then
+    : "${CH_BATCH:?profile $CH_PROFILE runs in batches; submit with submit.sh --batches}"
+    select_batch "$CH_BATCH" || exit 2
+fi
 
 CASE=$CONFIG/$(printf 'N%04d' "$NSTEPS")
 SCR=$SCRATCH_ROOT/$SWEEP/$CASE
@@ -43,14 +49,22 @@ elif [[ -d "$SCR" ]]; then
     echo "moved uncopied scratch attempt $SCR -> $SUP/$(basename "$SCR").scratch.$stamp"
 fi
 
+# The profile's Julia/XLA flags (none for the default profile); a fresh HLO dump dir.
+orchestrator_flag_args "$SWEEP/$CASE"
+HLO=$SCRATCH_ROOT/_hlo/$SWEEP/$CASE
+[[ ${XLA_DUMP:-0} == 1 ]] && { rm -rf "$HLO"; mkdir -p "$HLO"; }
+
 start=$(date -u +%FT%TZ)
 echo "[$start] $CASE on $(hostname), job $SLURM_JOB_ID, orchestrator timeout ${TIMEOUT_S}s"
 apptainer_exec julia /opt/channelanigans/bench/run_cases.jl \
     --configs "$CONFIG" --nsteps "$NSTEPS" --out "/results/$SWEEP" \
-    --timeout "$TIMEOUT_S" --perf "${PERF:-on}" --numactl on --core "$CORE" \
+    --timeout "$TIMEOUT_S" --perf "${PERF:-on}" --numactl on --core "$CORE" "${ORCH_FLAGS[@]}" \
     -- $DRIVER_ARGS
 rc=$?
 end=$(date -u +%FT%TZ)
+
+# XLA's memory figure (buffer assignment), as the August job scripts collected it.
+[[ ${XLA_DUMP:-0} == 1 && -d "$SCR" ]] && xla_total_bytes "$HLO" > "$SCR/xla_buffer_assignment.txt"
 
 mkdir -p "$DST"
 cp -a "$SCR/." "$DST/"
@@ -71,6 +85,9 @@ cat > "$DST/job_info.json" <<EOF
   "core": $CORE,
   "driver_args": "$DRIVER_ARGS",
   "perf_mode": "${PERF:-on}",
+  "image_profile": "${CH_PROFILE:-current}",
+  "batch": $([[ -n ${BATCH_REPEATS:-} ]] && echo "$CH_BATCH" || echo null),
+  "sweep": "$SWEEP",
   "sif": "$SIF",
   "image_ref": "$IMAGE_REF",
   "image_digest": "$IMAGE_DIGEST",
