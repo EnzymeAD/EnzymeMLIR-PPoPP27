@@ -131,6 +131,12 @@ RUN if [ "$(uname -m)" = "aarch64" ]; then \
  && julia --project=/opt/julia_project -e 'using Pkg; Pkg.instantiate(); Pkg.precompile(); Pkg.status()' \
  && chmod -R a+rX /opt/julia_depot /opt/julia_project
 
+# Keep plotting dependencies separate from the benchmark's pinned Julia project.
+# Package versions follow the Pluto notebooks; the lockfile targets this image's Julia.
+COPY --chown=$USERNAME:$USERNAME docker/plotting/ /opt/julia_plotting/
+RUN JULIA_NUM_PRECOMPILE_TASKS=4 julia --project=/opt/julia_plotting -e 'using Pkg; Pkg.instantiate(); Pkg.precompile()' \
+ && chmod -R a+rX /opt/julia_depot /opt/julia_plotting
+
 USER root
 RUN mkdir -p /github \
  && chown $USERNAME:$USERNAME /github \
@@ -138,6 +144,7 @@ RUN mkdir -p /github \
 
 # Stack a writable /tmp depot in front of the precompiled /opt depot at runtime
 ENV JULIA_DEPOT_PATH=/tmp/julia_depot:/opt/julia_depot \
+    JULIA_LOAD_PATH="@:/opt/julia_plotting:@v#.#:@stdlib" \
     XLA_FLAGS="--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"
 
 COPY --chown=$USERNAME:$USERNAME . $HOME

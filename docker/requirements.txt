@@ -11,3 +11,8 @@ jaxlib==0.10.0
 jax-md==0.2.27
 jax[cuda12-local]==0.10.0
 xprof==2.24.2
+
+# Interactive and batch execution of the checked-in plotting notebook.
+jupyterlab==4.6.6
+nbconvert==7.17.2
+ipykernel==7.4.0
