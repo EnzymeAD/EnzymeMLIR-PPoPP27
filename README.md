@@ -40,17 +40,21 @@ We assume the target machine has a functional NVIDIA GPU driver installation wit
 
 | Component | Minimum | Recommended | Paper Evaluation Setup |
 | :--- | :--- | :--- | :--- |
-| **CPU** | 8 cores (x86_64 or aarch64) | 32+ cores | NVIDIA Grace CPU (72-core Arm Neoverse V2, TACC Vista) |
-| **GPU** | None (CPU execution) | None (CPU execution) | NVIDIA GH100 Grace Hopper Superchip node (TACC Vista) |
-| **RAM** | 32 GiB (`smoke` / `quick` presets) | 192 GiB+ (`full` preset up to $N=256$) | 480 GiB LPDDR5X |
+| **CPU** | 8 cores; x86_64 for the container, x86_64 or aarch64 natively | 32+ cores | NVIDIA Grace CPU Superchip (2× 72-core Arm Neoverse V2, TACC Vista `gg` node); each benchmark pinned to a single core |
+| **GPU** | None (CPU execution) | None (CPU execution) | None (CPU-only node) |
+| **RAM** | 32 GiB (`smoke` / `quick` presets) | 192 GiB+ (`full` preset up to $N=256$) | 237 GiB LPDDR5X |
 | **Storage** | 30 GiB | 60 GiB | NVMe SSD |
-| **OS** | Linux | Linux | Linux (TACC Vista) |
+| **OS** | Linux (container); Linux or macOS (native) | Linux | Linux (TACC Vista) |
+
+The container image is built for x86_64. On aarch64 machines, including NVIDIA Grace (the paper's hardware) and Apple silicon, run the benchmark natively with Julia 1.12 instead, as described in [`Oceananigans/README.md`](Oceananigans/README.md). FLOP counts (Table 2) need Linux on NVIDIA Grace (Arm Neoverse V2) CPUs, so they can only be reproduced natively; runtime and memory can be measured on any machine.
 
 ---
 
 ## 3. Getting Started
 
 ### Step 0: Install NVIDIA Container Toolkit
+
+The toolkit is needed only for the GPU benchmarks; for the CPU-only Oceananigans benchmark, skip this step.
 
 On Ubuntu, the NVIDIA Container Toolkit can be installed as follows:
 ```bash
@@ -96,6 +100,14 @@ docker run -it --rm --gpus all \
   ghcr.io/enzymead/enzymemlir-ppopp27:latest bash
 ```
 
+For the CPU-only Oceananigans benchmark, no GPU or NVIDIA Container Toolkit is needed: launch the same container without `--gpus all` (on an x86_64 machine):
+```bash
+docker run -it --rm \
+  -v "$(pwd)":/workspaces/EnzymeMLIR-PPoPP27 \
+  -w /workspaces/EnzymeMLIR-PPoPP27 \
+  ghcr.io/enzymead/enzymemlir-ppopp27:latest bash
+```
+
 Inside the container, verify all toolchains:
 ```bash
 # 1. Verify Clang & MLIR build
@@ -129,6 +141,7 @@ julia --project=/opt/julia_project -e 'using InteractiveUtils; versioninfo()'
 # Expected output:
 #   JAX devices: [CudaDevice(id=0)]
 ```
+*(Check 4 needs a GPU; on a CPU-only machine, skip it. Check 3 is the one the Oceananigans benchmark needs.)*
 
 ---
 
@@ -186,6 +199,8 @@ cd /workspaces/EnzymeMLIR-PPoPP27/lbm/futhark
 
 Reference measurements collected on TACC Vista (Grace CPU) are checked into `Oceananigans/data/vista_2026-11/` (including `table.tex` and `table.csv`).
 
+The commands below run **inside the container** started in Step 2 (with or without `--gpus all`); `/opt/julia_project` exists only there. To run natively instead, on any machine with Julia 1.12 (including aarch64 machines such as NVIDIA Grace and Apple silicon, and required for FLOP counts), follow [`Oceananigans/README.md`](Oceananigans/README.md): it uses the same commands with `--project=provenance/julia_env`, the exact package environment of the reference runs.
+
 #### 1. Formatting Table 2 from Checked-In Data (Inside Container)
 ```bash
 cd /workspaces/EnzymeMLIR-PPoPP27/Oceananigans
@@ -195,7 +210,6 @@ julia --project=/opt/julia_project bench/make_table.jl --out data/vista_2026-11 
 #### 2. Running the Benchmark Suite Inside the Container
 ```bash
 cd /workspaces/EnzymeMLIR-PPoPP27/Oceananigans
-ln -sf /opt/julia_project/Manifest.toml Manifest.toml
 
 # 1. Forward consistency check (CPU):
 REACTANT_BACKEND=cpu julia --project=/opt/julia_project bench/forward_consistency.jl 1 --reactant-init
