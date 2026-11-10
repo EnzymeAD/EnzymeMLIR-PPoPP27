@@ -31,8 +31,6 @@ The repository includes the following reference measurements and figures for the
 | **JAX-MD** (`jax/jaxmd/`) | Sec. 6.3; Fig. 9 | `results/results_JAXMD.json`<br>`results/plot-jaxmd.ipynb` | `results/plot-jaxmd.ipynb` |
 | **legoESM MPAS-4DVar** (`jax/legoESM-MPAS-4DVar/`) | Sec. 6.2; Fig. 8 | `results/mpas4dvar_binomial_sweep.csv`<br>`results/mpas4dvar_binomial_sweep.pdf` | `jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl` |
 
-**Coverage limits:** The CPU Oceananigans archive above supports Table 2; it does not contain the separate Appendix B experiment in Tables 5–6 (including XLA peak device memory). A standalone generator for the combined Figure 7 summary and its 99% confidence intervals is not provided. The full original LBM step-count sweep is not checked in; the runner below can collect a new sweep.
-
 ---
 
 ## 2. Hardware and Software Dependencies
