@@ -4,6 +4,15 @@ This repository contains the artifact for the paper:
 > **"EnzymeMLIR: Combining Domain-Specific Optimizations With Fast Differentiation"**  
 > *ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP '27)*
 
+The paper introduces EnzymeMLIR, an MLIR-based compiler for automatic differentiation. By operating across different levels of abstraction, including structured/parallel control flow, tensor arithmetic,
+and more, EnzymeMLIR combines with both existing and user-defined optimizations, resulting in superior performance. This workflow also enables the ability for custom differentiation-specific transformations
+that otherwise would have been infeasible. This repository contains instructions and artifacts for the core evaluations of our paper. Notably, here we provide builds linking EnzymeMLIR into
+C++ (via Reactant/Polygeist), Julia (via Reactant.jl) and Python (via JAX). We compare performance of both the impact of MLIR-level optimizations on differentiation, as well as overall performace against
+existing tools. Overall we have five key benchmarks: LBM (CUDA C++), RSBench (CUDA C++), Oceananigans (Julia on CPU), JAXMD (JAX CUDA), and legoESM (JAX CUDA). Both runtime and memory usage are compared,
+potentially across different sized inputs/iterations, and optimization configurations. The CUDA benchmarks were original run on an NVIDIA 5090 and the CPU benchmarks were run on an NVIDIA Grace CPU, though
+similarly specified NVIDIA GPUs or X86 CPUs (from any vendor) should suffice, with potential hardware-specific performance differences. All software needed is available in a docker container built and
+deployed within the artifact repository (though can also be built by end users, if they prefer).
+
 ---
 
 ## 1. Overview & Checked-In Reference Results
