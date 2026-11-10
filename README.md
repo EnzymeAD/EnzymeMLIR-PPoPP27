@@ -4,6 +4,8 @@ This repository contains the artifact for the paper:
 > **"EnzymeMLIR: Combining Domain-Specific Optimizations With Fast Differentiation"**  
 > *ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP '27)*
 
+[![DOI](https://zenodo.org/badge/1439939997.svg)](https://zenodo.org/badge/latestdoi/1439939997)
+
 The paper introduces EnzymeMLIR, an MLIR-based compiler for automatic differentiation. By operating across different levels of abstraction, including structured/parallel control flow, tensor arithmetic,
 and more, EnzymeMLIR combines with both existing and user-defined optimizations, resulting in superior performance. This workflow also enables the ability for custom differentiation-specific transformations
 that otherwise would have been infeasible. This repository contains instructions and artifacts for the core evaluations of our paper. Notably, here we provide builds linking EnzymeMLIR into
