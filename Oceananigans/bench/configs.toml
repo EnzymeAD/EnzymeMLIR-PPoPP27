@@ -14,9 +14,6 @@
 #                   "periodic" => Checkpointing.jl Periodic(snaps)
 #                   "revolve"  => Checkpointing.jl Revolve(snaps)  (binomial)
 #   snaps         = integer, "log2" (Int(log2(N))), or "isqrt" (isqrt(N))
-#
-# Provenance: the Aug 2026 table rows map to reactant_full ... enzyme_naive below;
-# see original_results/ (or evidence/) for the logs each row came from.
 
 [table]
 # Row order of the generated table. Configs not listed here can still be run by name.

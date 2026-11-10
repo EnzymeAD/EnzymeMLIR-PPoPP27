@@ -7,15 +7,16 @@
 >
 > - The allocation name, notification email, SIF location and image registry in
 >   [`env.sh`](env.sh) are redacted. The same fields are redacted in each batch's
->   `job_info.json`.
+>   `job_info.json`. The name of the original benchmark repository is replaced by
+>   `redacted` throughout, in these scripts and in the data (for example
+>   `/opt/redacted`, the image's install path).
 > - The scripts were run from the original benchmark repository, where they lived
 >   in `hpc/vista/`; here they are in `provenance/vista/`. The
 >   `hpc_scripts_commit` and `git_commit` fields in the data refer to that
 >   repository.
-> - The original `env.sh` also had profiles for earlier runs; this copy keeps only
->   `jll443`, the profile that produced the data. The other scripts are unchanged
->   apart from their paths, so they still mention the other profiles, and their
->   default profile (`current`) is not in this copy: pass `--profile jll443`.
+> - [`env.sh`](env.sh) keeps only the `jll443` profile, which produced the data.
+>   The scripts' default profile (`current`) is not defined here: pass
+>   `--profile jll443`.
 > - `submit.sh` refuses to submit unless `IMAGE_COMMIT` is in the git history,
 >   which is not the case in this repository.
 > - The exact package environment of the image is in
@@ -28,7 +29,7 @@ path, image digest, result locations) live in [`env.sh`](env.sh).
 Run every command from the repo root on a login node. `report.sh` uses the
 container, and Vista only allows Apptainer on compute nodes, so submit it as a
 short job with `submit.sh --report status` (or `--report final`); its output lands
-in `$WORK/channelanigans_results/slurm_logs/ch-report-<mode>.<jobid>.out`. Inside an
+in `$WORK/redacted_results/slurm_logs/ch-report-<mode>.<jobid>.out`. Inside an
 `idev` session you can also run `provenance/vista/report.sh status` directly.
 
 ## Image profile
@@ -36,7 +37,7 @@ in `$WORK/channelanigans_results/slurm_logs/ch-report-<mode>.<jobid>.out`. Insid
 The container image is selected with `--profile` on every `submit.sh` call; its
 settings are in [`env.sh`](env.sh).
 
-| Profile | Image | Results in `$WORK/channelanigans_results/` | Table rows |
+| Profile | Image | Results in `$WORK/redacted_results/` | Table rows |
 |---|---|---|---|
 | `jll443` | Julia 1.12.7, Oceananigans 0.116.1, Reactant 0.2.308 (Reactant_jll 0.0.443), Enzyme 0.13.219 ([`../julia_env/`](../julia_env/)); runs in batches | `table_jll443_b1/`, `_b2/`, … pooled into `table_jll443/` | all 9 |
 
@@ -52,7 +53,7 @@ TACC allows only ~40–50 queued + running jobs per user, fewer than the 63 case
 `fill.sh` reruns `submit.sh` every 10 min to keep the queue topped up to
 `--max-jobs` (default 40). Every batch-1 case is submitted before any batch 2, and
 each batch goes longest case first. A case whose batch 1 ended other than `ok`
-(e.g. `m`) gets no later batches. Walltimes come from the timings of an earlier run
+(e.g. `m`) gets no later batches. Walltime limits are conservative per-case estimates
 ([`walltimes_jll443_seed.tsv`](walltimes_jll443_seed.tsv)), so there are no waves.
 
 ```bash
@@ -78,7 +79,7 @@ provenance/vista/submit.sh --profile jll443 --gate
 
 The gate checks the node, the FLOP counters (one matmul with a known count, 2·10⁹)
 and the full measurement pipeline (`reactant_full` and `enzyme_naive` at N = 4). The
-log ends with `GATE PASSED`. The files land in `$WORK/channelanigans_results/gate/<jobid>/`.
+log ends with `GATE PASSED`. The files land in `$WORK/redacted_results/gate/<jobid>/`.
 
 ## Finalize
 
@@ -89,7 +90,7 @@ provenance/vista/submit.sh --profile jll443 --report final
 This pools the finished batches, builds `table.tex` and `table.csv`, cross-checks
 gradients across configs, and writes the raw-data export (`export/raw_runs.csv`,
 `cases.csv`, `batches.csv`, `DATA_README.md`, `raw_data.tar.gz`) into
-`$WORK/channelanigans_results/table_jll443/`.
+`$WORK/redacted_results/table_jll443/`.
 
 ## Notes
 

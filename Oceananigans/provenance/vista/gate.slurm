@@ -31,7 +31,7 @@ lscpu | grep -E 'Model name|^CPU\(s\)|Socket|NUMA node\(s\)|Thread'
 free -g | head -2
 numactl -H 2>/dev/null | grep -E 'available|size' || true
 echo "apptainer: $(apptainer --version)"
-apptainer_exec bash -c 'perf --version; head -3 /opt/channelanigans/BUILD_INFO.txt'
+apptainer_exec bash -c 'perf --version; head -3 /opt/redacted/BUILD_INFO.txt'
 echo "sif sha256: $(sha256sum "$SIF" | cut -d' ' -f1)"  | tee "$GATE_DIR/sif_sha256.txt"
 
 echo
@@ -41,7 +41,7 @@ apptainer_exec bash -c '
     d=$(mktemp -d); mkfifo $d/ctl $d/ack
     PERF_CTL_FIFO=$d/ctl PERF_ACK_FIFO=$d/ack \
         perf stat -x, -o $d/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:$d/ctl,$d/ack -- \
-        julia /opt/channelanigans/bench/perf_gate_test.jl
+        julia /opt/redacted/bench/perf_gate_test.jl
     cat $d/perf.csv
     awk -F, "\$3 ~ /r80C/ || \$4 ~ /r80C/ { s += \$1 } END { printf \"FLOPs counted: %.4e   ratio to 2n^3: %.4f\n\", s, s/2e9 }" $d/perf.csv
     rm -rf $d' 2>&1 | tee "$GATE_DIR/flop_gate.txt"
@@ -57,7 +57,7 @@ echo "===== 3. end-to-end attribution test (N=4, 2 measured calls)"
 orchestrator_flag_args "gate/$SLURM_JOB_ID"
 [[ ${XLA_DUMP:-0} == 1 ]] && mkdir -p "$SCRATCH_ROOT/_hlo/gate/$SLURM_JOB_ID"
 echo "orchestrator flag args: ${ORCH_FLAGS[*]:-(defaults)}"
-apptainer_exec julia /opt/channelanigans/bench/run_cases.jl "${ORCH_FLAGS[@]}" \
+apptainer_exec julia /opt/redacted/bench/run_cases.jl "${ORCH_FLAGS[@]}" \
     --configs reactant_full,enzyme_naive --nsteps 4 --out /work_results/gate/$SLURM_JOB_ID/e2e \
     --perf on --numactl on --core "$CORE" --timeout "$GATE_E2E_TIMEOUT_S" \
     -- --repeats 2 --save-gradients || fail=1

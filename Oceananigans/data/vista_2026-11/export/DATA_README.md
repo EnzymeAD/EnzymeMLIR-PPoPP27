@@ -25,7 +25,7 @@ every call is recorded (`objective_sv`) and checked to be identical.
 ## Execution environment
 
 - One fresh Julia process per case (`bench/run_cases.jl` → `bench/driver_*.jl`),
-  inside the archived container image; `-O0`, `JULIA_NUM_THREADS=1`,
+  inside the container image; `-O0`, `JULIA_NUM_THREADS=1`,
   `XLA_FLAGS="--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"`.
 - The process is pinned to a single core with `numactl -C <core>` (column
   `numactl` in cases.csv). XLA's CPU runtime may still use several threads; with

@@ -3,13 +3,10 @@
 # repository). Kept as a record; the image instantiated this Project.toml with this
 # Manifest.toml.
 #
-# Relative to an earlier run (Reactant 0.2.304, Reactant_jll 0.0.438, Enzyme 0.13.216):
-#   * Reactant 0.2.308: the registered release that switched to Reactant_jll 0.0.443;
-#   * Reactant_jll 0.0.443 pinned as a direct dependency, so the build records exactly
-#     which XLA/MLIR binary ran;
-#   * Enzyme 0.13.219.
-# The Manifest started from the earlier run's Manifest and was re-resolved only as far
-# as these pins required, so every other package kept its version.
+# Direct pins: Julia 1.12, Oceananigans 0.116.1, Reactant 0.2.308, Enzyme 0.13.219,
+# Checkpointing.jl 0.13.0, CUDA.jl 6.2.2 (Reactant needs it loaded even on CPU), and
+# Reactant_jll 0.0.443, pinned as a direct dependency so the build records exactly which
+# XLA/MLIR binary ran.
 #
 # The repository's own environment (docker/Project.toml, linked as Oceananigans/Project.toml)
 # has the same direct pins, but no Manifest.

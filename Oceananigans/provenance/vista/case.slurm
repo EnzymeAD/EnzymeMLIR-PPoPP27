@@ -56,14 +56,14 @@ HLO=$SCRATCH_ROOT/_hlo/$SWEEP/$CASE
 
 start=$(date -u +%FT%TZ)
 echo "[$start] $CASE on $(hostname), job $SLURM_JOB_ID, orchestrator timeout ${TIMEOUT_S}s"
-apptainer_exec julia /opt/channelanigans/bench/run_cases.jl \
+apptainer_exec julia /opt/redacted/bench/run_cases.jl \
     --configs "$CONFIG" --nsteps "$NSTEPS" --out "/results/$SWEEP" \
     --timeout "$TIMEOUT_S" --perf "${PERF:-on}" --numactl on --core "$CORE" "${ORCH_FLAGS[@]}" \
     -- $DRIVER_ARGS
 rc=$?
 end=$(date -u +%FT%TZ)
 
-# XLA's memory figure (buffer assignment), as the August job scripts collected it.
+# XLA's memory figure (buffer assignment), when the profile sets XLA_DUMP=1.
 [[ ${XLA_DUMP:-0} == 1 && -d "$SCR" ]] && xla_total_bytes "$HLO" > "$SCR/xla_buffer_assignment.txt"
 
 mkdir -p "$DST"

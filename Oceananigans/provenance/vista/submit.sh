@@ -5,12 +5,11 @@
 #   provenance/vista/submit.sh --nsteps 4,8 --walltime 04:00:00   # wave 1: all table configs
 #   provenance/vista/submit.sh --walltimes provenance/vista/walltimes.tsv  # later waves, per-case limits
 #   provenance/vista/submit.sh --report status                 # run report.sh as a short job
-#   provenance/vista/submit.sh --profile aug2026 ...           # same, for the August-environment image
 #   provenance/vista/submit.sh --profile jll443 --batches 1,2,3 \
 #       --walltimes provenance/vista/walltimes_jll443_seed.tsv  # batched profile (or use fill.sh)
 #
 # Options:
-#   --profile NAME     image profile from env.sh: current (default) or aug2026. Sets the
+#   --profile NAME     image profile from env.sh (jll443 in this copy). Sets the
 #                      image, the results folder, the table's configs and job names
 #   --configs LIST     comma-separated config names, or "table" (default: the profile's
 #                      table configs)

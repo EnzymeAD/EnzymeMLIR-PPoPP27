@@ -196,7 +196,7 @@ end
 
 function git_commit()
     # Container images carry no .git; the build records the commit instead.
-    c = get(ENV, "CHANNELANIGANS_GIT_COMMIT", "")
+    c = get(ENV, "BENCH_GIT_COMMIT", "")
     isempty(c) || return c
     try
         root = dirname(@__DIR__)

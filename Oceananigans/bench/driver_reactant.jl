@@ -40,11 +40,9 @@ const CHECKPOINTING = let c = CFG["checkpointing"]
 end
 
 # Diagnostic only: `--first-step-init off` skips the explicit initialize! + update_state!
-# in estimate_tracer_error, i.e. differentiates the program of the original July/August
-# 2026 scripts. The first Reactant step then reads stale state (J differs from CPU by
-# ~1e-4 after 4 steps), so this is for timing comparisons, never for table entries.
-# Accepted by the generic `--key value` parsing in common.jl, so it also works with
-# images whose common.jl predates it. Default: on.
+# in estimate_tracer_error. The first Reactant step then reads stale state (J differs
+# from CPU by ~1e-4 after 4 steps), so this is for timing comparisons, never for table
+# entries. Parsed by the generic `--key value` handling in common.jl. Default: on.
 const FIRST_STEP_INIT = let v = get(OPTS, "first-step-init", "on")
     v in ("on", "off") || error("--first-step-init must be on or off, got $(repr(v))")
     v == "on"
