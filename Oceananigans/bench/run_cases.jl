@@ -21,6 +21,10 @@ using Dates
 include(joinpath(@__DIR__, "stats.jl"))
 
 const REPO_ROOT = dirname(@__DIR__)
+# The children run in this process's environment (e.g. /opt/julia_project in the
+# container, provenance/julia_env natively), so package loading and Pkg (which records
+# package versions) see the same Project.toml and Manifest.toml.
+const CHILD_PROJECT = something(Base.active_project(), REPO_ROOT)
 
 const DEFAULT_XLA_FLAGS = "--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"
 const NEOVERSE_V2_FP_EVENTS = "r80C0,r80C1"   # FP_SCALE_OPS_SPEC, FP_FIXED_OPS_SPEC
@@ -219,7 +223,7 @@ function run_case(o, name, cfg, N; use_perf, use_numactl)
     driver = joinpath(REPO_ROOT, "bench", "driver_$(cfg["driver"]).jl")
     julia  = Base.julia_cmd()   # same julia binary as this orchestrator
     jflags = split(o["julia-flags"])
-    inner = `$julia $jflags --project=$REPO_ROOT $driver --config $name --nsteps $N --out $(o["out"]) --configs-file $(o["configs-file"]) $(o["driver-args"])`
+    inner = `$julia $jflags --project=$CHILD_PROJECT $driver --config $name --nsteps $N --out $(o["out"]) --configs-file $(o["configs-file"]) $(o["driver-args"])`
 
     env = copy(ENV)
     env["JULIA_NUM_THREADS"] = string(o["threads"])

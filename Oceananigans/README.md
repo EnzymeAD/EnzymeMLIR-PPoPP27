@@ -40,14 +40,69 @@ The 9 table rows are defined in [`bench/configs.toml`](bench/configs.toml):
 | [`bench/`](bench/) | Drivers (`driver_reactant.jl`, `driver_enzyme.jl`), the orchestrator (`run_cases.jl`), checks (`forward_consistency.jl`, `check_gradients.jl`, `perf_gate_test.jl`), and table and export scripts (`make_table.jl`, `merge_batches.jl`, `export_raw.jl`) |
 | [`run.sh`](run.sh) | Runs the benchmarks inside the repository's container image, and builds the table from the results |
 | [`data/vista_2026-11/`](data/vista_2026-11/) | The reference measurements behind the paper's table (see its README) |
-| [`provenance/`](provenance/) | How the reference data was produced: the SLURM scripts (`vista/`) and the exact package environment (`julia_env/`) |
+| [`provenance/`](provenance/) | How the reference data was produced: the SLURM scripts (`vista/`) and the exact package environment (`julia_env/`, also used to run the benchmarks natively) |
 | `Project.toml` | The package environment (a link to `../docker/Project.toml`, which the container image installs) |
 
 ## Running the benchmarks
 
-The step-by-step instructions, inside or outside the container, are in the
-artifact-evaluation section of the [repository README](../README.md). In short,
-from this folder on the host:
+There are two ways to run the benchmarks, with the same scripts: natively, on any
+machine with Julia 1.12 (Linux, including NVIDIA Grace, or macOS), or in the
+repository's container image. Run every command from this folder. Results go to
+`results/<name>/`, which git ignores.
+
+### Natively
+
+Install Julia 1.12 (for example with [juliaup](https://github.com/JuliaLang/juliaup)),
+then:
+
+```bash
+# 1. Install the exact package environment of the reference runs (provenance/julia_env)
+julia --project=provenance/julia_env -e 'using Pkg; Pkg.instantiate()'
+
+# 2. Check that the Reactant-compiled model matches the plain-CPU model
+REACTANT_BACKEND=cpu julia --project=provenance/julia_env bench/forward_consistency.jl 1 --reactant-init
+
+# 3. Smoke test: reactant_full and enzyme_naive at N = 4, 2 measured calls each
+julia --project=provenance/julia_env bench/run_cases.jl --out results/smoke \
+    --configs reactant_full,enzyme_naive --nsteps 4 --timeout 3600 --core 0 \
+    --perf off --skip-existing -- --save-gradients --repeats 2
+julia --project=provenance/julia_env bench/make_table.jl --out results/smoke --ci --delta
+julia --project=provenance/julia_env bench/check_gradients.jl --out results/smoke
+```
+
+On an Apple M1 Max, starting from an empty Julia depot, step 1 takes about 5 min,
+step 2 about 4 min and step 3 about 7 min. Step 2 prints the objective on both
+backends (relative difference about 1e-12) and confirms that salinity is conserved;
+`check_gradients.jl` ends with "All comparisons passed".
+
+For the rest of the table, change the configurations, N values and timeout (seconds
+per case) of step 3:
+
+- **All 9 configurations at N = 4 and 8:** `--out results/quick --configs table
+  --nsteps 4,8 --timeout 14400`, without `--repeats 2` (the default is 12 measured
+  calls per case).
+- **The whole table:** `--out results/full --configs table --nsteps
+  4,8,16,32,64,128,256 --timeout 172800`. On one Grace core this takes about 80 h,
+  and the largest cases need up to about 175 GiB of memory; a case that exceeds the
+  machine's memory is recorded as out of memory (`m`), as in the paper.
+
+`--skip-existing` skips cases that already finished, so an interrupted run can be
+resumed with the same command. On Linux, the benchmark process is pinned to the core
+given by `--core` when `numactl` is installed.
+
+**FLOPs** are counted only on Linux with NVIDIA Grace (Arm Neoverse V2) CPUs, with
+`perf` installed and `perf_event_paranoid` at 2 or lower: use `--perf on` instead of
+`--perf off`, and `--flops` for `make_table.jl`. Runtime and memory can be measured
+on any machine.
+
+### In the container
+
+The repository's container image (`ghcr.io/enzymead/enzymemlir-ppopp27:latest`,
+built for x86_64 Linux) has Julia 1.12 and the same direct package pins, installed in
+`/opt/julia_project`. Inside the container, use the commands above with
+`--project=/opt/julia_project` in place of `--project=provenance/julia_env`, and skip
+step 1; the [repository README](../README.md) shows how to start the container. From
+the host, [`run.sh`](run.sh) runs the same presets in the container for you:
 
 ```bash
 ./run.sh run smoke          # reactant_full + enzyme_naive at N = 4 (checks the setup)
@@ -58,15 +113,17 @@ from this folder on the host:
 
 `report` builds `table.tex` and `table.csv`, checks that all configurations compute
 the same gradient (`bench/check_gradients.jl`) and exports the raw data. FLOP counts
-need `FLOPS=1` and a Linux host with NVIDIA Grace (Arm Neoverse V2) CPUs; runtime
-and memory can be measured on any machine. `./run.sh` with no arguments prints all
-options.
+need `FLOPS=1` on a Grace host. `./run.sh` with no arguments prints all options.
 
-To rebuild the paper's table from the reference data instead (inside the container):
+### Rebuilding the paper's table from the reference data
 
 ```bash
-julia --project=/opt/julia_project bench/make_table.jl --out data/vista_2026-11 --ci --flops --delta
+julia --project=provenance/julia_env bench/make_table.jl --out data/vista_2026-11 --ci --flops --delta
 ```
+
+(`--project=/opt/julia_project` in the container.) This rewrites
+`data/vista_2026-11/table.tex` and `table.csv` from the committed JSON files;
+`table.csv` comes out identical.
 
 ## How the reference data was produced
 
@@ -86,8 +143,11 @@ julia --project=/opt/julia_project bench/make_table.jl --out data/vista_2026-11 
 - **Benchmark code:** the image's `bench/driver_reactant.jl` compiled with Reactant's
   default passes. The driver in this repository additionally sets
   `disable_dot_formation_passes = true` (commit 4fb71d0, #27), which was added after
-  these runs; that commit reports it as neutral on the gradient. Everything else in
-  `bench/` and `src/` is the code that produced the data.
+  these runs; that commit reports it as neutral on the gradient. The orchestrator
+  `bench/run_cases.jl` now starts each case in the orchestrator's own Julia
+  environment (it used the `Oceananigans/` folder's), which changes nothing that is
+  measured. Everything else in `bench/` and `src/` is the code that produced the
+  data, apart from comments.
 - **Protocol: batches.** Each case (configuration × N) ran as 3 independent
   *batches*: separate SLURM jobs, usually on different nodes, each a fresh process
   with its own compilation, 1 warmup call (excluded from the statistics) and 4
