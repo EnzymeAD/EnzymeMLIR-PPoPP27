@@ -94,6 +94,10 @@ else
     # Split certain multi-result ops into separate ops. Can lead to better mincut solutions
     CFLAGS += -mllvm -reactant-split-multi-results
   endif
+
+  ifeq ($(CACHELICM),no)
+    CFLAGS += -DENZYME_LOOP_INVARIANT_CACHE=0
+  endif
 endif
 
 CFLAGS += -ffast-math --cuda-path=$(CUDA_PATH) -I$(CUDA_PATH)/include -L$(CUDA_PATH)/lib64 --cuda-gpu-arch=sm_$(SM_VERSION)  -std=c++11 $(ENZYME_LOAD_FLAGS) -fno-exceptions

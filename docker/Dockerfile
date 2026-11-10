@@ -68,7 +68,7 @@ RUN mkdir Enzyme/build && cd Enzyme/build \
 # Build Reactant (this is the EnzymeMLIR C++ frontend)
 RUN git init -q Reactant \
   && cd Reactant \
-  && git fetch -q --depth 1 https://github.com/EnzymeAD/Reactant.git a38313b8decc4861eb127a57bab5275eb08968b9 \
+  && git fetch -q --depth 1 https://github.com/EnzymeAD/Reactant.git 0bc51c31e9d000d9e0cda5350df615419b334da2 \
   && git checkout -q FETCH_HEAD \
   && rm -rf .git
 
@@ -80,7 +80,7 @@ RUN mkdir Reactant/build && cd Reactant/build \
 # Build libRaise.so (EnzymeMLIR raising plugin for Reactant C++ frontend) and discard Bazel cache
 RUN git init -q Enzyme-JAX \
   && cd Enzyme-JAX \
-  && git fetch -q --depth 1 https://github.com/EnzymeAD/Enzyme-JAX.git 5ff3f3308af08ab9e6cfb19d77e4867ce4afd271 \
+  && git fetch -q --depth 1 https://github.com/EnzymeAD/Enzyme-JAX.git 814279be2ae863114160bba3217a9ee5cc1d136b \
   && git checkout -q FETCH_HEAD \
   && CC=clang-18 HERMETIC_PYTHON_VERSION=3.12 bazel build :libRaise.so --jobs=${NJOBS:-$(nproc)} \
   && cp -L bazel-bin/libRaise.so /tmp/libRaise.so \

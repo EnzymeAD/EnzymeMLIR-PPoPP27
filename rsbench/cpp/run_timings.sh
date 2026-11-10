@@ -49,6 +49,8 @@ mkdir -p "$RESULTS_DIR"
 CONFIGS=(
   "mlir|EnzymeMLIR|USE_ENZYME_LLVM=no"
   "llvm|EnzymeLLVM|USE_ENZYME_LLVM=yes"
+  "mlir_no_lic|EnzymeMLIR|CACHELICM=no USE_ENZYME_LLVM=no"
+  "llvm_no_lic|EnzymeLLVM|CACHELICM=no USE_ENZYME_LLVM=yes"
 )
 
 build() {
