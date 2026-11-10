@@ -69,7 +69,11 @@ behave as before. Ratios are this folder ÷ the earlier run, over N = 8 to 256:
   (built from repo commit `3f6c63d` of the original benchmark repository), run with
   `julia -O0` and
   `XLA_FLAGS="--xla_cpu_multi_thread_eigen=false --xla_backend_extra_options=xla_cpu_use_multi_output_fusion"`,
-  as in the earlier run.
+  as in the earlier run. That image is not archived with this repository. Its exact
+  package environment (`Project.toml` and `Manifest.toml`) is in
+  [`provenance/julia_env/`](../../provenance/julia_env/); the repository's own
+  image (`docker/`) has the same direct package pins, and instantiating that
+  Manifest reproduces the full environment.
 - **Benchmark code:** the image's `bench/driver_reactant.jl` compiled with Reactant's
   default passes. The driver in this repository additionally sets
   `disable_dot_formation_passes = true` (commit 4fb71d0, #27), which was added after
@@ -110,10 +114,18 @@ that ran the sweep are kept as a record in
 | `<config>/N<nnnn>/status.json` | Outcome (`ok` / `t` / `m` / `s` / `e`) and the batches behind it |
 | `batches/table_jll443_b<K>/<config>/N<nnnn>/` | Batch K as it ran: `result.json`, `status.json`, `progress.json`, `job_info.json` (SLURM job, node, image digest, Apptainer version, script commit; allocation name, SIF path and image registry redacted), `log.txt` |
 
-**Not in this repository** because of size (to be archived; DOI to follow):
-- `perf.csv`: the raw 100 ms hardware-counter intervals behind the per-call FLOPs.
-- `gradients.jld2`: the full gradient fields used for the cross-configuration
-  check.
+**Not kept:** two intermediate files per case, which [`run.sh`](../../run.sh)
+regenerates (both are excluded by `.gitignore`):
+- `perf.csv`: the raw 100 ms hardware-counter intervals. The per-call FLOP counts
+  computed from them are kept, in each `result.json` and in the `flops` column of
+  `export/raw_runs.csv`, and the table is built from those. `run.sh` writes
+  `perf.csv` when run with `FLOPS=1`, which needs a Linux host with NVIDIA Grace
+  (Arm Neoverse V2) CPUs; runtime and memory can be reproduced on any machine.
+- `gradients.jld2`: the full gradient fields of each case's reference call. Their
+  summaries (norms and other statistics of every gradient field) are kept in each
+  `result.json`; the full fields are only needed for the element-wise
+  cross-configuration check. `run.sh run` always writes them, and `run.sh report`
+  runs the check (`bench/check_gradients.jl`).
 
 ## Correctness
 
@@ -123,8 +135,9 @@ that ran the sweep are kept as a record in
 - **Across configurations,** every configuration agrees with `reactant_full` at
   every N. From the committed gradient summaries: Reactant configurations within
   1.5e-13, Enzyme-only configurations within 7.8e-13 (objective and gradient
-  norms). The full-field check (`bench/check_gradients.jl`) needs the
-  `gradients.jld2` files.
+  norms). The element-wise check of the full gradient fields
+  (`bench/check_gradients.jl`) needs the `gradients.jld2` files, which are not
+  kept; a rerun with `run.sh` regenerates them (see "Files").
 - **Against the earlier run:** the Enzyme-only configurations reproduce it bit for
   bit (objective and gradient summaries). The Reactant configurations agree with it
   within 1.3e-14 in the objective and 8.2e-14 in the gradient summaries. The new

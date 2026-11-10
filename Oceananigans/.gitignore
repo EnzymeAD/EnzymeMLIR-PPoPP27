@@ -19,7 +19,8 @@ Manifest.toml
 !provenance/julia_env/Manifest.toml
 
 # Benchmark data: the small files (tables, CSV exports, per-case JSON and logs) are
-# committed; the bulky raw files are archived on Zenodo instead.
+# committed; the bulky intermediate files are not kept (run.sh regenerates them; see
+# data/vista_2026-11/README.md).
 data/**/perf.csv
 data/**/*.jld2
 *.tar.gz
