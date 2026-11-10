@@ -202,6 +202,11 @@ cd /workspaces/EnzymeMLIR-PPoPP27/lbm/futhark
 ../../futhark-nightly-linux-x86_64/bin/futhark bench --backend=cuda -r 12 lbm.fut
 ```
 
+**Ablation tests**.
+Section 4.3 describes an ablation study done on LBM comparing variants of EnzymeMLIR with and without polyhedral atomic removal. This speedup can be verified by comparing the LBM runtimes of variants `EnzymeMLIR (mincut)` and `EnzymeMLIR (with atomics)`. The sole difference between the two is that the former includes atomic removal while the latter does not, leading to approximately a 1.8x speedup from removing atomics.
+
+Section 5.3 describes an ablation of RSBench that compares the impact of a loop-invariant cache optimization on both EnzymeMLIR and EnzymeLLVM. Variants `Enzyme{MLIR,LLVM}` include this optimization while variants `Enzyme{MLIR,LLVM} (no lic)` do not. `EnzymeMLIR` should show approximately a 60x speedup over `EnzymeMLIR (no lic)`, while `EnzymeLLVM` should show a 2.2x speedup over `EnzymeLLVM (no lic)`.
+
 ---
 
 ### B. Julia Oceananigans Benchmarks (`Oceananigans/`, Section 6.1, Table 2)

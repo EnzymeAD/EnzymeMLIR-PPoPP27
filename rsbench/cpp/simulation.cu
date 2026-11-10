@@ -167,6 +167,10 @@ __device__ void calculate_macro_xs( double * __restrict__ macro_xs, int mat, dou
 
 	// for nuclide in mat
 	int sz = num_nucs[mat];
+#ifdef ENZYME_LOOP_INVARIANT_CACHE
+    // Defined only on the Reactant/MLIR path; ClangEnzyme does not know this attribute
+    __attribute__((enzyme_set_loop_invariant_cache(ENZYME_LOOP_INVARIANT_CACHE)))
+#endif
 	for( int i = 0; i < sz; i++ )
 	// for( int i = 0; i < num_nucs[mat]; i++ )
 	{
