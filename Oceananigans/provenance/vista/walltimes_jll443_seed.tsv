@@ -1,10 +1,9 @@
-# Walltimes for the batched jll443 sweep (profile jll443: 1 warmup + 4 measured calls
-# per batch job), seeded from the 2026-11 sweep (data/vista_2026-11, Reactant 0.2.304):
-#   walltime = 1.5 x (overhead + 5 x t/call) + 30 min margin, rounded up to 30 min, >= 1 h
-# overhead = 2026-11 elapsed - 13 x t/call (process start, compile, JIT). The 1.5 covers
-# a slower Reactant build and node-to-node spread (up to ~20%). The 2026-11 out-of-memory
-# cases have extrapolated t/call: reactant_mincut_off N=128 1120 s and N=256 3270 s (power
-# law through N=32,64), enzyme_naive N=256 400 s (2 x N=128).
+# Walltime limits for the batched jll443 sweep (profile jll443: 1 warmup + 4 measured
+# calls per batch job): conservative per-case estimates of the run time,
+#   walltime = 1.5 x (overhead + 5 x t/call) + 30 min margin, rounded up to 30 min, >= 1 h,
+# where overhead is process start, compilation and JIT. The 1.5 covers node-to-node
+# spread (up to ~20%). For cases expected to run out of memory, t/call was extrapolated:
+# reactant_mincut_off N=128 1120 s and N=256 3270 s, enzyme_naive N=256 400 s.
 # Lines: config<TAB>N<TAB>HH:MM:SS (submit.sh --walltimes reads lines with 3 tab fields).
 reactant_full	4	01:00:00
 reactant_full	8	01:00:00

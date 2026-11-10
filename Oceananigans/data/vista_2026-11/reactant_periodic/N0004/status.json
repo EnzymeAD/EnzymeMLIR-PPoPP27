@@ -49,7 +49,7 @@
       "wall_s_mean": 4.4601874535
     }
   ],
-  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b1/reactant_periodic/N0004/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_F2xE9QjcJi.perf_ctl,/tmp/jl_JEf2fAhQP6.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/channelanigans /opt/channelanigans/bench/driver_reactant.jl --config reactant_periodic --nsteps 4 --out /results/table_jll443_b1 --configs-file /opt/channelanigans/bench/configs.toml --save-gradients --repeats 4`",
+  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b1/reactant_periodic/N0004/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_F2xE9QjcJi.perf_ctl,/tmp/jl_JEf2fAhQP6.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/redacted /opt/redacted/bench/driver_reactant.jl --config reactant_periodic --nsteps 4 --out /results/table_jll443_b1 --configs-file /opt/redacted/bench/configs.toml --save-gradients --repeats 4`",
   "config": "reactant_periodic",
   "elapsed_s": 926.9598939418793,
   "exitcode": 0,

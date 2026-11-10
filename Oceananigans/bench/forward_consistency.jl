@@ -10,7 +10,7 @@
 #   * conservation of the initially uniform salinity (S ≡ 35, no forcing, no-flux BCs):
 #     flux-form advection must keep it exactly 35 in every fluid cell.
 #
-# Known result (2026-11-03, Oceananigans 0.116.1, Reactant 0.2.304, CUDA.jl 6.2.2):
+# Known result (Oceananigans 0.116.1):
 #   * without --reactant-init: CPU keeps S ≡ 35; Reactant drifts in ~38.7k fluid
 #     cells after one step (mostly the surface layer, max ~2.8e-3 next to the wall)
 #     and J differs by ~1e-4 after 4 steps. Cause: the Reactant extension makes

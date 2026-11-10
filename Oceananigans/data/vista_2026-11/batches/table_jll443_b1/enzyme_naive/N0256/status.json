@@ -1,5 +1,5 @@
 {
-  "command": "`numactl -C 0 /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/channelanigans /opt/channelanigans/bench/driver_enzyme.jl --config enzyme_naive --nsteps 256 --out /results/table_jll443_b1 --configs-file /opt/channelanigans/bench/configs.toml --save-gradients --repeats 4`",
+  "command": "`numactl -C 0 /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/redacted /opt/redacted/bench/driver_enzyme.jl --config enzyme_naive --nsteps 256 --out /results/table_jll443_b1 --configs-file /opt/redacted/bench/configs.toml --save-gradients --repeats 4`",
   "config": "enzyme_naive",
   "elapsed_s": 364.3125870227814,
   "exitcode": 0,

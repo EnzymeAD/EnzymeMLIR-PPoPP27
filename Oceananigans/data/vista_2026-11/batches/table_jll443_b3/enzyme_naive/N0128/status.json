@@ -1,5 +1,5 @@
 {
-  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b3/enzyme_naive/N0128/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_TiHqPm5WpC.perf_ctl,/tmp/jl_FYlkF4vmZ0.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/channelanigans /opt/channelanigans/bench/driver_enzyme.jl --config enzyme_naive --nsteps 128 --out /results/table_jll443_b3 --configs-file /opt/channelanigans/bench/configs.toml --save-gradients --repeats 4`",
+  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b3/enzyme_naive/N0128/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_TiHqPm5WpC.perf_ctl,/tmp/jl_FYlkF4vmZ0.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/redacted /opt/redacted/bench/driver_enzyme.jl --config enzyme_naive --nsteps 128 --out /results/table_jll443_b3 --configs-file /opt/redacted/bench/configs.toml --save-gradients --repeats 4`",
   "config": "enzyme_naive",
   "elapsed_s": 1246.239478111267,
   "exitcode": 0,

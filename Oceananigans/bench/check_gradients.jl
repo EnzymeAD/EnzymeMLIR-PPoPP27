@@ -12,9 +12,8 @@
 # Tolerances: configurations on the same backend as the reference should agree to
 # `rtol-same` (checkpointing/min-cut change the schedule, not the arithmetic);
 # Reactant vs Enzyme-only CPU comparisons use `rtol-cross`.
-# Observed on the Mac (2026-11-03, Oceananigans 0.116.1, Reactant 0.2.304,
-# Enzyme 0.13.216), N = 4 and 8: worst same-backend error ≤ 1e-14, worst
-# cross-backend error ≤ 8e-13 (objective and every full gradient field).
+# Typical agreement: same-backend error ≤ 1e-13, cross-backend error ≤ 1e-12
+# (objective and gradient fields; see README.md, "Correctness").
 # Cross-backend agreement requires the explicit first-step initialization in
 # bench/driver_reactant.jl; without it the backends differ by ~1e-4 in J.
 #

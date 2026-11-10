@@ -15,10 +15,9 @@ MAIL_TYPE=END,FAIL
 
 # ---- Image profile -------------------------------------------------------------
 # Which container image a run uses, and where its results go. Selected with
-# `submit.sh --profile NAME`, which exports CH_PROFILE to the jobs. The original
-# file had further profiles for earlier runs; this copy keeps only `jll443`, the
-# profile that produced data/vista_2026-11 (every command was run with
-# `--profile jll443`).
+# `submit.sh --profile NAME`, which exports CH_PROFILE to the jobs. This copy keeps
+# only `jll443`, the profile that produced data/vista_2026-11 (every command was run
+# with `--profile jll443`).
 # The SIF was pulled from the registry image named in IMAGE_REF. The tag is mutable,
 # the digest is not: the digest identifies the image that produced the results.
 #   SIF            the pulled image on Vista
@@ -39,8 +38,8 @@ case $CH_PROFILE in
         # Orchestrator defaults: -O0, multi-threaded Eigen off. Run in batches of 4
         # measured calls (see "Batches" below).
         # Image built 2026-11-09 from commit 3f6c63d (arm64), pulled by digest.
-        SIF=$WORK/channelanigans-2026-11-jll443-cpu.sif   # original location redacted
-        IMAGE_REF=channelanigans-artifact:2026-11-jll443-cpu   # registry redacted
+        SIF=$WORK/redacted-2026-11-jll443-cpu.sif   # original location redacted
+        IMAGE_REF=redacted-artifact:2026-11-jll443-cpu   # registry redacted
         IMAGE_DIGEST=sha256:bc5ed0f2d08f3c234360fbd31ff66924ddba22d9231a9fe33c8187412b688d6b
         IMAGE_COMMIT=3f6c63da496e9bcdb5acf77948578a963ccbd711
         SWEEP=table_jll443
@@ -51,7 +50,7 @@ case $CH_PROFILE in
         GATE_E2E_TIMEOUT_S=3600
         BATCH_REPEATS=4
         # enzyme_naive N=256 runs out of memory; under perf that is recorded as "e", so
-        # run it without perf (as in the earlier run).
+        # run it without perf.
         PERF_OFF_CASES="enzyme_naive:256"
         ;;
     *)
@@ -63,8 +62,8 @@ esac
 # ---- Results -----------------------------------------------------------------
 # Jobs write to $SCRATCH (fast, purged after inactivity) and copy each finished
 # case to $WORK (persistent). Everything downstream reads the $WORK copy.
-SCRATCH_ROOT=$SCRATCH/channelanigans_results
-WORK_ROOT=$WORK/channelanigans_results
+SCRATCH_ROOT=$SCRATCH/redacted_results
+WORK_ROOT=$WORK/redacted_results
 LOG_DIR=$WORK_ROOT/slurm_logs
 
 # ---- Benchmark settings (same as the Docker proofing runs) -------------------
@@ -99,14 +98,14 @@ REPO_DIR=$(cd "$HPC_DIR/../.." && pwd)
 # out of the container. A per-job writable depot is stacked in front of the frozen,
 # precompiled one. SLURM variables are passed back in so result.json records them.
 apptainer_exec() {
-    local depot=${TMPDIR:-/tmp}/channelanigans_depot_${SLURM_JOB_ID:-$$}
+    local depot=${TMPDIR:-/tmp}/redacted_depot_${SLURM_JOB_ID:-$$}
     mkdir -p "$depot"
     apptainer exec --cleanenv \
         --bind "$SCRATCH_ROOT:/results" \
         --bind "$WORK_ROOT:/work_results" \
         --env "JULIA_DEPOT_PATH=$depot:/opt/julia_depot" \
         --env "SLURM_JOB_ID=${SLURM_JOB_ID:-},SLURM_JOB_PARTITION=${SLURM_JOB_PARTITION:-}" \
-        --env "CHANNELANIGANS_IMAGE_DIGEST=$IMAGE_DIGEST" \
+        --env "BENCH_IMAGE_DIGEST=$IMAGE_DIGEST" \
         "$SIF" "$@"
 }
 
@@ -127,7 +126,7 @@ orchestrator_flag_args() {
 # Lines of XLA's buffer assignment with "Total bytes used", one per compiled module,
 # prefixed with the dump file name. $1: HLO dump directory on the host. Depending on the
 # XLA version the line is in *-buffer-assignment.txt or *-buffer-assignment-values.txt
-# (the August job scripts grepped only the former and found nothing), so search both.
+# so search both.
 xla_total_bytes() {
     grep -H "Total bytes used" "$1"/*buffer-assignment*.txt 2>/dev/null | sed "s|^$1/||"
     return 0

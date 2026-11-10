@@ -143,9 +143,8 @@ function run_protocol(; build, call, objective, interior, opts, cfg, driver, ext
     grad_summary = Dict(k => field_summary(v) for (k, v) in grads)
     if opts["save-gradients"]
         jld = joinpath(dir, "gradients.jld2")
-        # IOStream, not JLD2's default memory-mapped IO: under Julia 1.11, Mmap.PAGESIZE
-        # is fixed at build time (4 KiB), so JLD2's msync fails on kernels with 64 KiB
-        # pages (TACC Vista). Julia 1.12 reads the page size at runtime.
+        # IOStream, not JLD2's default memory-mapped IO, which can fail on kernels with
+        # 64 KiB pages (TACC Vista) when Julia's Mmap.PAGESIZE is fixed at build time.
         jldsave(jld, false, IOStream; objective = J_ref, (Symbol(k) => v for (k, v) in grads)...)
         @info "saved gradients to $jld"
     end

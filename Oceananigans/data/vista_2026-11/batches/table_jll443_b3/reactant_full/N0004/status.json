@@ -1,5 +1,5 @@
 {
-  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b3/reactant_full/N0004/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_xW50vWPm7Y.perf_ctl,/tmp/jl_xoLAjGdgvs.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/channelanigans /opt/channelanigans/bench/driver_reactant.jl --config reactant_full --nsteps 4 --out /results/table_jll443_b3 --configs-file /opt/channelanigans/bench/configs.toml --save-gradients --repeats 4`",
+  "command": "`numactl -C 0 perf stat -x, -I 100 -o /results/table_jll443_b3/reactant_full/N0004/perf.csv --delay=-1 -e r80C0,r80C1 --control fifo:/tmp/jl_xW50vWPm7Y.perf_ctl,/tmp/jl_xoLAjGdgvs.perf_ack -- /usr/local/julia/bin/julia -C native -J/usr/local/julia/lib/julia/sys.so -g1 -O0 --project=/opt/redacted /opt/redacted/bench/driver_reactant.jl --config reactant_full --nsteps 4 --out /results/table_jll443_b3 --configs-file /opt/redacted/bench/configs.toml --save-gradients --repeats 4`",
   "config": "reactant_full",
   "elapsed_s": 311.3203580379486,
   "exitcode": 0,

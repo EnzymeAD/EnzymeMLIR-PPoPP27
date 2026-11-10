@@ -36,7 +36,7 @@ case ${1:-status} in
     status)
         plan() {   # plan <results dir under /work_results> <walltimes file> [ncalls]
             apptainer exec --cleanenv --bind "$WORK_ROOT:/work_results" --bind "$HPC_DIR:/hpc" "$SIF" \
-                julia /hpc/plan.jl "/work_results/$1" /opt/channelanigans/bench/configs.toml "/hpc/$2" \
+                julia /hpc/plan.jl "/work_results/$1" /opt/redacted/bench/configs.toml "/hpc/$2" \
                       "$MAX_WALLTIME_H" "$TIMEOUT_MARGIN_S" "$TABLE_CONFIGS" ${3:+"$3"}
         }
         if [[ -n ${BATCH_REPEATS:-} ]]; then
@@ -53,20 +53,20 @@ case ${1:-status} in
         ;;
     final)
         if [[ -n ${BATCH_REPEATS:-} ]]; then
-            echo "== pool batches";  apptainer_exec julia /opt/channelanigans/bench/merge_batches.jl \
+            echo "== pool batches";  apptainer_exec julia /opt/redacted/bench/merge_batches.jl \
                                          --root /work_results --sweep "$SWEEP_BASE"
         fi
-        echo "== table";            apptainer_exec julia /opt/channelanigans/bench/make_table.jl --out "$RES" --ci --flops --delta "${CFG_ARGS[@]}"
-        echo "== gradient check";   apptainer_exec julia /opt/channelanigans/bench/check_gradients.jl --out "$RES" \
+        echo "== table";            apptainer_exec julia /opt/redacted/bench/make_table.jl --out "$RES" --ci --flops --delta "${CFG_ARGS[@]}"
+        echo "== gradient check";   apptainer_exec julia /opt/redacted/bench/check_gradients.jl --out "$RES" \
                                         || echo "gradient check reported failures (see above)"
         if [[ -n ${BATCH_REPEATS:-} ]]; then
-            echo "== raw-data export"; apptainer_exec julia /opt/channelanigans/bench/export_raw.jl --out "$RES"
+            echo "== raw-data export"; apptainer_exec julia /opt/redacted/bench/export_raw.jl --out "$RES"
             # archive: the pool and every batch (logs, JSON, perf.csv; no gradient files)
             ( cd "$WORK_ROOT" && tar -czf "$SWEEP/raw_data.tar.gz" --exclude='*.jld2' \
                   --exclude=raw_data.tar.gz "$SWEEP" "$SWEEP"_b* )
             echo "  archive (pool + batches; gradient .jld2 excluded) → $WORK_ROOT/$SWEEP/raw_data.tar.gz"
         else
-            echo "== raw-data export"; apptainer_exec julia /opt/channelanigans/bench/export_raw.jl --out "$RES" --archive
+            echo "== raw-data export"; apptainer_exec julia /opt/redacted/bench/export_raw.jl --out "$RES" --archive
         fi
         echo "outputs in $WORK_ROOT/$SWEEP (table.tex, table.csv, export/)"
         ;;
