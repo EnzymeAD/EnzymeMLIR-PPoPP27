@@ -27,7 +27,18 @@ every step is checkpointed as in JAX.
 using CairoMakie, DataFrames, Dates, Printf, Unitful
 
 # ╔═╡ 488c4e5b-432d-459b-9a0f-8247599f1595
-results_dir = get(ENV, "RESULTS_DIR", joinpath(@__DIR__, "results", "binomial_sweep"))
+begin
+    source = get(ENV, "PLOT_SOURCE", "reference")
+    source in ("reference", "new") || error("PLOT_SOURCE must be reference or new")
+    root = normpath(joinpath(@__DIR__, "..", ".."))
+    default_input = source == "reference" ?
+        joinpath(root, "results", "mpas4dvar_binomial_sweep.csv") :
+        joinpath(root, "results", "binomial_sweep", "summary.csv")
+    input_path = get(ENV, "PLOT_INPUT", haskey(ENV, "RESULTS_DIR") ?
+        joinpath(ENV["RESULTS_DIR"], "summary.csv") : default_input)
+    results_dir = get(ENV, "PLOT_OUTPUT_DIR", joinpath(root, "results", "plots", "mpas", source))
+    @info "MPAS plot data" source input_path results_dir
+end
 
 # ╔═╡ 95b33d51-6de2-44e7-8d98-bad8c54f309b
 # Display names => run tags used by run_binomial_sweep.sh
@@ -63,9 +74,8 @@ end
 
 # ╔═╡ 8f39a978-cd73-491a-ba14-8644c31fc398
 sweep = let
-	path = joinpath(results_dir, "summary.csv")
-	isfile(path) || error("no summary.csv in $results_dir, run ./run_binomial_sweep.sh first")
-	read_summary(path)
+	isfile(input_path) || error("no $source data at $input_path; run the sweep or set PLOT_INPUT")
+	read_summary(input_path)
 end
 
 # ╔═╡ 2c6faa54-c626-44a1-b08d-bb1c7337aaeb
@@ -162,6 +172,7 @@ let
 	Legend(f[2, 1:2], legend_handles, [label[n] for n in order];
 		   orientation=:horizontal, framevisible=false, tellwidth=false, tellheight=true, nbanks=2)
 
+	mkpath(results_dir)
 	save(joinpath(results_dir, "mpas4dvar_binomial_sweep.pdf"), f)
 	save(joinpath(results_dir, "mpas4dvar_binomial_sweep.png"), f; px_per_unit=3)
 
