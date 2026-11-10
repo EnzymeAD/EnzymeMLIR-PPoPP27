@@ -21,15 +21,17 @@ deployed within the artifact repository (though can also be built by end users, 
 
 EnzymeMLIR is an automatic differentiation (AD) framework integrated directly into the MLIR compiler infrastructure. It generates forward- and reverse-mode derivatives while enabling AD to interleave with high-level domain-specific and AD-specific compiler optimizations (including tensor algebra transformations, polyhedral atomic strength reduction and pipelining, loop-aware caching, region-aware mincut tape minimization, and periodic/binomial checkpointing).
 
-All reference measurements and figures from the paper (and additional rebuttal benchmarks) are checked into the repository under `results/` and `Oceananigans/data/vista_2026-11/`:
+The repository includes the following reference measurements and figures for the AE paper under `results/` and `Oceananigans/data/vista_2026-11/`:
 
 | Benchmark Suite | Paper Section / Figure / Table | Checked-In Reference Data & Figures | Plotting / Formatting Script |
 | :--- | :--- | :--- | :--- |
 | **Parboil LBM** (`lbm/cpp/`, `lbm/futhark/`) | Sec. 4.3, 5.1–5.2; Fig. 6; Tables 3–4 | `results/cpp_results.py`<br>`results/lbm_benchmark.pdf` | `lbm/cpp/plot_lbm_benchmark_results.jl` |
 | **RSBench** (`rsbench/cpp/`, `rsbench/futhark/`) | Sec. 5.3 | `results/cpp_results.py` | `rsbench/cpp/run_timings.sh` |
-| **Oceananigans.jl** (`Oceananigans/`) | Sec. 6.1; Table 2; Tables 5–6 | `Oceananigans/data/vista_2026-11/` | `Oceananigans/bench/make_table.jl` |
-| **JAX-MD** (`jax/jaxmd/`) | Sec. 6.2; Fig. 7 | `results/results_JAXMD.json`<br>`results/plot-jaxmd.ipynb` | `results/plot-jaxmd.ipynb` |
-| **legoESM MPAS-4DVar** (`jax/legoESM-MPAS-4DVar/`) | Additional atmospheric 4D-Var evaluation | `results/mpas4dvar_binomial_sweep.csv`<br>`results/mpas4dvar_binomial_sweep.pdf` | `jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl` |
+| **Oceananigans.jl** (`Oceananigans/`) | Sec. 6.1; Table 2 | `Oceananigans/data/vista_2026-11/` | `Oceananigans/bench/make_table.jl` |
+| **JAX-MD** (`jax/jaxmd/`) | Sec. 6.3; Fig. 9 | `results/results_JAXMD.json`<br>`results/plot-jaxmd.ipynb` | `results/plot-jaxmd.ipynb` |
+| **legoESM MPAS-4DVar** (`jax/legoESM-MPAS-4DVar/`) | Sec. 6.2; Fig. 8 | `results/mpas4dvar_binomial_sweep.csv`<br>`results/mpas4dvar_binomial_sweep.pdf` | `jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl` |
+
+**Coverage limits:** The CPU Oceananigans archive above supports Table 2; it does not contain the separate Appendix B experiment in Tables 5–6 (including XLA peak device memory). A standalone generator for the combined Figure 7 summary and its 99% confidence intervals is not provided. The full original LBM step-count sweep is not checked in; the runner below can collect a new sweep.
 
 ---
 
@@ -196,7 +198,7 @@ cat timings/summary_100.txt
 # Full C++ step-count sweep (25, 50, 100, 200, 400, 800, 1200 steps):
 make run
 
-# Regenerate Figure 6 (results/lbm_benchmark.pdf) from lbm/cpp/timings/summary_*.txt:
+# Regenerate Figure 6 into lbm/cpp/timings/lbm_benchmark.pdf from summary_*.txt:
 julia plot_lbm_benchmark_results.jl
 
 # Futhark (CUDA reverse-mode AD, 100 steps on data/120_120_150_ldc.in.gz, 12 repetitions):
@@ -255,7 +257,7 @@ julia --project=/opt/julia_project bench/make_table.jl --out results/full --ci -
 
 ### C. JAX GPU Workloads: JAX-MD and legoESM MPAS-4DVar (`jax/`)
 
-#### 1. JAX-MD Molecular Dynamics Simulation (`jax/jaxmd/`, Section 6.2, Figure 7)
+#### 1. JAX-MD Molecular Dynamics Simulation (`jax/jaxmd/`, Section 6.3, Figure 9)
 
 Reference timings and peak device memory across optimization pipelines (`Jax`, `HLOOpt`, `DefOpt`, `IDefOpt`) are checked into `results/results_JAXMD.json`, and the plotting notebook is in `results/plot-jaxmd.ipynb`.
 
@@ -269,9 +271,9 @@ Or invoke `main.py` directly:
 cd /workspaces/EnzymeMLIR-PPoPP27/jax/jaxmd
 TEST_UNDECLARED_OUTPUTS_DIR=../../results /home/evaluator/eval-env/bin/python3 main.py --warmup=2 --repeat=12
 ```
-Open `results/plot-jaxmd.ipynb` in Jupyter to regenerate Figure 7 from `results/results_JAXMD.json`.
+Open `results/plot-jaxmd.ipynb` in Jupyter to regenerate Figure 9. Set `source` in its input-selection cell to `reference` for `results/results_JAXMD.json` or `new` for freshly collected `results/jaxmd/results_JAXMD.json`. See [plotting data selection](docs/plotting-data.md) for command-line execution and output paths.
 
-#### 2. legoESM MPAS-4DVar Atmospheric Data Assimilation (`jax/legoESM-MPAS-4DVar/`)
+#### 2. legoESM MPAS-4DVar Atmospheric Data Assimilation (`jax/legoESM-MPAS-4DVar/`, Section 6.2, Figure 8)
 
 Computes the value and gradient of the single-observation 4D-Var cost on the legoESM MPAS primitive-equation model (icosahedral mesh, 40,962 cells, 40 levels, 6,594,882 control variables). Reference binomial checkpointing sweep measurements and the resulting plot are checked into `results/mpas4dvar_binomial_sweep.csv` and `results/mpas4dvar_binomial_sweep.pdf`.
 
@@ -298,8 +300,11 @@ MPAS_MODE=comparison bash jax/legoESM-MPAS-4DVar/run_benchmarks.sh
 #    (writes results/binomial_sweep/summary.csv):
 MPAS_MODE=binomial_sweep bash jax/legoESM-MPAS-4DVar/run_benchmarks.sh
 
-# 3. Regenerate results/mpas4dvar_binomial_sweep.pdf from the sweep CSV:
-julia jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl
+# 3. Plot the newly collected sweep (Figure 8) into results/plots/mpas/new/:
+PLOT_SOURCE=new julia jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl
+
+# Plot checked-in reference data into results/plots/mpas/reference/:
+PLOT_SOURCE=reference julia jax/legoESM-MPAS-4DVar/plot_binomial_sweep.jl
 ```
 See `jax/legoESM-MPAS-4DVar/README.md` for additional options and standalone host setup via `uv` (`./setup_env.sh`).
 
@@ -350,12 +355,12 @@ EnzymeMLIR-PPoPP27/
 │       ├── enzyme_4dvar_grad.py         # 4D-Var value-and-gradient driver (JAX vs EnzymeMLIR)
 │       ├── run_comparison.sh            # 4D-Var gradient and peak memory comparison
 │       ├── run_binomial_sweep.sh        # Step-count and binomial budget sweep
-│       ├── plot_binomial_sweep.jl       # Pluto notebook generating results/mpas4dvar_binomial_sweep.pdf
+│       ├── plot_binomial_sweep.jl       # Plot reference or new sweep data into results/plots/mpas/
 │       └── run_benchmarks.sh            # Orchestrated legoESM MPAS-4DVar runner
 └── results/
     ├── cpp_results.py                   # Recorded 12-run raw timings for LBM and RSBench
     ├── lbm_benchmark.pdf                # LBM runtime and peak memory scaling figure (Figure 6)
     ├── results_JAXMD.json               # Recorded JAX-MD timings and peak memory across pass pipelines
-    ├── plot-jaxmd.ipynb                 # Notebook plotting JAX-MD runtime and memory usage (Figure 7)
+    ├── plot-jaxmd.ipynb                 # Notebook plotting JAX-MD runtime and memory usage (Figure 9)
     ├── mpas4dvar_binomial_sweep.csv     # Recorded legoESM MPAS 4D-Var binomial sweep data
-    └── mpas4dvar_binomial_sweep.pdf     # legoESM MPAS 4D-Var runtime and peak memory figure
+    └── mpas4dvar_binomial_sweep.pdf     # legoESM MPAS 4D-Var runtime and peak memory figure (Figure 8)
