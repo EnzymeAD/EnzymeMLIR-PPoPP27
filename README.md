@@ -53,11 +53,11 @@ We assume the target machine has a functional NVIDIA GPU driver installation wit
 | :--- | :--- | :--- | :--- |
 | **CPU** | 8 cores; x86_64 for the container, x86_64 or aarch64 natively | 32+ cores | NVIDIA Grace CPU Superchip (2× 72-core Arm Neoverse V2, TACC Vista `gg` node); each benchmark pinned to a single core |
 | **GPU** | None (CPU execution) | None (CPU execution) | None (CPU-only node) |
-| **RAM** | 32 GiB (`smoke` / `quick` presets) | 192 GiB+ (`full` preset up to $N=256$) | 237 GiB LPDDR5X |
+| **RAM** | 32 GiB (`smoke` / `quick` presets: peaks of 16.4 / 30.8 GiB) | 192 GiB+ (`full` preset: the largest case that finishes peaks at 175.1 GiB; three cases need about 270–674 GiB and run out of memory even on the paper's 237 GiB nodes, see [Memory requirements](Oceananigans/README.md#memory-requirements)) | 237 GiB LPDDR5X |
 | **Storage** | 30 GiB | 60 GiB | NVMe SSD |
 | **OS** | Linux (container); Linux or macOS (native) | Linux | Linux (TACC Vista) |
 
-The container image is built for x86_64. On aarch64 machines, including NVIDIA Grace (the paper's hardware) and Apple silicon, run the benchmark natively with Julia 1.12 instead, as described in [`Oceananigans/README.md`](Oceananigans/README.md). FLOP counts (Table 2) need Linux on NVIDIA Grace (Arm Neoverse V2) CPUs, so they can only be reproduced natively; runtime and memory can be measured on any machine.
+The container image is built for x86_64. On aarch64 machines, including NVIDIA Grace (the paper's hardware) and Apple silicon, run the benchmark natively with Julia 1.12 instead, as described in [`Oceananigans/README.md`](Oceananigans/README.md). FLOP counts (Table 2) need Linux on NVIDIA Grace (Arm Neoverse V2) CPUs, so they can only be reproduced natively; runtime and memory can be measured on any machine. The exact (linux/arm64) image that produced the published Oceananigans measurements is `ghcr.io/enzymead/enzymemlir-ppopp27@sha256:bc5ed0f2d08f3c234360fbd31ff66924ddba22d9231a9fe33c8187412b688d6b` (tag `oceananigans-vista-2026-11`); see [`Oceananigans/README.md`](Oceananigans/README.md#the-exact-image-of-the-reference-runs).
 
 ---
 
@@ -94,12 +94,25 @@ docker pull ghcr.io/enzymead/enzymemlir-ppopp27:latest
 *(Alternatively, to build the image locally from `docker/Dockerfile`: `docker build -t ghcr.io/enzymead/enzymemlir-ppopp27:latest -f docker/Dockerfile .`)*
 
 The container includes:
-- **Clang 18 + MLIR** (`/home/evaluator/llvm-project/build/bin/clang++`)
+- **Clang/LLVM/MLIR 24.0.0git**, built from source (`/home/evaluator/llvm-project/build/bin/clang++`); Ubuntu's Clang 18 is used only to build it
 - **Enzyme LLVM Plugin** (`/home/evaluator/Enzyme/build/Enzyme/ClangEnzyme-24.so`)
 - **EnzymeMLIR C++ Frontend & Raising Plugins** (`/home/evaluator/Reactant/build/Enzyme/libClangReactant-24.so`, `/home/evaluator/Enzyme-JAX/bazel-bin/libRaise.so`)
 - **JAX 0.10.0 (CUDA 12) + Enzyme-JAX (`enzyme-ad`)** installed in `/home/evaluator/eval-env`
 - **NVIDIA Nsight Systems** (`/usr/local/cuda-12.9/bin/nsys`, used for device memory profiling in LBM)
 - **Julia 1.12.7** (`/usr/local/bin/julia`) with precompiled packages in `/opt/julia_project` and `/opt/julia_depot`
+
+The tag `latest` moves with every image build. Each build is also tagged `sha-<commit>` (the repository commit it was built from) and has an immutable digest; to pin one, use `docker pull ghcr.io/enzymead/enzymemlir-ppopp27@sha256:<digest>` (`docker buildx imagetools inspect ghcr.io/enzymead/enzymemlir-ppopp27:latest` prints the current digest).
+
+**Compiler revisions.** Every compiler in the image is built from a pinned revision in [`docker/Dockerfile`](docker/Dockerfile):
+
+| Component | Revision | Used by |
+| :--- | :--- | :--- |
+| Clang/LLVM/MLIR 24.0.0git | llvm-project `9d618fc0243103263ebf9bdcd08ef25e871d9c78` (built with Ubuntu's Clang 18) | C++ benchmarks (LBM, RSBench) |
+| Enzyme (LLVM plugin, `ClangEnzyme-24.so`) | `4433004499bb2a38076f5a4608ffa3012efc19a5` | C++ benchmarks |
+| Reactant C++ frontend (`libClangReactant-24.so`) | `0bc51c31e9d000d9e0cda5350df615419b334da2` | C++ benchmarks |
+| Enzyme-JAX raising plugin (`libRaise.so`) | `814279be2ae863114160bba3217a9ee5cc1d136b` | C++ benchmarks |
+| JAX + Enzyme-JAX (`enzyme-ad`) | 0.10.0 + 0.0.16 (PyPI) | JAX-MD, legoESM MPAS-4DVar |
+| Julia + Reactant.jl / Enzyme.jl | 1.12.7 (with its own LLVM 18.1.7); Reactant 0.2.308 (Reactant_jll 0.0.443), Enzyme 0.13.219 (Enzyme_jll 0.0.307) | Oceananigans.jl (see [`Oceananigans/README.md`](Oceananigans/README.md) for the exact revisions) |
 
 ### Step 2: Launch the Container & Verify the Installation (~5 minutes)
 
@@ -243,7 +256,9 @@ julia --project=/opt/julia_project bench/run_cases.jl \
   --timeout 14400 --core 0 --perf off --skip-existing -- --save-gradients
 julia --project=/opt/julia_project bench/make_table.jl --out results/quick --ci --delta
 
-# 4. Full Table 2 sweep (all 9 configs across N = 4, 8, 16, 32, 64, 128, 256):
+# 4. Full Table 2 sweep (all 9 configs across N = 4, 8, 16, 32, 64, 128, 256).
+#    Needs up to 175 GiB of memory; three cases run out of memory even on 237 GiB
+#    (see Oceananigans/README.md, "Memory requirements"):
 julia --project=/opt/julia_project bench/run_cases.jl \
   --out results/full --configs table --nsteps 4,8,16,32,64,128,256 \
   --timeout 172800 --core 0 --perf off --skip-existing -- --save-gradients
@@ -313,7 +328,7 @@ See `jax/legoESM-MPAS-4DVar/README.md` for additional options and standalone hos
 ```
 EnzymeMLIR-PPoPP27/
 ├── docker/
-│   ├── Dockerfile                       # Unified container specification (Julia 1.12.7 + LLVM 18 + Enzyme + JAX 0.10.0 + Nsight)
+│   ├── Dockerfile                       # Unified container specification (Julia 1.12.7 + Clang/LLVM/MLIR 24 + Enzyme + JAX 0.10.0 + Nsight)
 │   ├── Project.toml                     # Precompiled Julia dependency specifications
 │   └── requirements.txt                 # Python dependencies (JAX 0.10.0 CUDA 12, Jupyter, SciPy)
 ├── lbm/
