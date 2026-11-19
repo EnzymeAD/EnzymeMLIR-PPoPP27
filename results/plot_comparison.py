@@ -63,9 +63,8 @@ raw_runtimes = {
     ],
   },
   "LegoESM": { # 240 timesteps, binomial b=n to emulate JAX
-    # TODO: need to sample properly
-    "JAX": [27.48] * 12,
-    "EnzymeMLIR": [24.35] * 12,
+    "EnzymeMLIR": [24.48, 24.48, 24.45, 24.49, 24.48, 24.47, 24.47, 24.41, 24.44, 24.45, 24.42, 24.41],
+    "JAX": [27.6, 27.6, 27.6, 27.61, 27.61, 27.62, 27.6, 27.55, 27.56, 27.56, 27.6, 27.56],
   }
 }
 
