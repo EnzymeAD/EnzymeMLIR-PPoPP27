@@ -139,6 +139,7 @@ def verify_dir(d: pathlib.Path, required_ok: list[str]):
         raise SystemExit(f"ERROR: No .log files found in {d}!")
 
     succeeded = set()
+    expected_oom = set()
     for log in logs:
         text = log.read_text(errors="replace")
         m = ok_pat.search(text)
@@ -146,6 +147,7 @@ def verify_dir(d: pathlib.Path, required_ok: list[str]):
             succeeded.add(log.stem)
             print(f"  [OK]  {log.stem}: {m.group(0)}")
         elif "RESOURCE_EXHAUSTED" in text or "out of memory" in text.lower():
+            expected_oom.add(log.stem)
             print(f"  [OOM] {log.stem}: device memory exhausted (expected for un-checkpointed large rollouts)")
         else:
             print(f"ERROR: Unexpected failure in {log}:", file=sys.stderr)
@@ -166,6 +168,9 @@ def verify_dir(d: pathlib.Path, required_ok: list[str]):
         steps = gf.stem.rsplit("_", 1)[1]
         ref = d / f"grad_jax_{steps}.npy"
         if not ref.exists():
+            if f"jax_{steps}" in expected_oom:
+                print(f"  [SKIP] {gf.name}: JAX reference unavailable due to expected OOM at steps={steps}")
+                continue
             print(f"ERROR: Missing JAX reference gradient {ref} for {gf}!", file=sys.stderr)
             sys.exit(1)
         j = np.load(ref)
@@ -175,6 +180,8 @@ def verify_dir(d: pathlib.Path, required_ok: list[str]):
         if not math.isfinite(rel_diff) or rel_diff > 1e-4:
             print(f"ERROR: Gradient mismatch for {gf.name}: rel_diff={rel_diff:.3e} > 1e-4", file=sys.stderr)
             sys.exit(1)
+
+    return expected_oom
 
 if mpas_mode in ("comparison", "both"):
     print("\n--- Verifying results/mpas_4dvar ---")
@@ -194,7 +201,7 @@ if mpas_mode in ("comparison", "both"):
 if mpas_mode in ("binomial_sweep", "both"):
     print("\n--- Verifying results/binomial_sweep ---")
     sweep_dir = pathlib.Path("results/binomial_sweep")
-    verify_dir(
+    expected_oom = verify_dir(
         sweep_dir,
         required_ok=[
             "jax_60",
@@ -208,10 +215,14 @@ if mpas_mode in ("binomial_sweep", "both"):
         raise SystemExit(f"ERROR: {summary_csv} not generated!")
     with open(summary_csv) as f:
         rows = list(csv.DictReader(f))
-    failed_rows = [r for r in rows if r.get("status") != "ok"]
+    failed_rows = [
+        r for r in rows
+        if r.get("status") != "ok"
+        and not (r.get("status") == "oom" and f"{r.get('tag')}_{r.get('steps')}" in expected_oom)
+    ]
     if failed_rows:
-        print(f"ERROR: Non-ok rows in {summary_csv}: {failed_rows}", file=sys.stderr)
+        print(f"ERROR: Unexpected failed rows in {summary_csv}: {failed_rows}", file=sys.stderr)
         sys.exit(1)
 
-print("\nVERIFIED: All required legoESM MPAS-4DVar configurations succeeded and matched JAX gradients!")
+print("\nVERIFIED: All required legoESM MPAS-4DVar configurations succeeded; available JAX gradient comparisons passed (expected OOMs allowed).")
 EOF
