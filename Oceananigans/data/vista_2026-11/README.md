@@ -39,12 +39,18 @@ regenerates (both are excluded by `.gitignore`):
 ## Reading the table
 
 - **Out of memory:**
-  - `reactant_mincut_off` at N = 128 and 256: XLA reports it directly
-    (`Out of memory`).
+  - `reactant_mincut_off` at N = 128 and 256: XLA reports it directly, failing to
+    allocate a single buffer of 338 GiB and 674 GiB respectively
+    (`RESOURCE_EXHAUSTED: Out of memory allocating 363177057104 bytes` and
+    `… 723557678416 bytes` in batch 1's `log.txt`).
   - `enzyme_naive` at N = 256: killed by the kernel's out-of-memory killer. This
     case ran without hardware counters from the start (`"perf_mode": "off"` in its
     `job_info.json`): under `perf`, a process killed by the kernel is reported as a
     clean exit, so the case would be recorded as an error (`e`) instead of `m`.
+    Extrapolating its peak memory (71.4 GiB at N = 64, 138.6 GiB at N = 128), it
+    would need about 270 GiB.
+  - Memory requirements for every case are summarized in the
+    [Oceananigans README](../../README.md#memory-requirements).
 - **Node-to-node spread:** for most cases the batch means agree within a few
   percent (median spread between the fastest and slowest batch: 1.2%). Two cases
   stand out, both `reactant_mincut_off`, the configuration with by far the largest
